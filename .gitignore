@@ -1,0 +1,11 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/ScatterSharp/ScatterSharp/obj
+/ScatterSharp/ScatterSharp.UnitTests/obj
+/ScatterSharp/packages
+*.suo
+/ScatterSharp/ScatterSharp/bin
+/ScatterSharp/ScatterSharp.UnitTests/bin
+/ScatterSharp/.vs
