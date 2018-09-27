@@ -24,6 +24,13 @@ namespace ScatterSharp
             OpenTasks = new Dictionary<string, TaskCompletionSource<string>>();
         }
 
+        public void Dispose()
+        {
+            Socket.Dispose();
+        }
+
+        #region Api
+
         public async Task Connect(string host, CancellationToken cancellationToken)
         {
             if (Socket.State != WebSocketState.Open && Socket.State != WebSocketState.Connecting)
@@ -38,6 +45,187 @@ namespace ScatterSharp
 
             var receiverTask = Receive();
         }
+
+        public void Disconnect()
+        {
+            throw new NotImplementedException();
+            //return Socket.disconnect();
+        }
+
+        public bool IsConnected()
+        {
+            throw new NotImplementedException();
+            //return SocketService.isConnected();
+        }
+
+        public bool IsPaired()
+        {
+            throw new NotImplementedException();
+            //return SocketService.isPaired();
+        }
+
+        public string GetVersion()
+        {
+            throw new NotImplementedException();
+            //return SocketService.sendApiRequest({
+            //    type: 'getVersion',
+            //payload: { }
+            //});
+        }
+
+        public void GetIdentity(/*requiredFields*/)
+        {
+            throw new NotImplementedException();
+            //throwNoAuth();
+            //return SocketService.sendApiRequest({
+            //    type: 'getOrRequestIdentity',
+            //payload:
+            //    {
+            //        fields: requiredFields
+            //}
+            //}).then(id => {
+            //    if (id) this.identity = id;
+            //    return id;
+            //});
+        }
+
+        public void GetIdentityFromPermissions()
+        {
+            throw new NotImplementedException();
+            //throwNoAuth();
+            //return SocketService.sendApiRequest({
+            //    type: 'identityFromPermissions',
+            //payload: { }
+            //}).then(id => {
+            //    if (id) this.identity = id;
+            //    return id;
+            //});
+        }
+
+        public void ForgetIdentity()
+        {
+            throw new NotImplementedException();
+            //throwNoAuth();
+            //return SocketService.sendApiRequest({
+            //    type: 'forgetIdentity',
+            //payload: { }
+            //}).then(res => {
+            //    this.identity = null;
+            //    return res;
+            //});
+        }
+
+        public void Authenticate(/*nonce*/)
+        {
+            throw new NotImplementedException();
+            //throwNoAuth();
+            //return SocketService.sendApiRequest({
+            //    type: 'authenticate',
+            //payload: { nonce }
+            //});
+        }
+
+        public void GetArbitrarySignature(/*publicKey, data, whatfor = '', isHash = false*/)
+        {
+            throw new NotImplementedException();
+            //throwNoAuth();
+            //return SocketService.sendApiRequest({
+            //    type: 'requestArbitrarySignature',
+            //payload:
+            //    {
+            //        publicKey,
+            //    data,
+            //    whatfor,
+            //    isHash
+            //}
+            //});
+        }
+
+        public void GetPublicKey(/*blockchain*/)
+        {
+            throw new NotImplementedException();
+            //throwNoAuth();
+            //return SocketService.sendApiRequest({
+            //    type: 'getPublicKey',
+            //payload: { blockchain }
+            //});
+        }
+
+        public void LinkAccount(/*publicKey, network*/)
+        {
+            throw new NotImplementedException();
+            //throwNoAuth();
+            //return SocketService.sendApiRequest({
+            //    type: 'linkAccount',
+            //payload: { publicKey, network }
+            //});
+        }
+
+        public void HasAccountFor(/*network*/)
+        {
+            throw new NotImplementedException();
+            //throwNoAuth();
+            //return SocketService.sendApiRequest({
+            //    type: 'hasAccountFor',
+            //payload:
+            //    {
+            //        network
+            //}
+            //});
+        }
+
+        public void SuggestNetwork(/*network*/)
+        {
+            throw new NotImplementedException();
+            //throwNoAuth();
+            //return SocketService.sendApiRequest({
+            //    type: 'requestAddNetwork',
+            //payload:
+            //    {
+            //        network
+            //}
+            //});
+        }
+
+        public void RequestTransfer(/*network, to, amount, options = { }*/)
+        {
+            throw new NotImplementedException();
+            //const payload = { network, to, amount, options };
+            //return SocketService.sendApiRequest({
+            //    type:'requestTransfer',
+            //    payload
+            //});
+        }
+
+        public void RequestSignature(/*payload*/)
+        {
+            throw new NotImplementedException();
+            //throwNoAuth();
+            //return SocketService.sendApiRequest({
+            //    type: 'requestSignature',
+            //        payload
+            //    });
+        }
+
+        public void CreateTransaction(/*blockchain, actions, account, network*/)
+        {
+            throw new NotImplementedException();
+            //throwNoAuth();
+            //return SocketService.sendApiRequest({
+            //    type: 'createTransaction',
+            //        payload:
+            //    {
+            //        blockchain,
+            //            actions,
+            //            account,
+            //            network
+            //        }
+            //});
+        }
+
+        #endregion
+
+        #region Utils
 
         private async Task Receive()
         {
@@ -153,9 +341,6 @@ namespace ScatterSharp
             //}
         }
 
-        public void Dispose()
-        {
-            Socket.Dispose();
-        }
+        #endregion
     }
 }
