@@ -4,9 +4,9 @@ using System.Text;
 
 namespace ScatterSharp
 {
-    public class ScatterApiResponse
+    public class ScatterApiRequest
     {
         public string Type { get; set; }
-        public object Data { get; set; }
+        public object Payload { get; set; }
     }
 }

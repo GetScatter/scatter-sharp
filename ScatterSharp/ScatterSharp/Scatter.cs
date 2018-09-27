@@ -14,6 +14,8 @@ namespace ScatterSharp
     {
         private readonly string WSURI = "ws://{0}/socket.io/?EIO=3&transport=websocket";
         private readonly string SCATTER_API_PREAMBLE = "42/scatter";
+        private bool Paired { get; set; }
+
         private ClientWebSocket Socket { get; set; }
         private Dictionary<string, TaskCompletionSource<string>> OpenTasks { get; set; }
         private Task ReceiverTask { get; set; }
@@ -31,37 +33,34 @@ namespace ScatterSharp
 
         #region Api
 
-        public async Task Connect(string host, CancellationToken cancellationToken)
+        public async Task Connect(string host, CancellationToken? cancellationToken = null)
         {
             if (Socket.State != WebSocketState.Open && Socket.State != WebSocketState.Connecting)
             {
-                await Socket.ConnectAsync(new Uri(string.Format(WSURI, host)), cancellationToken);
+                await Socket.ConnectAsync(new Uri(string.Format(WSURI, host)), cancellationToken ?? CancellationToken.None);
             }
 
             if (Socket.State == WebSocketState.Open)
-                await Socket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes("40/scatter")), WebSocketMessageType.Text, true, cancellationToken);
+                await Send();
             else
                 throw new Exception("Socket closed.");
 
             var receiverTask = Receive();
         }
 
-        public void Disconnect()
+        public Task Disconnect(CancellationToken? cancellationToken = null)
         {
-            throw new NotImplementedException();
-            //return Socket.disconnect();
+            return Socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close socket received", cancellationToken ?? CancellationToken.None);
         }
 
         public bool IsConnected()
         {
-            throw new NotImplementedException();
-            //return SocketService.isConnected();
+            return Socket.State == WebSocketState.Open;
         }
 
         public bool IsPaired()
         {
-            throw new NotImplementedException();
-            //return SocketService.isPaired();
+            return Paired;
         }
 
         public string GetVersion()
@@ -226,13 +225,59 @@ namespace ScatterSharp
         #endregion
 
         #region Utils
+        private Task Send(string type = null, ScatterApiRequest request = null)
+        {
+            if(string.IsNullOrWhiteSpace(type) &&
+               request == null)
+            {
+                return Socket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes("40/scatter")), WebSocketMessageType.Text, true, CancellationToken.None);
+            }
+            else
+            {
+                var arraySeg = new ArraySegment<byte>(
+                    Encoding.UTF8.GetBytes(string.Format("42/scatter,{0}", JsonConvert.SerializeObject(new List<object>()
+                    {
+                        type,
+                        request
+                    })))
+                );
+                return Socket.SendAsync(arraySeg, WebSocketMessageType.Text, true, CancellationToken.None);
+            }            
+        }
+
+        private async Task SendApiRequest(ScatterApiRequest request)
+        {
+            //return new Promise((resolve, reject) => {
+            //    if (request.type === 'identityFromPermissions' && !paired) return resolve(false);
+
+            //    pair().then(() => {
+            //        if (!paired) return reject({ code: 'not_paired', message: 'The user did not allow this app to connect to their Scatter'});
+
+            //    // Request ID used for resolving promises
+            //    request.id = random();
+
+            //    // Set Application Key
+            //    request.appkey = appkey;
+
+            //    // Nonce used to authenticate this request
+            //    request.nonce = StorageService.getNonce() || 0;
+            //    // Next nonce used to authenticate the next request
+            //    const nextNonce = random();
+            //    request.nextNonce = sha256(nextNonce);
+            //    StorageService.setNonce(nextNonce);
+
+            //    openRequests.push(Object.assign(request, { resolve, reject}));
+            //    send('api', { data: request, plugin})
+            //    })
+            //});
+        }
 
         private async Task Receive()
         {
             byte[] frame = new byte[4096];
             byte[] preamble = new byte[SCATTER_API_PREAMBLE.Length];
             ArraySegment<byte> segment = new ArraySegment<byte>(frame, 0, frame.Length);
-            ScatterApiResponse apiResponse = null;
+            List<object> apiResponse = null;
 
             while (Socket.State == WebSocketState.Open)
             {
@@ -248,41 +293,52 @@ namespace ScatterSharp
 
                     ms.Write(segment.Array, segment.Offset, result.Count);
                 }
-                while (result.EndOfMessage);
+                while (!result.EndOfMessage);
 
                 if (result.MessageType == WebSocketMessageType.Close)
                 {
                     await Socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close response received", CancellationToken.None);
+                    ms.Dispose();
                     continue;
                 }
 
+                ms.Seek(0, SeekOrigin.Begin);
                 ms.Read(preamble, 0, preamble.Length);
 
                 // Disregarding Handshaking/Upgrading
                 if (Encoding.UTF8.GetString(preamble) != SCATTER_API_PREAMBLE)
+                {
+                    ms.Dispose();
                     continue;
+                }
 
                 //skip , from preamble
-                ms.Read(preamble, 0, 1);
+                ms.Seek(ms.Position+1, SeekOrigin.Begin);
 
                 using (var sr = new StreamReader(ms))
                 using (var jtr = new JsonTextReader(sr))
                 {
-                    apiResponse = JsonSerializer.Create().Deserialize<ScatterApiResponse>(jtr);
+                    apiResponse = JsonSerializer.Create().Deserialize<List<object>>(jtr);
                 }
 
                 ms.Dispose();
 
-                switch (apiResponse.Type)
+                if (apiResponse.Count == 0)
+                    continue;
+
+                var type = apiResponse[0] as string;
+                var data = apiResponse.Count == 2 ? apiResponse[1] : null;
+
+                switch (type)
                 {
                     case "paired":
-                        HandlePairedResponse(apiResponse.Data);
+                        HandlePairedResponse(data);
                         break;
                     case "rekey":
                         HandleRekeyResponse();
                         break;
                     case "api":
-                        HandleApiResponse(apiResponse.Data);
+                        HandleApiResponse(data);
                         break;
                 }
             }
