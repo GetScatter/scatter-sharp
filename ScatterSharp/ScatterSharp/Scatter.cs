@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
 using Newtonsoft.Json;
+using System.Security.Cryptography;
 
 namespace ScatterSharp
 {
@@ -17,13 +18,13 @@ namespace ScatterSharp
         private bool Paired { get; set; }
 
         private ClientWebSocket Socket { get; set; }
-        private Dictionary<string, TaskCompletionSource<string>> OpenTasks { get; set; }
+        private Dictionary<string, TaskCompletionSource<object>> OpenTasks { get; set; }
         private Task ReceiverTask { get; set; }
 
         public Scatter()
         {
             Socket = new ClientWebSocket();
-            OpenTasks = new Dictionary<string, TaskCompletionSource<string>>();
+            OpenTasks = new Dictionary<string, TaskCompletionSource<object>>();
         }
 
         public void Dispose()
@@ -245,9 +246,17 @@ namespace ScatterSharp
             }            
         }
 
-        private async Task SendApiRequest(ScatterApiRequest request)
+        public string RandomNumber()
         {
-            //return new Promise((resolve, reject) => {
+            var r = RandomNumberGenerator.Create();
+            byte[] numberBytes = new byte[24];
+            r.GetBytes(numberBytes);
+            return Encoding.UTF8.GetString(numberBytes);
+        }
+
+        private Task SendApiRequest(ScatterApiRequest request)
+        {
+            
             //    if (request.type === 'identityFromPermissions' && !paired) return resolve(false);
 
             //    pair().then(() => {
@@ -269,7 +278,13 @@ namespace ScatterSharp
             //    openRequests.push(Object.assign(request, { resolve, reject}));
             //    send('api', { data: request, plugin})
             //    })
-            //});
+
+            var tcs = new TaskCompletionSource<object>();
+            var id = RandomNumber();
+
+            OpenTasks.Add(id, tcs);
+            Send("api", null);
+            return tcs.Task;
         }
 
         private async Task Receive()
@@ -297,8 +312,8 @@ namespace ScatterSharp
 
                 if (result.MessageType == WebSocketMessageType.Close)
                 {
-                    await Socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close response received", CancellationToken.None);
                     ms.Dispose();
+                    await Socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close response received", CancellationToken.None);
                     continue;
                 }
 
