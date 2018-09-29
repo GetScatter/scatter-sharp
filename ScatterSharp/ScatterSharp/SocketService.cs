@@ -1,5 +1,7 @@
 ﻿using Cryptography.ECDSA;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ScatterSharp.Storage;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,8 +18,8 @@ namespace ScatterSharp
         private readonly string SCATTER_API_PREAMBLE = "42/scatter";
 
         private bool Paired { get; set; }
-        private string StoredNonce { get; set; }
-        private string StoredAppkey { get; set; }
+        private IStorageProvider StorageProvider { get; set; }
+        private string AppName { get; set; }
 
         private ClientWebSocket Socket { get; set; }
 
@@ -25,10 +27,13 @@ namespace ScatterSharp
         private Dictionary<string, TaskCompletionSource<object>> OpenTasks { get; set; }
         private Task ReceiverTask { get; set; }
 
-        public SocketService(int timeout = 60000)
+        public SocketService(IStorageProvider storageProvider, string appName, int timeout = 60000)
         {
             Socket = new ClientWebSocket();
             OpenTasks = new Dictionary<string, TaskCompletionSource<object>>();
+            StorageProvider = storageProvider;
+            AppName = appName;
+
             GenerateNewAppKey();
         }
 
@@ -47,20 +52,32 @@ namespace ScatterSharp
             if (Socket.State == WebSocketState.Open)
             {
                 await Send();
+                var receiverTask = Receive();
                 await Pair(true);
+
+                //this.identity = await this.getIdentityFromPermissions();
             }  
             else
                 throw new Exception("Socket closed.");
 
-            var receiverTask = Receive();
-
-            //this.identity = await this.getIdentityFromPermissions();
         }
 
-        public Task Pair(bool passthrough = false)
+        public async Task Pair(bool passthrough = false)
         {
             PairOpenTask = new TaskCompletionSource<bool>();
-            return Send("pair", new { data = new { appkey = StoredAppkey, passthrough, origin = "ABC"}, plugin = "ABC" });
+
+            await Send("pair", new
+            {
+                data = new
+                {
+                    appkey = StorageProvider.GetAppkey(),
+                    passthrough,
+                    origin = AppName
+                },
+                plugin = AppName
+            });
+
+            await PairOpenTask.Task;
         }
 
         public async Task<object> SendApiRequest(ScatterApiRequest request)
@@ -90,16 +107,21 @@ namespace ScatterSharp
 
             await Pair();
 
+            if (!Paired)
+                return Task.FromResult(new { code = "not_paired", message = "The user did not allow this app to connect to their Scatter" });
+
             var tcs = new TaskCompletionSource<object>();
 
             request.Id = RandomNumber();
-            request.Appkey = StoredAppkey;
-            request.Nonce = StoredNonce ?? "0";
-            request.NextNonce = RandomNumber();
-            StoredNonce = request.NextNonce;
+            request.Appkey = StorageProvider.GetAppkey();
+            request.Nonce = StorageProvider.GetNonce() ?? "0";
+
+            var nextNonce = RandomNumber();
+            request.NextNonce = GenerateNextNonce();
+            StorageProvider.SetNonce(request.NextNonce);
 
             OpenTasks.Add(request.Id, tcs);
-            await Send("api", new { data = request, plugin = "ABC" });
+            await Send("api", new { data = request, plugin = AppName });
 
             return await tcs.Task;
         }
@@ -144,7 +166,6 @@ namespace ScatterSharp
             byte[] frame = new byte[4096];
             byte[] preamble = new byte[SCATTER_API_PREAMBLE.Length];
             ArraySegment<byte> segment = new ArraySegment<byte>(frame, 0, frame.Length);
-            List<object> apiResponse = null;
 
             while (Socket.State == WebSocketState.Open)
             {
@@ -182,39 +203,46 @@ namespace ScatterSharp
                 //skip , from preamble
                 ms.Seek(ms.Position + 1, SeekOrigin.Begin);
 
+                string jsonStr = null;
                 using (var sr = new StreamReader(ms))
-                using (var jtr = new JsonTextReader(sr))
                 {
-                    apiResponse = JsonSerializer.Create().Deserialize<List<object>>(jtr);
+                    jsonStr = sr.ReadToEnd();
                 }
-
                 ms.Dispose();
 
-                if (apiResponse.Count == 0)
+                var jArr = JArray.Parse(jsonStr);
+  
+                if (jArr.Count == 0)
                     continue;
 
-                var type = apiResponse[0] as string;
-                var data = apiResponse.Count == 2 ? apiResponse[1] : null;
+                string type = jArr[0].ToObject<string>();
 
                 switch (type)
                 {
                     case "paired":
-                        HandlePairedResponse(data);
+                        if(jArr.Count == 2)
+                            HandlePairedResponse(jArr[1].ToObject<bool>());
                         break;
                     case "rekey":
                         HandleRekeyResponse();
                         break;
                     case "api":
-                        HandleApiResponse(data);
+                        if (jArr.Count == 2)
+                            HandleApiResponse(jArr[1].ToObject<ScatterApiMessage>());
                         break;
                 }
             }
         }
 
-        private void HandleApiResponse(object data)
+        private void HandleApiResponse(ScatterApiMessage data)
         {
-            
+            if (data == null)
+                return;
 
+            if (!OpenTasks.TryGetValue(data.id, out TaskCompletionSource<object> openTask))
+                return;
+
+            openTask.SetResult(data.result);
 
             //const openRequest = openRequests.find(x => x.id === response.id);
             //if (!openRequest) return;
@@ -232,23 +260,33 @@ namespace ScatterSharp
         private void HandleRekeyResponse()
         {
             GenerateNewAppKey();
-            Send("rekeyed", new { plugin = "ABC", data = new { origin = "ABC", appkey = StoredAppkey } });
+            Send("rekeyed", new
+            {
+                plugin = AppName,
+                data = new
+                {
+                    origin = AppName,
+                    appkey = StorageProvider.GetAppkey()
+                }
+            });
         }
 
-        private void HandlePairedResponse(object data)
+        private void HandlePairedResponse(bool? paired)
         {
-            Paired = data != null && data is bool ? (bool)data : false;
+            Paired = paired.GetValueOrDefault();
 
             if (Paired)
             {
-                string hashed = StoredAppkey.StartsWith("appkey:") ?
-                    Encoding.UTF8.GetString(Sha256Manager.GetHash(Encoding.UTF8.GetBytes(StoredAppkey))) :
-                    StoredAppkey;
+                var storedAppKey = StorageProvider.GetAppkey();
 
-                if (string.IsNullOrWhiteSpace(StoredAppkey) ||
-                    StoredAppkey != hashed)
+                string hashed = storedAppKey.StartsWith("appkey:") ?
+                    ByteArrayToHexString(Sha256Manager.GetHash(Encoding.UTF8.GetBytes(storedAppKey))) :
+                    storedAppKey;
+
+                if (string.IsNullOrWhiteSpace(storedAppKey) ||
+                    storedAppKey != hashed)
                 {
-                    StoredAppkey = hashed;
+                    StorageProvider.SetAppkey(hashed);
                 }
             }
 
@@ -258,17 +296,34 @@ namespace ScatterSharp
             }
         }
 
+        private string GenerateNextNonce()
+        {
+            var r = RandomNumberGenerator.Create();
+            byte[] numberBytes = new byte[24];
+            r.GetBytes(numberBytes);
+            return ByteArrayToHexString(Sha256Manager.GetHash(numberBytes));
+        }
+
         private string RandomNumber()
         {
             var r = RandomNumberGenerator.Create();
             byte[] numberBytes = new byte[24];
             r.GetBytes(numberBytes);
-            return Encoding.UTF8.GetString(numberBytes);
+            return ByteArrayToHexString(numberBytes);
+        }
+
+        private string ByteArrayToHexString(byte[] ba)
+        {
+            StringBuilder hex = new StringBuilder(ba.Length * 2);
+            foreach (byte b in ba)
+                hex.AppendFormat("{0:x2}", b);
+
+            return hex.ToString();
         }
 
         private void GenerateNewAppKey()
         {
-            StoredAppkey = "appkey:" + RandomNumber();
+            StorageProvider.SetAppkey("appkey:" + RandomNumber());
         }
 
         #endregion

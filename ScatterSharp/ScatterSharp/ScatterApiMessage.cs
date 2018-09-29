@@ -6,7 +6,7 @@ namespace ScatterSharp
 {
     public class ScatterApiMessage
     {
-        public string Type { get; set; }
-        public object Data { get; set; }
+        public string id { get; set; }
+        public object result { get; set; }
     }
 }

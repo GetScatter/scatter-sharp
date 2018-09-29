@@ -16,22 +16,20 @@ namespace ScatterSharp.UnitTests
 
         public ScatterUnitTests()
         {
-            Scatter = new Scatter();
+            Scatter = new Scatter("TESTAPP");
         }
 
         [TestMethod]
         public async Task Connect()
         {
             await Scatter.Connect(Host);
-            Thread.Sleep(20000);
         }
 
         [TestMethod]
         public async Task GetVersion()
         {
             await Scatter.Connect(Host);
-            await Scatter.GetVersion();
-            Thread.Sleep(20000);
+            Console.WriteLine(await Scatter.GetVersion());
         }
 
         [TestMethod]

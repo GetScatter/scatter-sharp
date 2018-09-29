@@ -8,17 +8,20 @@ using System.Threading.Tasks;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Security.Cryptography;
+using ScatterSharp.Storage;
 
 namespace ScatterSharp
 {
     public class Scatter
     {
         private readonly string WSURI = "ws://{0}/socket.io/?EIO=3&transport=websocket";
-        SocketService SocketService { get; set; }
+        private SocketService SocketService { get; set; }
+        private string AppName { get; set; }
 
-        public Scatter()
+        public Scatter(string appName)
         {
-            SocketService = new SocketService();
+            SocketService = new SocketService(new MemoryStorageProvider(), appName);
+            AppName = appName;
         }
 
         //const throwNoAuth = () => {
@@ -33,13 +36,15 @@ namespace ScatterSharp
 
         public async Task<string> GetVersion()
         {
-            var x = await SocketService.SendApiRequest(new ScatterApiRequest()
+            var result = await SocketService.SendApiRequest(new ScatterApiRequest()
             {
                 Type = "getVersion",
-                Payload = new { }
+                Payload = new {
+                    origin = AppName
+                }
             });
 
-            return "";
+            return result as string;
         }
 
         public void GetIdentity(/*requiredFields*/)
