@@ -271,9 +271,9 @@ namespace ScatterSharp
             });
         }
 
-        private void HandlePairedResponse(bool? paired)
+        private void HandlePairedResponse(bool paired)
         {
-            Paired = paired.GetValueOrDefault();
+            Paired = paired;
 
             if (Paired)
             {
