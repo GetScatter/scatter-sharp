@@ -25,5 +25,85 @@ namespace ScatterSharp.UnitTests
             await Scatter.Connect(Host);
             Thread.Sleep(20000);
         }
+
+        [TestMethod]
+        public async Task GetVersion()
+        {
+            await Scatter.Connect(Host);
+            await Scatter.GetVersion();
+            Thread.Sleep(20000);
+        }
+
+        [TestMethod]
+        public void GetIdentity()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void GetIdentityFromPermissions()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void ForgetIdentity()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void Authenticate()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void GetArbitrarySignature()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void GetPublicKey()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void LinkAccount()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void HasAccountFor()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void SuggestNetwork()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void RequestTransfer()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void RequestSignature()
+        {
+            throw new NotImplementedException();
+        }
+
+        [TestMethod]
+        public void CreateTransaction()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
