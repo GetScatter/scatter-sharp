@@ -1,6 +1,7 @@
 ﻿using Cryptography.ECDSA;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ScatterSharp.Api;
 using ScatterSharp.Storage;
 using System;
 using System.Collections.Generic;
@@ -80,7 +81,7 @@ namespace ScatterSharp
             await PairOpenTask.Task;
         }
 
-        public async Task<object> SendApiRequest(ScatterApiRequest request)
+        public async Task<object> SendApiRequest(ApiRequest request)
         {
 
             //    if (request.type === 'identityFromPermissions' && !paired) return resolve(false);
@@ -228,21 +229,21 @@ namespace ScatterSharp
                         break;
                     case "api":
                         if (jArr.Count == 2)
-                            HandleApiResponse(jArr[1].ToObject<ScatterApiMessage>());
+                            HandleApiResponse(jArr[1].ToObject<ApiMessage>());
                         break;
                 }
             }
         }
 
-        private void HandleApiResponse(ScatterApiMessage data)
+        private void HandleApiResponse(ApiMessage data)
         {
             if (data == null)
                 return;
 
-            if (!OpenTasks.TryGetValue(data.id, out TaskCompletionSource<object> openTask))
+            if (!OpenTasks.TryGetValue(data.Id, out TaskCompletionSource<object> openTask))
                 return;
 
-            openTask.SetResult(data.result);
+            openTask.SetResult(data.Result);
 
             //const openRequest = openRequests.find(x => x.id === response.id);
             //if (!openRequest) return;

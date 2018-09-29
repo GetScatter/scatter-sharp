@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.WebSockets;
-using System.Text;
+﻿using ScatterSharp.Api;
+using ScatterSharp.Storage;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
-using Newtonsoft.Json;
-using System.Security.Cryptography;
-using ScatterSharp.Storage;
 
 namespace ScatterSharp
 {
@@ -17,6 +11,7 @@ namespace ScatterSharp
         private readonly string WSURI = "ws://{0}/socket.io/?EIO=3&transport=websocket";
         private SocketService SocketService { get; set; }
         private string AppName { get; set; }
+        private string Identity { get; set; }
 
         public Scatter(string appName)
         {
@@ -24,10 +19,11 @@ namespace ScatterSharp
             AppName = appName;
         }
 
-        //const throwNoAuth = () => {
-        //    if (!holder.scatter.isExtension && !SocketService.isConnected())
-        //        throw new Error('Connect and Authenticate first - scatter.connect( pluginName )');
-        //};
+        public void ThrowNoAuth()
+        {
+            if(!SocketService.IsConnected())
+                throw new Exception("Connect and Authenticate first - scatter.connect( appName )");
+        }
 
         public Task Connect(string host, CancellationToken? cancellationToken = null)
         {
@@ -36,70 +32,73 @@ namespace ScatterSharp
 
         public async Task<string> GetVersion()
         {
-            var result = await SocketService.SendApiRequest(new ScatterApiRequest()
+            var result = await SocketService.SendApiRequest(new ApiRequest()
             {
                 Type = "getVersion",
-                Payload = new {
-                    origin = AppName
-                }
+                Payload = new { origin = AppName }
             });
 
             return result as string;
         }
 
-        public void GetIdentity(/*requiredFields*/)
+        public async Task<string> GetIdentity(ApiRequiredFields requiredFields)
         {
-            throw new NotImplementedException();
-            //throwNoAuth();
-            //return SocketService.sendApiRequest({
-            //    type: 'getOrRequestIdentity',
-            //payload:
-            //    {
-            //        fields: requiredFields
-            //}
-            //}).then(id => {
-            //    if (id) this.identity = id;
-            //    return id;
-            //});
+            ThrowNoAuth();
+
+            var result = await SocketService.SendApiRequest(new ApiRequest()
+            {
+                Type = "getOrRequestIdentity",
+                Payload = new { fields = requiredFields }
+            });
+
+            Identity = result as string;
+
+            return Identity;
         }
 
-        public void GetIdentityFromPermissions()
+        public async Task<string> GetIdentityFromPermissions()
         {
-            throw new NotImplementedException();
-            //throwNoAuth();
-            //return SocketService.sendApiRequest({
-            //    type: 'identityFromPermissions',
-            //payload: { }
-            //}).then(id => {
-            //    if (id) this.identity = id;
-            //    return id;
-            //});
+            ThrowNoAuth();
+
+            var result = await SocketService.SendApiRequest(new ApiRequest()
+            {
+                Type = "identityFromPermissions",
+                Payload = new {}
+            });
+
+            Identity = result as string;
+
+            return Identity;
         }
 
-        public void ForgetIdentity()
+        public async Task<object> ForgetIdentity()
         {
-            throw new NotImplementedException();
-            //throwNoAuth();
-            //return SocketService.sendApiRequest({
-            //    type: 'forgetIdentity',
-            //payload: { }
-            //}).then(res => {
-            //    this.identity = null;
-            //    return res;
-            //});
+            ThrowNoAuth();
+
+            var result = await SocketService.SendApiRequest(new ApiRequest()
+            {
+                Type = "forgetIdentity",
+                Payload = new {}
+            });
+
+            Identity = null;
+            return result;
         }
 
-        public void Authenticate(/*nonce*/)
+        public async Task<object> Authenticate(string nonce)
         {
-            throw new NotImplementedException();
-            //throwNoAuth();
-            //return SocketService.sendApiRequest({
-            //    type: 'authenticate',
-            //payload: { nonce }
-            //});
+            ThrowNoAuth();
+
+            var result = await SocketService.SendApiRequest(new ApiRequest()
+            {
+                Type = "authenticate",
+                Payload = new { nonce }
+            });
+
+            return result;
         }
 
-        public void GetArbitrarySignature(/*publicKey, data, whatfor = '', isHash = false*/)
+        public async Task<object> GetArbitrarySignature(/*publicKey, data, whatfor = '', isHash = false*/)
         {
             throw new NotImplementedException();
             //throwNoAuth();
@@ -115,53 +114,59 @@ namespace ScatterSharp
             //});
         }
 
-        public void GetPublicKey(/*blockchain*/)
+        public async Task<object> GetPublicKey(string blockchain)
         {
-            throw new NotImplementedException();
-            //throwNoAuth();
-            //return SocketService.sendApiRequest({
-            //    type: 'getPublicKey',
-            //payload: { blockchain }
-            //});
+            ThrowNoAuth();
+
+            var result = await SocketService.SendApiRequest(new ApiRequest()
+            {
+                Type = "getPublicKey",
+                Payload = new { blockchain }
+            });
+
+            return result;
         }
 
-        public void LinkAccount(/*publicKey, network*/)
+        public async Task<object> LinkAccount(string publicKey, string network)
         {
-            throw new NotImplementedException();
-            //throwNoAuth();
-            //return SocketService.sendApiRequest({
-            //    type: 'linkAccount',
-            //payload: { publicKey, network }
-            //});
+            ThrowNoAuth();
+
+            var result = await SocketService.SendApiRequest(new ApiRequest()
+            {
+                Type = "linkAccount",
+                Payload = new { publicKey, network }
+            });
+
+            return result;
         }
 
-        public void HasAccountFor(/*network*/)
+        public async Task<object> HasAccountFor(string network)
         {
-            throw new NotImplementedException();
-            //throwNoAuth();
-            //return SocketService.sendApiRequest({
-            //    type: 'hasAccountFor',
-            //payload:
-            //    {
-            //        network
-            //}
-            //});
+            ThrowNoAuth();
+
+            var result = await SocketService.SendApiRequest(new ApiRequest()
+            {
+                Type = "hasAccountFor",
+                Payload = new { network }
+            });
+
+            return result;
         }
 
-        public void SuggestNetwork(/*network*/)
+        public async Task<object> SuggestNetwork(string network)
         {
-            throw new NotImplementedException();
-            //throwNoAuth();
-            //return SocketService.sendApiRequest({
-            //    type: 'requestAddNetwork',
-            //payload:
-            //    {
-            //        network
-            //}
-            //});
+            ThrowNoAuth();
+
+            var result = await SocketService.SendApiRequest(new ApiRequest()
+            {
+                Type = "requestAddNetwork",
+                Payload = new { network }
+            });
+
+            return result;
         }
 
-        public void RequestTransfer(/*network, to, amount, options = { }*/)
+        public async Task<object> RequestTransfer(/*network, to, amount, options = { }*/)
         {
             throw new NotImplementedException();
             //const payload = { network, to, amount, options };
@@ -171,17 +176,20 @@ namespace ScatterSharp
             //});
         }
 
-        public void RequestSignature(/*payload*/)
+        public async Task<object> RequestSignature(object payload)
         {
-            throw new NotImplementedException();
-            //throwNoAuth();
-            //return SocketService.sendApiRequest({
-            //    type: 'requestSignature',
-            //        payload
-            //    });
+            ThrowNoAuth();
+
+            var result = await SocketService.SendApiRequest(new ApiRequest()
+            {
+                Type = "requestSignature",
+                Payload = payload
+            });
+
+            return result;
         }
 
-        public void CreateTransaction(/*blockchain, actions, account, network*/)
+        public async Task<object> CreateTransaction(/*blockchain, actions, account, network*/)
         {
             throw new NotImplementedException();
             //throwNoAuth();

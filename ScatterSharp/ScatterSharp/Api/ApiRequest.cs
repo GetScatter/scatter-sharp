@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ScatterSharp
+namespace ScatterSharp.Api
 {
-    public class ScatterApiRequest
+    public class ApiRequest
     {
         [JsonProperty("id")]
         public string Id { get; set; }

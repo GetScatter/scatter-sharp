@@ -33,74 +33,86 @@ namespace ScatterSharp.UnitTests
         }
 
         [TestMethod]
-        public void GetIdentity()
+        public async Task GetIdentity()
         {
+            await Scatter.Connect(Host);
             throw new NotImplementedException();
         }
 
         [TestMethod]
-        public void GetIdentityFromPermissions()
+        public async Task GetIdentityFromPermissions()
         {
+            await Scatter.Connect(Host);
             throw new NotImplementedException();
         }
 
         [TestMethod]
-        public void ForgetIdentity()
+        public async Task ForgetIdentity()
         {
+            await Scatter.Connect(Host);
+            Console.WriteLine(await Scatter.ForgetIdentity());
+        }
+
+        [TestMethod]
+        public async Task Authenticate()
+        {
+            await Scatter.Connect(Host);
             throw new NotImplementedException();
         }
 
         [TestMethod]
-        public void Authenticate()
+        public async Task GetArbitrarySignature()
         {
+            await Scatter.Connect(Host);
             throw new NotImplementedException();
         }
 
         [TestMethod]
-        public void GetArbitrarySignature()
+        public async Task GetPublicKey()
         {
+            await Scatter.Connect(Host);
             throw new NotImplementedException();
         }
 
         [TestMethod]
-        public void GetPublicKey()
+        public async Task LinkAccount()
         {
+            await Scatter.Connect(Host);
             throw new NotImplementedException();
         }
 
         [TestMethod]
-        public void LinkAccount()
+        public async Task HasAccountFor()
         {
+            await Scatter.Connect(Host);
             throw new NotImplementedException();
         }
 
         [TestMethod]
-        public void HasAccountFor()
+        public async Task SuggestNetwork()
         {
+            await Scatter.Connect(Host);
             throw new NotImplementedException();
         }
 
         [TestMethod]
-        public void SuggestNetwork()
+        public async Task RequestTransfer()
         {
+            await Scatter.Connect(Host);
             throw new NotImplementedException();
         }
 
         [TestMethod]
-        public void RequestTransfer()
+        public async Task RequestSignature()
         {
+            await Scatter.Connect(Host);
             throw new NotImplementedException();
         }
 
         [TestMethod]
-        public void RequestSignature()
+        public async Task CreateTransaction()
         {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod]
-        public void CreateTransaction()
-        {
+            await Scatter.Connect(Host);
             throw new NotImplementedException();
         }
     }
