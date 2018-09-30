@@ -26,9 +26,10 @@ namespace ScatterSharp
                 throw new Exception("Connect and Authenticate first - scatter.connect( appName )");
         }
 
-        public Task Connect(string host, CancellationToken? cancellationToken = null)
+        public async Task Connect(string host, CancellationToken? cancellationToken = null)
         {
-            return SocketService.Link(new Uri(string.Format(WSURI, host)), cancellationToken);
+            await SocketService.Link(new Uri(string.Format(WSURI, host)), cancellationToken);
+            this.Identity = await this.GetIdentityFromPermissions();
         }
 
         public async Task<string> GetVersion()

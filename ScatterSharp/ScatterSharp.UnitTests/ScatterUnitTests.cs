@@ -43,7 +43,7 @@ namespace ScatterSharp.UnitTests
         public async Task GetIdentityFromPermissions()
         {
             await Scatter.Connect(Host);
-            throw new NotImplementedException();
+            Console.WriteLine(await Scatter.GetIdentityFromPermissions());
         }
 
         [TestMethod]
@@ -57,7 +57,7 @@ namespace ScatterSharp.UnitTests
         public async Task Authenticate()
         {
             await Scatter.Connect(Host);
-            throw new NotImplementedException();
+            //Console.WriteLine(await Scatter.Authenticate());
         }
 
         [TestMethod]
@@ -71,7 +71,7 @@ namespace ScatterSharp.UnitTests
         public async Task GetPublicKey()
         {
             await Scatter.Connect(Host);
-            throw new NotImplementedException();
+            Console.WriteLine(await Scatter.GetPublicKey("eos"));
         }
 
         [TestMethod]

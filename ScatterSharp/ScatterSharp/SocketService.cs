@@ -55,8 +55,6 @@ namespace ScatterSharp
                 await Send();
                 var receiverTask = Receive();
                 await Pair(true);
-
-                //this.identity = await this.getIdentityFromPermissions();
             }  
             else
                 throw new Exception("Socket closed.");
@@ -83,28 +81,8 @@ namespace ScatterSharp
 
         public async Task<object> SendApiRequest(ApiRequest request)
         {
-
-            //    if (request.type === 'identityFromPermissions' && !paired) return resolve(false);
-
-            //    pair().then(() => {
-            //        if (!paired) return reject({ code: 'not_paired', message: 'The user did not allow this app to connect to their Scatter'});
-
-            //    // Request ID used for resolving promises
-            //    request.id = random();
-
-            //    // Set Application Key
-            //    request.appkey = appkey;
-
-            //    // Nonce used to authenticate this request
-            //    request.nonce = StorageService.getNonce() || 0;
-            //    // Next nonce used to authenticate the next request
-            //    const nextNonce = random();
-            //    request.nextNonce = sha256(nextNonce);
-            //    StorageService.setNonce(nextNonce);
-
-            //    openRequests.push(Object.assign(request, { resolve, reject}));
-            //    send('api', { data: request, plugin})
-            //    })
+            if (request.Type == "identityFromPermissions" && !Paired)
+                return Task.FromResult(false);
 
             await Pair();
 
