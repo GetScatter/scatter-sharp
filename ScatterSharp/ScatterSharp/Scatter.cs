@@ -1,6 +1,7 @@
 ﻿using ScatterSharp.Api;
 using ScatterSharp.Storage;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -98,20 +99,17 @@ namespace ScatterSharp
             return result;
         }
 
-        public async Task<object> GetArbitrarySignature(/*publicKey, data, whatfor = '', isHash = false*/)
+        public async Task<object> GetArbitrarySignature(string publicKey, string data, string whatfor = "", bool isHash = false)
         {
-            throw new NotImplementedException();
-            //throwNoAuth();
-            //return SocketService.sendApiRequest({
-            //    type: 'requestArbitrarySignature',
-            //payload:
-            //    {
-            //        publicKey,
-            //    data,
-            //    whatfor,
-            //    isHash
-            //}
-            //});
+            ThrowNoAuth();
+
+            var result = await SocketService.SendApiRequest(new ApiRequest()
+            {
+                Type = "requestArbitrarySignature",
+                Payload = new { publicKey, data, whatfor, isHash }
+            });
+
+            return result;
         }
 
         public async Task<object> GetPublicKey(string blockchain)
@@ -166,14 +164,17 @@ namespace ScatterSharp
             return result;
         }
 
-        public async Task<object> RequestTransfer(/*network, to, amount, options = { }*/)
+        public async Task<object> RequestTransfer(string network, string to, string amount, object options = null)
         {
-            throw new NotImplementedException();
-            //const payload = { network, to, amount, options };
-            //return SocketService.sendApiRequest({
-            //    type:'requestTransfer',
-            //    payload
-            //});
+            ThrowNoAuth();
+
+            var result = await SocketService.SendApiRequest(new ApiRequest()
+            {
+                Type = "requestTransfer",
+                Payload = new { network, to, amount, options }
+            });
+
+            return result;
         }
 
         public async Task<object> RequestSignature(object payload)
@@ -189,20 +190,17 @@ namespace ScatterSharp
             return result;
         }
 
-        public async Task<object> CreateTransaction(/*blockchain, actions, account, network*/)
+        public async Task<object> CreateTransaction(string blockchain, List<object> actions, string account, string network)
         {
-            throw new NotImplementedException();
-            //throwNoAuth();
-            //return SocketService.sendApiRequest({
-            //    type: 'createTransaction',
-            //        payload:
-            //    {
-            //        blockchain,
-            //            actions,
-            //            account,
-            //            network
-            //        }
-            //});
+            ThrowNoAuth();
+
+            var result = await SocketService.SendApiRequest(new ApiRequest()
+            {
+                Type = "createTransaction",
+                Payload = new { blockchain, actions, account, network }
+            });
+
+            return result;
         }
     }
 }
