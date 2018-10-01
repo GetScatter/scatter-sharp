@@ -12,21 +12,21 @@ namespace ScatterSharp.UnitTests
     [TestClass]
     public class ScatterUnitTests
     {
-        public string SCATTER_DESKTOP_WS_HOST = "127.0.0.1:50005";
-        public string BLOCKCHAIN = "eos";
+        public static readonly string SCATTER_DESKTOP_WS_HOST = "127.0.0.1:50005";
+        public static readonly string BLOCKCHAIN = "eos";
 
         //mainnet
-        public string ENDPOINT_HOST = "nodes.eos42.io";
-        public string ENDPOINT_PORT = "443";
-        public string ENDPOINT_CHAINID = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906";
-        public string TEST_PUBKEY = "TEST_PUBKEY";
+        public static readonly string ENDPOINT_HOST = "nodes.eos42.io";
+        public static readonly string ENDPOINT_PORT = "443";
+        public static readonly string ENDPOINT_CHAINID = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906";
+        public static readonly string TEST_PUBKEY = "TEST_PUBKEY";
 
         //btuga testnet
-        //public string ENDPOINT_HOST = "nodeos01.btuga.io";
-        //public string ENDPOINT_PORT = "443";
-        //public string ENDPOINT_CHAINID = "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f";
-        //public string TEST_PRIVKEY = "5K57oSZLpfzePvQNpsLS6NfKXLhhRARNU13q6u2ZPQCGHgKLbTA";
-        //public string TEST_PUBKEY = "EOS8Q8CJqwnSsV4A6HDBEqmQCqpQcBnhGME1RUvydDRnswNngpqfr";
+        //public static readonly string ENDPOINT_HOST = "nodeos01.btuga.io";
+        //public static readonly string ENDPOINT_PORT = "443";
+        //public static readonly string ENDPOINT_CHAINID = "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f";
+        //public static readonly string TEST_PRIVKEY = "5K57oSZLpfzePvQNpsLS6NfKXLhhRARNU13q6u2ZPQCGHgKLbTA";
+        //public static readonly string TEST_PUBKEY = "EOS8Q8CJqwnSsV4A6HDBEqmQCqpQcBnhGME1RUvydDRnswNngpqfr";
 
         public Scatter Scatter { get; set; }
 
@@ -134,14 +134,14 @@ namespace ScatterSharp.UnitTests
         public async Task RequestSignature()
         {
             await Scatter.Connect(SCATTER_DESKTOP_WS_HOST);
-            throw new NotImplementedException();
+            Console.WriteLine(await Scatter.RequestSignature(new {}));
         }
 
         [TestMethod]
         public async Task CreateTransaction()
         {
             await Scatter.Connect(SCATTER_DESKTOP_WS_HOST);
-            throw new NotImplementedException();
+            Console.WriteLine(await Scatter.CreateTransaction(BLOCKCHAIN, new List<object>(), "tester112345", BLOCKCHAIN));
         }
     }
 }
