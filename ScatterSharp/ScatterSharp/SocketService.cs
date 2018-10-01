@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ScatterSharp.Api;
+using ScatterSharp.Helpers;
 using ScatterSharp.Storage;
 using System;
 using System.Collections.Generic;
@@ -91,12 +92,12 @@ namespace ScatterSharp
 
             var tcs = new TaskCompletionSource<object>();
 
-            request.Id = RandomNumber();
+            request.Id = UtilsHelper.RandomNumber();
             request.Appkey = StorageProvider.GetAppkey();
             request.Nonce = StorageProvider.GetNonce() ?? "0";
 
-            var nextNonce = RandomNumber();
-            request.NextNonce = GenerateNextNonce();
+            var nextNonce = UtilsHelper.RandomNumber();
+            request.NextNonce = UtilsHelper.GenerateNextNonce();
             StorageProvider.SetNonce(request.NextNonce);
 
             OpenTasks.Add(request.Id, tcs);
@@ -259,7 +260,7 @@ namespace ScatterSharp
                 var storedAppKey = StorageProvider.GetAppkey();
 
                 string hashed = storedAppKey.StartsWith("appkey:") ?
-                    ByteArrayToHexString(Sha256Manager.GetHash(Encoding.UTF8.GetBytes(storedAppKey))) :
+                    UtilsHelper.ByteArrayToHexString(Sha256Manager.GetHash(Encoding.UTF8.GetBytes(storedAppKey))) :
                     storedAppKey;
 
                 if (string.IsNullOrWhiteSpace(storedAppKey) ||
@@ -275,34 +276,9 @@ namespace ScatterSharp
             }
         }
 
-        private string GenerateNextNonce()
-        {
-            var r = RandomNumberGenerator.Create();
-            byte[] numberBytes = new byte[24];
-            r.GetBytes(numberBytes);
-            return ByteArrayToHexString(Sha256Manager.GetHash(numberBytes));
-        }
-
-        private string RandomNumber()
-        {
-            var r = RandomNumberGenerator.Create();
-            byte[] numberBytes = new byte[24];
-            r.GetBytes(numberBytes);
-            return ByteArrayToHexString(numberBytes);
-        }
-
-        private string ByteArrayToHexString(byte[] ba)
-        {
-            StringBuilder hex = new StringBuilder(ba.Length * 2);
-            foreach (byte b in ba)
-                hex.AppendFormat("{0:x2}", b);
-
-            return hex.ToString();
-        }
-
         private void GenerateNewAppKey()
         {
-            StorageProvider.SetAppkey("appkey:" + RandomNumber());
+            StorageProvider.SetAppkey("appkey:" + UtilsHelper.RandomNumber());
         }
 
         #endregion
