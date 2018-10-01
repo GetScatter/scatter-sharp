@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ScatterSharp.Api
 {
-    public class ApiRequest
+    public class Request
     {
         [JsonProperty("id")]
         public string Id { get; set; }

@@ -80,7 +80,7 @@ namespace ScatterSharp
             await PairOpenTask.Task;
         }
 
-        public async Task<object> SendApiRequest(ApiRequest request)
+        public async Task<object> SendApiRequest(Request request)
         {
             if (request.Type == "identityFromPermissions" && !Paired)
                 return Task.FromResult(false);
@@ -208,13 +208,13 @@ namespace ScatterSharp
                         break;
                     case "api":
                         if (jArr.Count == 2)
-                            HandleApiResponse(jArr[1].ToObject<ApiMessage>());
+                            HandleApiResponse(jArr[1].ToObject<Message>());
                         break;
                 }
             }
         }
 
-        private void HandleApiResponse(ApiMessage data)
+        private void HandleApiResponse(Message data)
         {
             if (data == null)
                 return;

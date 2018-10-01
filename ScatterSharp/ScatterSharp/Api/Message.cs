@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ScatterSharp.Api
 {
-    public class ApiMessage
+    public class Message
     {
         public string Id { get; set; }
         public object Result { get; set; }
