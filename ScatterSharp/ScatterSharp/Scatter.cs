@@ -1,4 +1,5 @@
-﻿using ScatterSharp.Api;
+﻿using Newtonsoft.Json.Linq;
+using ScatterSharp.Api;
 using ScatterSharp.Storage;
 using System;
 using System.Collections.Generic;
@@ -20,10 +21,18 @@ namespace ScatterSharp
             AppName = appName;
         }
 
-        public void ThrowNoAuth()
+        private void ThrowNoAuth()
         {
             if(!SocketService.IsConnected())
                 throw new Exception("Connect and Authenticate first - scatter.connect( appName )");
+        }
+
+        private static void ThrowOnApiError(JToken result)
+        {
+            var apiError = result.ToObject<ApiError>();
+
+            if (apiError != null)
+                throw new Exception(apiError.Message);
         }
 
         public async Task Connect(string host, CancellationToken? cancellationToken = null)
@@ -40,7 +49,9 @@ namespace ScatterSharp
                 Payload = new { origin = AppName }
             });
 
-            return result as string;
+            ThrowOnApiError(result);
+
+            return result.ToObject<string>();
         }
 
         public async Task<string> GetIdentity(IdentityRequiredFields requiredFields)
@@ -53,7 +64,9 @@ namespace ScatterSharp
                 Payload = new { fields = requiredFields, origin = AppName }
             });
 
-            Identity = result as string;
+            ThrowOnApiError(result);
+
+            Identity = result.ToObject<string>();
 
             return Identity;
         }
@@ -68,7 +81,9 @@ namespace ScatterSharp
                 Payload = new { origin = AppName }
             });
 
-            Identity = result as string;
+            ThrowOnApiError(result);
+
+            Identity = result.ToObject<string>();
 
             return Identity;
         }
@@ -82,6 +97,8 @@ namespace ScatterSharp
                 Type = "forgetIdentity",
                 Payload = new { origin = AppName }
             });
+
+            ThrowOnApiError(result);
 
             Identity = null;
             return result;
@@ -97,6 +114,8 @@ namespace ScatterSharp
                 Payload = new { nonce, origin = AppName }
             });
 
+            ThrowOnApiError(result);
+
             return result;
         }
 
@@ -109,6 +128,8 @@ namespace ScatterSharp
                 Type = "requestArbitrarySignature",
                 Payload = new { publicKey, data, whatfor, isHash, origin = AppName }
             });
+
+            ThrowOnApiError(result);
 
             return result;
         }
@@ -123,6 +144,8 @@ namespace ScatterSharp
                 Payload = new { blockchain } //TODO keypair
             });
 
+            ThrowOnApiError(result);
+
             return result;
         }
 
@@ -135,6 +158,8 @@ namespace ScatterSharp
                 Type = "linkAccount",
                 Payload = new { publicKey, network, origin = AppName }
             });
+
+            ThrowOnApiError(result);
 
             return result;
         }
@@ -149,6 +174,8 @@ namespace ScatterSharp
                 Payload = new { network }
             });
 
+            ThrowOnApiError(result);
+
             return result;
         }
 
@@ -161,6 +188,8 @@ namespace ScatterSharp
                 Type = "requestAddNetwork",
                 Payload = new { network, origin = AppName }
             });
+
+            ThrowOnApiError(result);
 
             return result;
         }
@@ -175,6 +204,8 @@ namespace ScatterSharp
                 Payload = new { network, to, amount, options }
             });
 
+            ThrowOnApiError(result);
+
             return result;
         }
 
@@ -187,6 +218,8 @@ namespace ScatterSharp
                 Type = "requestSignature",
                 Payload = payload
             });
+
+            ThrowOnApiError(result);
 
             return result;
         }
@@ -201,7 +234,10 @@ namespace ScatterSharp
                 Payload = new { blockchain, actions, account, network }
             });
 
+            ThrowOnApiError(result);
+
             return result;
         }
     }
+
 }

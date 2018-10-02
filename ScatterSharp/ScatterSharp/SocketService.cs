@@ -8,10 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.WebSockets;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace ScatterSharp
 {
@@ -26,13 +26,13 @@ namespace ScatterSharp
         private ClientWebSocket Socket { get; set; }
 
         TaskCompletionSource<bool> PairOpenTask { get; set; }
-        private Dictionary<string, TaskCompletionSource<object>> OpenTasks { get; set; }
+        private Dictionary<string, TaskCompletionSource<JToken>> OpenTasks { get; set; }
         private Task ReceiverTask { get; set; }
 
         public SocketService(IStorageProvider storageProvider, string appName, int timeout = 60000)
         {
             Socket = new ClientWebSocket();
-            OpenTasks = new Dictionary<string, TaskCompletionSource<object>>();
+            OpenTasks = new Dictionary<string, TaskCompletionSource<JToken>>();
             StorageProvider = storageProvider;
             AppName = appName;
 
@@ -54,7 +54,7 @@ namespace ScatterSharp
             if (Socket.State == WebSocketState.Open)
             {
                 await Send();
-                var receiverTask = Receive();
+                var receiverTask = Receive(cancellationToken);
                 await Pair(true);
             }  
             else
@@ -80,17 +80,17 @@ namespace ScatterSharp
             await PairOpenTask.Task;
         }
 
-        public async Task<object> SendApiRequest(Request request)
+        public async Task<JToken> SendApiRequest(Request request)
         {
             if (request.Type == "identityFromPermissions" && !Paired)
-                return Task.FromResult(false);
+                return false;
 
             await Pair();
 
             if (!Paired)
-                return Task.FromResult(new { code = "not_paired", message = "The user did not allow this app to connect to their Scatter" });
+                throw new Exception("The user did not allow this app to connect to their Scatter");
 
-            var tcs = new TaskCompletionSource<object>();
+            var tcs = new TaskCompletionSource<JToken>();
 
             request.Id = UtilsHelper.RandomNumber();
             request.Appkey = StorageProvider.GetAppkey();
@@ -141,7 +141,7 @@ namespace ScatterSharp
             }
         }
 
-        private async Task Receive()
+        private async Task Receive(CancellationToken? cancellationToken = null)
         {
             byte[] frame = new byte[4096];
             byte[] preamble = new byte[SCATTER_API_PREAMBLE.Length];
@@ -154,7 +154,7 @@ namespace ScatterSharp
 
                 do
                 {
-                    result = await Socket.ReceiveAsync(segment, CancellationToken.None);
+                    result = await Socket.ReceiveAsync(segment, cancellationToken ?? CancellationToken.None);
 
                     if (ms == null)
                         ms = new MemoryStream();
@@ -166,7 +166,7 @@ namespace ScatterSharp
                 if (result.MessageType == WebSocketMessageType.Close)
                 {
                     ms.Dispose();
-                    await Socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close response received", CancellationToken.None);
+                    await Socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close response received", cancellationToken ?? CancellationToken.None);
                     continue;
                 }
 
@@ -201,28 +201,32 @@ namespace ScatterSharp
                 {
                     case "paired":
                         if(jArr.Count == 2)
-                            HandlePairedResponse(jArr[1].ToObject<bool>());
+                            HandlePairedResponse(jArr[1].ToObject<bool?>());
                         break;
                     case "rekey":
                         HandleRekeyResponse();
                         break;
                     case "api":
                         if (jArr.Count == 2)
-                            HandleApiResponse(jArr[1].ToObject<Message>());
+                            HandleApiResponse(jArr[1]);
                         break;
                 }
             }
         }
 
-        private void HandleApiResponse(Message data)
+        private void HandleApiResponse(JToken data)
         {
-            if (data == null)
+            if (data == null && data.Children().Count() != 2)
                 return;
 
-            if (!OpenTasks.TryGetValue(data.Id, out TaskCompletionSource<object> openTask))
+            var id = data.First().ToObject<string>();
+            var result = data.Skip(1).First().First;
+
+
+            if (!OpenTasks.TryGetValue(id, out TaskCompletionSource<JToken> openTask))
                 return;
 
-            openTask.SetResult(data.Result);
+            openTask.SetResult(result);
 
             //const openRequest = openRequests.find(x => x.id === response.id);
             //if (!openRequest) return;
@@ -251,9 +255,9 @@ namespace ScatterSharp
             });
         }
 
-        private void HandlePairedResponse(bool paired)
+        private void HandlePairedResponse(bool? paired)
         {
-            Paired = paired;
+            Paired = paired.GetValueOrDefault();
 
             if (Paired)
             {
