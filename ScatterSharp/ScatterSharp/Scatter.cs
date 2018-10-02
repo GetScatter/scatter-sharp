@@ -123,7 +123,7 @@ namespace ScatterSharp
             return result;
         }
 
-        public async Task<object> GetArbitrarySignature(string publicKey, string data, string whatfor = "", bool isHash = false)
+        public async Task<string> GetArbitrarySignature(string publicKey, string data, string whatfor = "", bool isHash = false)
         {
             ThrowNoAuth();
 
@@ -135,7 +135,7 @@ namespace ScatterSharp
 
             ThrowOnApiError(result);
 
-            return result;
+            return result.ToObject<string>();
         }
 
         public async Task<object> GetPublicKey(string blockchain)

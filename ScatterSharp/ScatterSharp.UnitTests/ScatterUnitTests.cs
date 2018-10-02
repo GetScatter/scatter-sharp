@@ -20,7 +20,7 @@ namespace ScatterSharp.UnitTests
         public static readonly string ENDPOINT_HOST = "nodes.eos42.io";
         public static readonly int ENDPOINT_PORT = 443;
         public static readonly string ENDPOINT_CHAINID = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906";
-        public static readonly string TEST_PUBKEY = "TEST_PUBKEY";
+        public static readonly string TEST_PUBKEY = "EOS6gZnj2wyBUu2BtRsGrdHScpdDmBdihDGnKnJxP5udfRzHW9S8Y";
 
         //btuga testnet
         //public static readonly string ENDPOINT_HOST = "nodeos01.btuga.io";
@@ -60,7 +60,6 @@ namespace ScatterSharp.UnitTests
         [TestMethod]
         public async Task GetIdentity()
         {
-            //mainnet
             await Scatter.Connect(SCATTER_DESKTOP_WS_HOST);
             Console.WriteLine(JsonConvert.SerializeObject(await Scatter.GetIdentity(new Api.IdentityRequiredFields()
             {
@@ -94,11 +93,21 @@ namespace ScatterSharp.UnitTests
             Console.WriteLine(await Scatter.Authenticate(UtilsHelper.RandomNumber()));
         }
 
-        //TODO no identity
         [TestMethod]
         public async Task GetArbitrarySignature()
         {
             await Scatter.Connect(SCATTER_DESKTOP_WS_HOST);
+
+            Console.WriteLine(JsonConvert.SerializeObject(await Scatter.GetIdentity(new Api.IdentityRequiredFields()
+            {
+                Accounts = new List<Api.Network>()
+                {
+                    network
+                },
+                Location = new List<Api.LocationFields>(),
+                Personal = new List<Api.PersonalFields>()
+            })));
+
             Console.WriteLine(await Scatter.GetArbitrarySignature(TEST_PUBKEY, "HELLO WORLD!"));
         }
 
@@ -110,7 +119,6 @@ namespace ScatterSharp.UnitTests
             Console.WriteLine(await Scatter.GetPublicKey(BLOCKCHAIN));
         }
 
-        //TODO invalid public key
         [TestMethod]
         public async Task LinkAccount()
         {
