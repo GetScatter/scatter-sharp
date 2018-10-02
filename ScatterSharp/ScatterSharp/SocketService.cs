@@ -92,7 +92,7 @@ namespace ScatterSharp
 
             var tcs = new TaskCompletionSource<JToken>();
 
-            request.Id = UtilsHelper.RandomNumber();
+            request.Id = UtilsHelper.RandomNumber(24);
             request.Appkey = StorageProvider.GetAppkey();
             request.Nonce = StorageProvider.GetNonce() ?? "0";
 
@@ -227,18 +227,6 @@ namespace ScatterSharp
                 return;
 
             openTask.SetResult(result);
-
-            //const openRequest = openRequests.find(x => x.id === response.id);
-            //if (!openRequest) return;
-
-            //openRequests = openRequests.filter(x => x.id !== response.id);
-
-            //const isErrorResponse = typeof response.result === 'object'
-            //    && response.result !== null
-            //    && response.result.hasOwnProperty('isError');
-
-            //if (isErrorResponse) openRequest.reject(response.result);
-            //else openRequest.resolve(response.result);
         }
 
         private void HandleRekeyResponse()

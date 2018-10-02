@@ -94,6 +94,7 @@ namespace ScatterSharp.UnitTests
             Console.WriteLine(await Scatter.Authenticate(UtilsHelper.RandomNumber()));
         }
 
+        //TODO no identity
         [TestMethod]
         public async Task GetArbitrarySignature()
         {
@@ -101,6 +102,7 @@ namespace ScatterSharp.UnitTests
             Console.WriteLine(await Scatter.GetArbitrarySignature(TEST_PUBKEY, "HELLO WORLD!"));
         }
 
+        //TODO blocking
         [TestMethod]
         public async Task GetPublicKey()
         {
@@ -108,6 +110,7 @@ namespace ScatterSharp.UnitTests
             Console.WriteLine(await Scatter.GetPublicKey(BLOCKCHAIN));
         }
 
+        //TODO invalid public key
         [TestMethod]
         public async Task LinkAccount()
         {
@@ -115,6 +118,7 @@ namespace ScatterSharp.UnitTests
             Console.WriteLine(await Scatter.LinkAccount(TEST_PUBKEY, network));
         }
 
+        //TODO blocking
         [TestMethod]
         public async Task HasAccountFor()
         {
@@ -129,6 +133,7 @@ namespace ScatterSharp.UnitTests
             Console.WriteLine(await Scatter.SuggestNetwork(network));
         }
 
+        //TODO blocking
         [TestMethod]
         public async Task RequestTransfer()
         {
@@ -136,6 +141,7 @@ namespace ScatterSharp.UnitTests
             Console.WriteLine(await Scatter.RequestTransfer(network, "tester112345", "tester212345", "1.0000 EOS"));
         }
 
+        //TODO blocking
         [TestMethod]
         public async Task RequestSignature()
         {
@@ -143,6 +149,7 @@ namespace ScatterSharp.UnitTests
             Console.WriteLine(await Scatter.RequestSignature(new { }));
         }
 
+        //TODO blocking
         [TestMethod]
         public async Task CreateTransaction()
         {
