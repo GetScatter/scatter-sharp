@@ -8,18 +8,18 @@ namespace ScatterSharp.Helpers
 {
     public class UtilsHelper
     {
-        public static string GenerateNextNonce()
+        public static string GenerateNextNonce(int size = 6)
         {
             var r = RandomNumberGenerator.Create();
-            byte[] numberBytes = new byte[24];
+            byte[] numberBytes = new byte[size];
             r.GetBytes(numberBytes);
             return ByteArrayToHexString(Sha256Manager.GetHash(numberBytes));
         }
 
-        public static string RandomNumber()
+        public static string RandomNumber(int size = 6)
         {
             var r = RandomNumberGenerator.Create();
-            byte[] numberBytes = new byte[24];
+            byte[] numberBytes = new byte[size];
             r.GetBytes(numberBytes);
             return ByteArrayToHexString(numberBytes);
         }

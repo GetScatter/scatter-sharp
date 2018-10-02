@@ -282,7 +282,7 @@ namespace ScatterSharp
 
         private void GenerateNewAppKey()
         {
-            StorageProvider.SetAppkey("appkey:" + UtilsHelper.RandomNumber());
+            StorageProvider.SetAppkey("appkey:" + UtilsHelper.RandomNumber(24));
         }
 
         #endregion
