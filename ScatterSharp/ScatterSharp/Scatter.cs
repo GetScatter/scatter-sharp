@@ -15,6 +15,12 @@ namespace ScatterSharp
         private string AppName { get; set; }
         private string Identity { get; set; }
 
+        public class Blockchains
+        {
+            public static readonly string EOSIO = "eos";
+            public static readonly string ETH = "eth";
+        };
+
         public Scatter(string appName)
         {
             SocketService = new SocketService(new MemoryStorageProvider(), appName);
@@ -138,19 +144,19 @@ namespace ScatterSharp
             return result.ToObject<string>();
         }
 
-        public async Task<object> GetPublicKey(string blockchain)
+        public async Task<string> GetPublicKey(string blockchain)
         {
             ThrowNoAuth();
 
             var result = await SocketService.SendApiRequest(new Request()
             {
                 Type = "getPublicKey",
-                Payload = new { blockchain } //TODO keypair
+                Payload = new { blockchain, origin = AppName }
             });
 
             ThrowOnApiError(result);
 
-            return result;
+            return result.ToObject<string>();
         }
 
         public async Task<object> LinkAccount(string publicKey, Network network)
@@ -205,7 +211,7 @@ namespace ScatterSharp
             var result = await SocketService.SendApiRequest(new Request()
             {
                 Type = "requestTransfer",
-                Payload = new { network, to, amount, options }
+                Payload = new { network, to, amount, options, origin = AppName }
             });
 
             ThrowOnApiError(result);
@@ -235,7 +241,7 @@ namespace ScatterSharp
             var result = await SocketService.SendApiRequest(new Request()
             {
                 Type = "createTransaction",
-                Payload = new { blockchain, actions, account, network }
+                Payload = new { blockchain, actions, account, network, origin = AppName }
             });
 
             ThrowOnApiError(result);
