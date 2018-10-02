@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 using ScatterSharp.Helpers;
 using System;
 using System.Collections.Generic;
@@ -61,7 +62,7 @@ namespace ScatterSharp.UnitTests
         {
             //mainnet
             await Scatter.Connect(SCATTER_DESKTOP_WS_HOST);
-            Console.WriteLine(await Scatter.GetIdentity(new Api.IdentityRequiredFields()
+            Console.WriteLine(JsonConvert.SerializeObject(await Scatter.GetIdentity(new Api.IdentityRequiredFields()
             {
                 Accounts = new List<Api.Network>()
                 {
@@ -69,7 +70,7 @@ namespace ScatterSharp.UnitTests
                 },
                 Location = new List<Api.LocationFields>(),
                 Personal = new List<Api.PersonalFields>()
-            }));
+            })));
         }
 
         [TestMethod]

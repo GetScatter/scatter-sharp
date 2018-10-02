@@ -16,6 +16,6 @@ namespace ScatterSharp.Api
         [JsonProperty("kyc")]
         public bool Kyc { get; set; }
         [JsonProperty("accounts")]
-        public IdentityAccount Accounts { get; set; }
+        public List<IdentityAccount> Accounts { get; set; }
     }
 }

@@ -29,6 +29,10 @@ namespace ScatterSharp
 
         private static void ThrowOnApiError(JToken result)
         {
+            if(result.Type != JTokenType.Object || 
+               result.SelectToken("isError") == null)
+                return;
+
             var apiError = result.ToObject<ApiError>();
 
             if (apiError != null)
@@ -54,7 +58,7 @@ namespace ScatterSharp
             return result.ToObject<string>();
         }
 
-        public async Task<string> GetIdentity(IdentityRequiredFields requiredFields)
+        public async Task<Identity> GetIdentity(IdentityRequiredFields requiredFields)
         {
             ThrowNoAuth();
 
@@ -66,9 +70,9 @@ namespace ScatterSharp
 
             ThrowOnApiError(result);
 
-            Identity = result.ToObject<string>();
+            //Identity = result.ToObject<Identity>();
 
-            return Identity;
+            return result.ToObject<Identity>();
         }
 
         public async Task<string> GetIdentityFromPermissions()
