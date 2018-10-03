@@ -21,6 +21,7 @@ namespace ScatterSharp
         {
             public static readonly string EOSIO = "eos";
             public static readonly string ETH = "eth";
+            public static readonly string TRX = "trx";
         };
 
         public Scatter(string appName)
