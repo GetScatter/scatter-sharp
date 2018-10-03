@@ -13,8 +13,6 @@ namespace ScatterSharp.UnitTests
     [TestClass]
     public class ScatterUnitTests
     {
-        public static readonly string SCATTER_DESKTOP_WS_HOST = "127.0.0.1:50005";
-
         //mainnet
         public static readonly Api.Network network = new Api.Network()
         {
@@ -43,41 +41,41 @@ namespace ScatterSharp.UnitTests
         [TestMethod]
         public async Task Connect()
         {
-            await Scatter.Connect(SCATTER_DESKTOP_WS_HOST);
+            await Scatter.Connect();
         }
 
         [TestMethod]
         public async Task GetVersion()
         {
-            await Scatter.Connect(SCATTER_DESKTOP_WS_HOST);
+            await Scatter.Connect();
             Console.WriteLine(await Scatter.GetVersion());
         }
 
         [TestMethod]
         public async Task GetIdentity()
         {
-            await Scatter.Connect(SCATTER_DESKTOP_WS_HOST);
+            await Scatter.Connect();
             Console.WriteLine(JsonConvert.SerializeObject(await GetIdentityFromScatter()));
         }
 
         [TestMethod]
         public async Task GetIdentityFromPermissions()
         {
-            await Scatter.Connect(SCATTER_DESKTOP_WS_HOST);
+            await Scatter.Connect();
             Console.WriteLine(await Scatter.GetIdentityFromPermissions());
         }
 
         [TestMethod]
         public async Task ForgetIdentity()
         {
-            await Scatter.Connect(SCATTER_DESKTOP_WS_HOST);
+            await Scatter.Connect();
             Console.WriteLine(await Scatter.ForgetIdentity());
         }
 
         [TestMethod]
         public async Task Authenticate()
         {
-            await Scatter.Connect(SCATTER_DESKTOP_WS_HOST);
+            await Scatter.Connect();
 
             var identity = await GetIdentityFromScatter();
 
@@ -87,7 +85,7 @@ namespace ScatterSharp.UnitTests
         [TestMethod]
         public async Task GetArbitrarySignature()
         {
-            await Scatter.Connect(SCATTER_DESKTOP_WS_HOST);
+            await Scatter.Connect();
 
             var identity = await GetIdentityFromScatter();
 
@@ -97,14 +95,14 @@ namespace ScatterSharp.UnitTests
         [TestMethod]
         public async Task GetPublicKey()
         {
-            await Scatter.Connect(SCATTER_DESKTOP_WS_HOST);
+            await Scatter.Connect();
             Console.WriteLine(await Scatter.GetPublicKey(Scatter.Blockchains.EOSIO));
         }
 
         [TestMethod]
         public async Task LinkAccount()
         {
-            await Scatter.Connect(SCATTER_DESKTOP_WS_HOST);
+            await Scatter.Connect();
 
             var pubKey = await Scatter.GetPublicKey(Scatter.Blockchains.EOSIO);
 
@@ -115,14 +113,14 @@ namespace ScatterSharp.UnitTests
         [TestMethod]
         public async Task HasAccountFor()
         {
-            await Scatter.Connect(SCATTER_DESKTOP_WS_HOST);
+            await Scatter.Connect();
             Console.WriteLine(await Scatter.HasAccountFor(network));
         }
 
         [TestMethod]
         public async Task SuggestNetwork()
         {
-            await Scatter.Connect(SCATTER_DESKTOP_WS_HOST);
+            await Scatter.Connect();
             Console.WriteLine(await Scatter.SuggestNetwork(network));
         }
 
@@ -130,7 +128,7 @@ namespace ScatterSharp.UnitTests
         [TestMethod]
         public async Task RequestTransfer()
         {
-            await Scatter.Connect(SCATTER_DESKTOP_WS_HOST);
+            await Scatter.Connect();
             Console.WriteLine(await Scatter.RequestTransfer(network, "tester112345", "tester212345", "0.0001 EOS"));
         }
 
@@ -138,7 +136,7 @@ namespace ScatterSharp.UnitTests
         [TestMethod]
         public async Task RequestSignature()
         {
-            await Scatter.Connect(SCATTER_DESKTOP_WS_HOST);
+            await Scatter.Connect();
 
             //var identity = await GetIdentityFromScatter();
 
@@ -158,7 +156,7 @@ namespace ScatterSharp.UnitTests
         [TestMethod]
         public async Task CreateTransaction()
         {
-            await Scatter.Connect(SCATTER_DESKTOP_WS_HOST);
+            await Scatter.Connect();
             Console.WriteLine(await Scatter.CreateTransaction(Scatter.Blockchains.EOSIO, new List<object>(), "tester112345", network));
 
               //  {

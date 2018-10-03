@@ -219,14 +219,15 @@ namespace ScatterSharp
             if (data == null && data.Children().Count() != 2)
                 return;
 
-            var id = data.First().ToObject<string>();
-            var result = data.Skip(1).First().First;
+            var idToken = data.SelectToken("id");
 
+            if (idToken == null)
+                throw new Exception("response id not found.");
 
-            if (!OpenTasks.TryGetValue(id, out TaskCompletionSource<JToken> openTask))
+            if (!OpenTasks.TryGetValue(idToken.ToObject<string>(), out TaskCompletionSource<JToken> openTask))
                 return;
 
-            openTask.SetResult(result);
+            openTask.SetResult(data.SelectToken("result"));
         }
 
         private void HandleRekeyResponse()

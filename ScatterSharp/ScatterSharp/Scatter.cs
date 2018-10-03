@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using EosSharp;
+using Newtonsoft.Json.Linq;
 using ScatterSharp.Api;
+using ScatterSharp.Providers;
 using ScatterSharp.Storage;
 using System;
 using System.Collections.Generic;
@@ -27,28 +29,33 @@ namespace ScatterSharp
             AppName = appName;
         }
 
-        private void ThrowNoAuth()
-        {
-            if(!SocketService.IsConnected())
-                throw new Exception("Connect and Authenticate first - scatter.connect( appName )");
-        }
-
-        private static void ThrowOnApiError(JToken result)
-        {
-            if(result.Type != JTokenType.Object || 
-               result.SelectToken("isError") == null)
-                return;
-
-            var apiError = result.ToObject<ApiError>();
-
-            if (apiError != null)
-                throw new Exception(apiError.Message);
-        }
-
-        public async Task Connect(string host, CancellationToken? cancellationToken = null)
+        public async Task Connect(string host = "127.0.0.1:50005", CancellationToken? cancellationToken = null)
         {
             await SocketService.Link(new Uri(string.Format(WSURI, host)), cancellationToken);
             this.Identity = await this.GetIdentityFromPermissions();
+        }
+
+        public Eos Eos(Network network)
+        {
+            if (!SocketService.IsConnected())
+                throw new Exception("Scatter is not connected.");
+
+            if (network == null)
+                throw new ArgumentNullException("network");
+
+            string httpEndpoint = "";
+
+            if (network.Port == 443)
+                httpEndpoint += "https://" + network.Host + "/";
+            else
+                httpEndpoint += "http://" + network.Host + ":" + network.Port + "/";
+
+            return new Eos(new EosConfigurator()
+            {
+                ChainId = network.ChainId,
+                HttpEndpoint = httpEndpoint,
+                SignProvider = new ScatterSignatureProvider(this)
+            });
         }
 
         public async Task<string> GetVersion()
@@ -248,6 +255,26 @@ namespace ScatterSharp
 
             return result;
         }
+
+        #region Utils
+        private void ThrowNoAuth()
+        {
+            if (!SocketService.IsConnected())
+                throw new Exception("Connect and Authenticate first - scatter.connect( appName )");
+        }
+
+        private static void ThrowOnApiError(JToken result)
+        {
+            if (result.Type != JTokenType.Object ||
+               result.SelectToken("isError") == null)
+                return;
+
+            var apiError = result.ToObject<ApiError>();
+
+            if (apiError != null)
+                throw new Exception(apiError.Message);
+        }
+        #endregion
     }
 
 }
