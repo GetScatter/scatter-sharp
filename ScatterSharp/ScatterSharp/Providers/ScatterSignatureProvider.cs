@@ -1,4 +1,5 @@
 ﻿using EosSharp;
+using EosSharp.Api.v1;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,7 +21,7 @@ namespace ScatterSharp.Providers
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<string>> Sign(string chainId, List<string> requiredKeys, byte[] signBytes)
+        public Task<IEnumerable<string>> Sign(string chainId, List<string> requiredKeys, byte[] signBytes = null, Transaction trx = null)
         {
             throw new NotImplementedException();
         }
