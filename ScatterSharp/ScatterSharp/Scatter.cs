@@ -13,9 +13,11 @@ namespace ScatterSharp
     public class Scatter
     {
         private readonly string WSURI = "ws://{0}/socket.io/?EIO=3&transport=websocket";
-        private SocketService SocketService { get; set; }
-        private string AppName { get; set; }
+        private SocketService SocketService { get; set; }        
         private string Identity { get; set; }
+
+        public string AppName { get; set; }
+        public Network Network { get; set; }
 
         public class Blockchains
         {
@@ -24,10 +26,11 @@ namespace ScatterSharp
             public static readonly string TRX = "trx";
         };
 
-        public Scatter(string appName)
+        public Scatter(string appName, Network network)
         {
             SocketService = new SocketService(new MemoryStorageProvider(), appName);
             AppName = appName;
+            Network = network;
         }
 
         public async Task Connect(string host = "127.0.0.1:50005", CancellationToken? cancellationToken = null)
@@ -36,24 +39,24 @@ namespace ScatterSharp
             this.Identity = await this.GetIdentityFromPermissions();
         }
 
-        public Eos Eos(Network network)
+        public Eos Eos()
         {
             if (!SocketService.IsConnected())
                 throw new Exception("Scatter is not connected.");
 
-            if (network == null)
+            if (Network == null)
                 throw new ArgumentNullException("network");
 
             string httpEndpoint = "";
 
-            if (network.Port == 443)
-                httpEndpoint += "https://" + network.Host + "/";
+            if (Network.Port == 443)
+                httpEndpoint += "https://" + Network.Host;
             else
-                httpEndpoint += "http://" + network.Host + ":" + network.Port + "/";
+                httpEndpoint += "http://" + Network.Host + ":" + Network.Port;
 
             return new Eos(new EosConfigurator()
             {
-                ChainId = network.ChainId,
+                ChainId = Network.ChainId,
                 HttpEndpoint = httpEndpoint,
                 SignProvider = new ScatterSignatureProvider(this)
             });
@@ -167,14 +170,14 @@ namespace ScatterSharp
             return result.ToObject<string>();
         }
 
-        public async Task<object> LinkAccount(string publicKey, Network network)
+        public async Task<object> LinkAccount(string publicKey)
         {
             ThrowNoAuth();
 
             var result = await SocketService.SendApiRequest(new Request()
             {
                 Type = "linkAccount",
-                Payload = new { publicKey, network, origin = AppName }
+                Payload = new { publicKey, Network, origin = AppName }
             });
 
             ThrowOnApiError(result);
@@ -182,29 +185,30 @@ namespace ScatterSharp
             return result;
         }
 
-        public async Task<object> HasAccountFor(Network network)
-        {
-            ThrowNoAuth();
+        //TODO
+        //public async Task<object> HasAccountFor()
+        //{
+        //    ThrowNoAuth();
 
-            var result = await SocketService.SendApiRequest(new Request()
-            {
-                Type = "hasAccountFor",
-                Payload = new { network }
-            });
+        //    var result = await SocketService.SendApiRequest(new Request()
+        //    {
+        //        Type = "hasAccountFor",
+        //        Payload = new { Network }
+        //    });
 
-            ThrowOnApiError(result);
+        //    ThrowOnApiError(result);
 
-            return result;
-        }
+        //    return result;
+        //}
 
-        public async Task<object> SuggestNetwork(Network network)
+        public async Task<object> SuggestNetwork()
         {
             ThrowNoAuth();
 
             var result = await SocketService.SendApiRequest(new Request()
             {
                 Type = "requestAddNetwork",
-                Payload = new { network, origin = AppName }
+                Payload = new { Network, origin = AppName }
             });
 
             ThrowOnApiError(result);
@@ -212,14 +216,14 @@ namespace ScatterSharp
             return result;
         }
 
-        public async Task<object> RequestTransfer(Network network, string to, string amount, object options = null)
+        public async Task<object> RequestTransfer(string to, string amount, object options = null)
         {
             ThrowNoAuth();
 
             var result = await SocketService.SendApiRequest(new Request()
             {
                 Type = "requestTransfer",
-                Payload = new { network, to, amount, options, origin = AppName }
+                Payload = new { Network, to, amount, options, origin = AppName }
             });
 
             ThrowOnApiError(result);
@@ -242,14 +246,14 @@ namespace ScatterSharp
             return result;
         }
 
-        public async Task<object> CreateTransaction(string blockchain, List<object> actions, string account, Network network)
+        public async Task<object> CreateTransaction(string blockchain, List<object> actions, string account)
         {
             ThrowNoAuth();
 
             var result = await SocketService.SendApiRequest(new Request()
             {
                 Type = "createTransaction",
-                Payload = new { blockchain, actions, account, network, origin = AppName }
+                Payload = new { blockchain, actions, account, Network, origin = AppName }
             });
 
             ThrowOnApiError(result);

@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using EosSharp.Api.v1;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +16,7 @@ namespace ScatterSharp.UnitTests
         public static readonly Api.Network network = new Api.Network()
         {
             Blockchain = Scatter.Blockchains.EOSIO,
-            Host = "nodes.eos42.io",
+            Host = "api.eossweden.se",
             Port = 443,
             ChainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"
         };
@@ -32,14 +34,51 @@ namespace ScatterSharp.UnitTests
 
         public ScatterEosUnitTests()
         {
-            Scatter = new Scatter("SCATTER-SHARP-EOS");
+            Scatter = new Scatter("SCATTER-SHARP-EOS", network);
         }
 
         [TestMethod]
+        [TestCategory("Scatter EOS Tests")]
         public async Task Connect()
         {
             await Scatter.Connect();
-            var eos = Scatter.Eos(network);
+            var eos = Scatter.Eos();
+        }
+
+        [TestMethod]
+        [TestCategory("Scatter EOS Tests")]
+        public async Task PushTransaction()
+        {            
+            bool success = false;
+            try
+            {
+                await Scatter.Connect();
+                var eos = Scatter.Eos();
+
+                var result = await eos.CreateTransaction(new Transaction()
+                {
+                    Actions = new List<EosSharp.Api.v1.Action>()
+                    {
+                        new EosSharp.Api.v1.Action()
+                        {
+                            Account = "eosio.token",
+                            Authorization = new List<PermissionLevel>()
+                            {
+                                new PermissionLevel() {Actor = "tester112345", Permission = "active" }
+                            },
+                            Name = "transfer",
+                            Data = new { from = "tester112345", to = "tester212345", quantity = "0.0001 EOS", memo = "hello crypto world!" }
+                        }
+                    }
+                });
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(JsonConvert.SerializeObject(ex));
+            }
+
+            Assert.IsTrue(success);
         }
     }
 }

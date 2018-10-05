@@ -224,7 +224,8 @@ namespace ScatterSharp
             if (idToken == null)
                 throw new Exception("response id not found.");
 
-            if (!OpenTasks.TryGetValue(idToken.ToObject<string>(), out TaskCompletionSource<JToken> openTask))
+            TaskCompletionSource<JToken> openTask;
+            if (!OpenTasks.TryGetValue(idToken.ToObject<string>(), out openTask))
                 return;
 
             openTask.SetResult(data.SelectToken("result"));

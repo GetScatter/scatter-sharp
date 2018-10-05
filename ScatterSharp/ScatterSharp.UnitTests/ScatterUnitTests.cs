@@ -35,16 +35,18 @@ namespace ScatterSharp.UnitTests
 
         public ScatterUnitTests()
         {
-            Scatter = new Scatter("SCATTER-SHARP");
+            Scatter = new Scatter("SCATTER-SHARP", network);
         }
 
         [TestMethod]
+        [TestCategory("Scatter Tests")]
         public async Task Connect()
         {
             await Scatter.Connect();
         }
 
         [TestMethod]
+        [TestCategory("Scatter Tests")]
         public async Task GetVersion()
         {
             await Scatter.Connect();
@@ -52,6 +54,7 @@ namespace ScatterSharp.UnitTests
         }
 
         [TestMethod]
+        [TestCategory("Scatter Tests")]
         public async Task GetIdentity()
         {
             await Scatter.Connect();
@@ -59,6 +62,7 @@ namespace ScatterSharp.UnitTests
         }
 
         [TestMethod]
+        [TestCategory("Scatter Tests")]
         public async Task GetIdentityFromPermissions()
         {
             await Scatter.Connect();
@@ -66,6 +70,7 @@ namespace ScatterSharp.UnitTests
         }
 
         [TestMethod]
+        [TestCategory("Scatter Tests")]
         public async Task ForgetIdentity()
         {
             await Scatter.Connect();
@@ -73,6 +78,7 @@ namespace ScatterSharp.UnitTests
         }
 
         [TestMethod]
+        [TestCategory("Scatter Tests")]
         public async Task Authenticate()
         {
             await Scatter.Connect();
@@ -83,6 +89,7 @@ namespace ScatterSharp.UnitTests
         }
 
         [TestMethod]
+        [TestCategory("Scatter Tests")]
         public async Task GetArbitrarySignature()
         {
             await Scatter.Connect();
@@ -93,6 +100,7 @@ namespace ScatterSharp.UnitTests
         }
 
         [TestMethod]
+        [TestCategory("Scatter Tests")]
         public async Task GetPublicKey()
         {
             await Scatter.Connect();
@@ -100,45 +108,49 @@ namespace ScatterSharp.UnitTests
         }
 
         [TestMethod]
+        [TestCategory("Scatter Tests")]
         public async Task LinkAccount()
         {
             await Scatter.Connect();
 
             var pubKey = await Scatter.GetPublicKey(Scatter.Blockchains.EOSIO);
 
-            Console.WriteLine(await Scatter.LinkAccount(pubKey, network));
+            Console.WriteLine(await Scatter.LinkAccount(pubKey));
         }
 
         //TODO blocking
-        [TestMethod]
-        public async Task HasAccountFor()
-        {
-            await Scatter.Connect();
-            Console.WriteLine(await Scatter.HasAccountFor(network));
-        }
+        //[TestMethod]
+        //public async Task HasAccountFor()
+        //{
+        //    await Scatter.Connect();
+        //    Console.WriteLine(await Scatter.HasAccountFor(network));
+        //}
 
         [TestMethod]
+        [TestCategory("Scatter Tests")]
         public async Task SuggestNetwork()
         {
             await Scatter.Connect();
-            Console.WriteLine(await Scatter.SuggestNetwork(network));
+            Console.WriteLine(await Scatter.SuggestNetwork());
         }
 
         //TODO parse "error": "to account does not exist"
         [TestMethod]
+        [TestCategory("Scatter Tests")]
         public async Task RequestTransfer()
         {
             await Scatter.Connect();
-            Console.WriteLine(await Scatter.RequestTransfer(network, "tester112345", "tester212345", "0.0001 EOS"));
+            Console.WriteLine(await Scatter.RequestTransfer("tester112345", "tester212345", "0.0001 EOS"));
         }
 
         //TODO blocking
         [TestMethod]
+        [TestCategory("Scatter Tests")]
         public async Task RequestSignature()
         {
             await Scatter.Connect();
 
-            //var identity = await GetIdentityFromScatter();
+            var identity = await GetIdentityFromScatter();
 
             Console.WriteLine(await Scatter.RequestSignature(new {
                 network,
@@ -148,16 +160,17 @@ namespace ScatterSharp.UnitTests
                 //payload.messages
                 //.map(message => message.authorization
                 //    .map(auth => `${ auth.actor}@${ auth.permission}`))
-                origin = "SCATTER-SHARP"
+                origin = Scatter.AppName
             }));
         }
 
         //TODO check this
         [TestMethod]
+        [TestCategory("Scatter Tests")]
         public async Task CreateTransaction()
         {
             await Scatter.Connect();
-            Console.WriteLine(await Scatter.CreateTransaction(Scatter.Blockchains.EOSIO, new List<object>(), "tester112345", network));
+            Console.WriteLine(await Scatter.CreateTransaction(Scatter.Blockchains.EOSIO, new List<object>(), "tester112345"));
 
               //  {
               //      "network": {
