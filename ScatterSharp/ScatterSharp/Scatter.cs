@@ -5,6 +5,7 @@ using ScatterSharp.Providers;
 using ScatterSharp.Storage;
 using System;
 using System.Collections.Generic;
+using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,7 +13,7 @@ namespace ScatterSharp
 {
     public class Scatter
     {
-        private readonly string WSURI = "ws://{0}/socket.io/?EIO=3&transport=websocket";
+        private readonly string WSURI = "{0}://{1}:{2}/socket.io/?EIO=3&transport=websocket";
         private SocketService SocketService { get; set; }        
         private Identity Identity { get; set; }
 
@@ -33,9 +34,22 @@ namespace ScatterSharp
             Network = network;
         }
 
-        public async Task Connect(string host = "127.0.0.1:50005", CancellationToken? cancellationToken = null)
+        public async Task Connect(CancellationToken? cancellationToken = null)
         {
-            await SocketService.Link(new Uri(string.Format(WSURI, host)), cancellationToken);
+            try
+            {
+                //Try connect with wss connection
+                Uri wssURI = new Uri(string.Format(WSURI, "wss", "local.get-scatter.com", "50006"));
+                await SocketService.Link(wssURI, cancellationToken);
+            }
+            catch(WebSocketException)
+            {
+                //try normal ws connection
+                SocketService = new SocketService(new MemoryStorageProvider(), AppName);
+                Uri wsURI = new Uri(string.Format(WSURI, "ws", "127.0.0.1", "50005"));
+                await SocketService.Link(wsURI, cancellationToken);
+            }
+
             this.Identity = await this.GetIdentityFromPermissions();
         }
 
