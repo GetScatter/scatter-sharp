@@ -161,27 +161,6 @@ namespace ScatterSharp.UnitTests
             }));
         }
 
-        //TODO check this
-        [TestMethod]
-        [TestCategory("Scatter Tests")]
-        public async Task CreateTransaction()
-        {
-            await Scatter.Connect();
-            Console.WriteLine(await Scatter.CreateTransaction(Scatter.Blockchains.EOSIO, new List<object>(), "tester112345"));
-
-              //  {
-              //      "network": {
-              //                  "name": null,
-              //  "blockchain": "eos",
-              //  "host": "nodes.eos42.io",
-              //  "port": 443,
-              //  "chainId": "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"
-              //              },
-              //"blockchain": "eos",
-              //"requiredFields": []
-              //  }
-        }
-
         private async Task<Api.Identity> GetIdentityFromScatter()
         {
             return await Scatter.GetIdentity(new Api.IdentityRequiredFields()

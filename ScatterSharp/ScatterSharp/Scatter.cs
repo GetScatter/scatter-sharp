@@ -108,7 +108,7 @@ namespace ScatterSharp
             return Identity;
         }
 
-        public async Task<object> ForgetIdentity()
+        public async Task<bool> ForgetIdentity()
         {
             ThrowNoAuth();
 
@@ -121,10 +121,10 @@ namespace ScatterSharp
             ThrowOnApiError(result);
 
             Identity = null;
-            return result;
+            return result.ToObject<bool>();
         }
 
-        public async Task<object> Authenticate(string nonce)
+        public async Task<string> Authenticate(string nonce)
         {
             ThrowNoAuth();
 
@@ -136,7 +136,7 @@ namespace ScatterSharp
 
             ThrowOnApiError(result);
 
-            return result;
+            return result.ToObject<string>();
         }
 
         public async Task<string> GetArbitrarySignature(string publicKey, string data, string whatfor = "", bool isHash = false)
@@ -169,51 +169,52 @@ namespace ScatterSharp
             return result.ToObject<string>();
         }
 
-        public async Task<object> LinkAccount(string publicKey)
+        public async Task<bool> LinkAccount(string publicKey)
         {
             ThrowNoAuth();
 
             var result = await SocketService.SendApiRequest(new Request()
             {
                 Type = "linkAccount",
-                Payload = new { publicKey, Network, origin = AppName }
+                Payload = new { publicKey, network = Network, origin = AppName }
             });
 
             ThrowOnApiError(result);
 
-            return result;
+            return result.ToObject<bool>();
         }
 
-        public async Task<object> HasAccountFor()
+        public async Task<bool> HasAccountFor()
         {
             ThrowNoAuth();
 
             var result = await SocketService.SendApiRequest(new Request()
             {
                 Type = "hasAccountFor",
-                Payload = new { Network }
+                Payload = new { network = Network, origin = AppName }
             });
 
             ThrowOnApiError(result);
 
-            return result;
+            return result.ToObject<bool>();
         }
 
-        public async Task<object> SuggestNetwork()
+        public async Task<bool> SuggestNetwork()
         {
             ThrowNoAuth();
 
             var result = await SocketService.SendApiRequest(new Request()
             {
                 Type = "requestAddNetwork",
-                Payload = new { Network, origin = AppName }
+                Payload = new { network = Network, origin = AppName }
             });
 
             ThrowOnApiError(result);
 
-            return result;
+            return result.ToObject<bool>();
         }
 
+        //TODO check
         public async Task<object> RequestTransfer(string to, string amount, object options = null)
         {
             ThrowNoAuth();
@@ -221,7 +222,7 @@ namespace ScatterSharp
             var result = await SocketService.SendApiRequest(new Request()
             {
                 Type = "requestTransfer",
-                Payload = new { Network, to, amount, options, origin = AppName }
+                Payload = new { network = Network, to, amount, options, origin = AppName }
             });
 
             ThrowOnApiError(result);
@@ -242,21 +243,6 @@ namespace ScatterSharp
             ThrowOnApiError(result);
 
             return result.ToObject<SignaturesResult>();
-        }
-
-        public async Task<object> CreateTransaction(string blockchain, List<object> actions, string account)
-        {
-            ThrowNoAuth();
-
-            var result = await SocketService.SendApiRequest(new Request()
-            {
-                Type = "createTransaction",
-                Payload = new { blockchain, actions, account, Network, origin = AppName }
-            });
-
-            ThrowOnApiError(result);
-
-            return result;
         }
 
         #region Utils
