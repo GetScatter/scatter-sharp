@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using ScatterSharp.Helpers;
 
 namespace ScatterSharp.Providers
 {
@@ -38,14 +39,22 @@ namespace ScatterSharp.Providers
             return identity.Accounts.Select(acc => acc.PublicKey);
         }
 
-        public async Task<IEnumerable<string>> Sign(string chainId, List<string> requiredKeys, byte[] signBytes = null, Transaction trx = null)
+        public async Task<IEnumerable<string>> Sign(string chainId, IEnumerable<string> requiredKeys, byte[] signBytes, IEnumerable<string> abiNames = null)
         {
+            IEnumerable<object> abis = null;
+
+            if (abiNames != null)
+                abis = abiNames.Select(a => new { account_name = a });
+            else
+                abis = new List<object>();
+
             var result = await Scatter.RequestSignature(new
             {
                 network = Scatter.Network,
                 blockchain = Scatter.Blockchains.EOSIO,
                 requiredFields = new List<object>(),
-                transaction = trx,
+                abis,
+                serializedTransaction = UtilsHelper.ByteArrayToHexString(signBytes),
                 origin = Scatter.AppName
             });
 

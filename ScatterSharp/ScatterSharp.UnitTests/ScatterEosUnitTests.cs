@@ -64,10 +64,10 @@ namespace ScatterSharp.UnitTests
                             Account = "eosio.token",
                             Authorization = new List<PermissionLevel>()
                             {
-                                new PermissionLevel() {Actor = "tester112345", Permission = "active" }
+                                new PermissionLevel() {Actor = "darksidemoon", Permission = "active" }
                             },
                             Name = "transfer",
-                            Data = new { from = "tester112345", to = "tester212345", quantity = "0.0001 EOS", memo = "hello crypto world!" }
+                            Data = new { from = "darksidemoon", to = "booleankings", quantity = "0.0001 EOS", memo = "hello crypto world!" }
                         }
                     }
                 });
