@@ -22,19 +22,27 @@ namespace ScatterSharp
         private bool Paired { get; set; }
         private IStorageProvider StorageProvider { get; set; }
         private string AppName { get; set; }
+        private int TimeoutMS { get; set; }
 
         private ClientWebSocket Socket { get; set; }
 
         TaskCompletionSource<bool> PairOpenTask { get; set; }
         private Dictionary<string, TaskCompletionSource<JToken>> OpenTasks { get; set; }
+        private Dictionary<string, DateTime> OpenTaskTimes { get; set; }
+
         private Task ReceiverTask { get; set; }
+        private Task TimoutTasksTask { get; set; }
 
         public SocketService(IStorageProvider storageProvider, string appName, int timeout = 60000)
         {
             Socket = new ClientWebSocket();
+
             OpenTasks = new Dictionary<string, TaskCompletionSource<JToken>>();
+            OpenTaskTimes = new Dictionary<string, DateTime>();
+
             StorageProvider = storageProvider;
             AppName = appName;
+            TimeoutMS = timeout;
 
             GenerateNewAppKey();
         }
@@ -54,7 +62,10 @@ namespace ScatterSharp
             if (Socket.State == WebSocketState.Open)
             {
                 await Send();
-                var receiverTask = Receive(cancellationToken);
+
+                ReceiverTask = Receive(cancellationToken);
+                TimoutTasksTask = Task.Run(() => TimeoutOpenTasksCheck());
+
                 await Pair(true);
             }  
             else
@@ -101,6 +112,8 @@ namespace ScatterSharp
             StorageProvider.SetNonce(UtilsHelper.ByteArrayToHexString(nextNonce));
 
             OpenTasks.Add(request.Id, tcs);
+            OpenTaskTimes.Add(request.Id, DateTime.Now);
+
             await Send("api", new { data = request, plugin = AppName });
 
             return await tcs.Task;
@@ -214,6 +227,38 @@ namespace ScatterSharp
             }
         }
 
+        private void TimeoutOpenTasksCheck()
+        {
+            while(Socket.State == WebSocketState.Open)
+            {
+                var now = DateTime.Now;
+                int count = 0;
+
+                foreach(var ttKey in OpenTaskTimes.Keys)
+                {
+                    if ((now - OpenTaskTimes[ttKey]).TotalMilliseconds >= TimeoutMS)
+                    {
+                        TaskCompletionSource<JToken> openTask = OpenTasks[ttKey];
+                        
+                        OpenTasks.Remove(ttKey);
+                        OpenTaskTimes.Remove(ttKey);
+
+                        openTask.SetResult(JToken.FromObject(new ApiError() {
+                            Code = "0",
+                            IsError = "true",
+                            Message = "Request timeout."
+                        }));
+                    }
+
+                    //sleep checking each 10 requests
+                    if((count % 10) == 0)
+                        Thread.Sleep(1000);
+
+                    count++;
+                }
+            }
+        } 
+
         private void HandleApiResponse(JToken data)
         {
             if (data == null && data.Children().Count() != 2)
@@ -224,9 +269,14 @@ namespace ScatterSharp
             if (idToken == null)
                 throw new Exception("response id not found.");
 
+            string id = idToken.ToObject<string>();
+
             TaskCompletionSource<JToken> openTask;
-            if (!OpenTasks.TryGetValue(idToken.ToObject<string>(), out openTask))
+            if (!OpenTasks.TryGetValue(id, out openTask))
                 return;
+
+            OpenTasks.Remove(id);
+            OpenTaskTimes.Remove(id);
 
             openTask.SetResult(data.SelectToken("result"));
         }
