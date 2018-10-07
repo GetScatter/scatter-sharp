@@ -14,7 +14,7 @@ namespace ScatterSharp
     {
         private readonly string WSURI = "ws://{0}/socket.io/?EIO=3&transport=websocket";
         private SocketService SocketService { get; set; }        
-        private string Identity { get; set; }
+        private Identity Identity { get; set; }
 
         public string AppName { get; set; }
         public Network Network { get; set; }
@@ -87,12 +87,10 @@ namespace ScatterSharp
 
             ThrowOnApiError(result);
 
-            //Identity = result.ToObject<Identity>();
-
             return result.ToObject<Identity>();
         }
 
-        public async Task<string> GetIdentityFromPermissions()
+        public async Task<Identity> GetIdentityFromPermissions()
         {
             ThrowNoAuth();
 
@@ -104,7 +102,8 @@ namespace ScatterSharp
 
             ThrowOnApiError(result);
 
-            Identity = result.ToObject<string>();
+            if(result.Type == JTokenType.Object)
+                Identity = result.ToObject<Identity>();
 
             return Identity;
         }
@@ -185,21 +184,20 @@ namespace ScatterSharp
             return result;
         }
 
-        //TODO
-        //public async Task<object> HasAccountFor()
-        //{
-        //    ThrowNoAuth();
+        public async Task<object> HasAccountFor()
+        {
+            ThrowNoAuth();
 
-        //    var result = await SocketService.SendApiRequest(new Request()
-        //    {
-        //        Type = "hasAccountFor",
-        //        Payload = new { Network }
-        //    });
+            var result = await SocketService.SendApiRequest(new Request()
+            {
+                Type = "hasAccountFor",
+                Payload = new { Network }
+            });
 
-        //    ThrowOnApiError(result);
+            ThrowOnApiError(result);
 
-        //    return result;
-        //}
+            return result;
+        }
 
         public async Task<object> SuggestNetwork()
         {
@@ -231,7 +229,7 @@ namespace ScatterSharp
             return result;
         }
 
-        public async Task<object> RequestSignature(object payload)
+        public async Task<SignaturesResult> RequestSignature(object payload)
         {
             ThrowNoAuth();
 
@@ -243,7 +241,7 @@ namespace ScatterSharp
 
             ThrowOnApiError(result);
 
-            return result;
+            return result.ToObject<SignaturesResult>();
         }
 
         public async Task<object> CreateTransaction(string blockchain, List<object> actions, string account)

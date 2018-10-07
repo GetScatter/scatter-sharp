@@ -94,11 +94,11 @@ namespace ScatterSharp
 
             request.Id = UtilsHelper.RandomNumber(24);
             request.Appkey = StorageProvider.GetAppkey();
-            request.Nonce = StorageProvider.GetNonce() ?? "0";
+            request.Nonce = StorageProvider.GetNonce() ?? "";
 
-            var nextNonce = UtilsHelper.RandomNumber();
-            request.NextNonce = UtilsHelper.GenerateNextNonce();
-            StorageProvider.SetNonce(request.NextNonce);
+            var nextNonce = UtilsHelper.RandomNumberBytes();
+            request.NextNonce = UtilsHelper.ByteArrayToHexString(Sha256Manager.GetHash(nextNonce));
+            StorageProvider.SetNonce(UtilsHelper.ByteArrayToHexString(nextNonce));
 
             OpenTasks.Add(request.Id, tcs);
             await Send("api", new { data = request, plugin = AppName });

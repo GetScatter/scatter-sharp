@@ -13,7 +13,7 @@ namespace ScatterSharp.Api
         public string Appkey { get; set; }
         [JsonProperty("nonce")]
         public string Nonce { get; set; }
-        [JsonProperty("nextnonce")]
+        [JsonProperty("nextNonce")]
         public string NextNonce { get; set; }
 
         [JsonProperty("type")]

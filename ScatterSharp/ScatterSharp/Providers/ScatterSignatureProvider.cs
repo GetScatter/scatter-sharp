@@ -20,15 +20,7 @@ namespace ScatterSharp.Providers
 
         public async Task<IEnumerable<string>> GetAvailableKeys()
         {
-            var identity = await Scatter.GetIdentity(new Api.IdentityRequiredFields()
-            {
-                Accounts = new List<Api.Network>()
-                {
-                    Scatter.Network
-                },
-                Location = new List<Api.LocationFields>(),
-                Personal = new List<Api.PersonalFields>()
-            });
+            var identity = await Scatter.GetIdentityFromPermissions();
 
             if (identity == null)
                 throw new ArgumentNullException("identity");
@@ -53,12 +45,16 @@ namespace ScatterSharp.Providers
                 network = Scatter.Network,
                 blockchain = Scatter.Blockchains.EOSIO,
                 requiredFields = new List<object>(),
-                abis,
-                serializedTransaction = UtilsHelper.ByteArrayToHexString(signBytes),
+                transaction = new
+                {
+                    abis,
+                    serializedTransaction = UtilsHelper.ByteArrayToHexString(signBytes),
+                    chainId
+                },
                 origin = Scatter.AppName
             });
 
-            return new List<string>();
+            return result.Signatures;
         }
     }
 }

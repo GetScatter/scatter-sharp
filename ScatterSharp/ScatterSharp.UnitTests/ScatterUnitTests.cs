@@ -118,13 +118,13 @@ namespace ScatterSharp.UnitTests
             Console.WriteLine(await Scatter.LinkAccount(pubKey));
         }
 
-        //TODO blocking
-        //[TestMethod]
-        //public async Task HasAccountFor()
-        //{
-        //    await Scatter.Connect();
-        //    Console.WriteLine(await Scatter.HasAccountFor(network));
-        //}
+        [TestMethod]
+        [TestCategory("Scatter Tests")]
+        public async Task HasAccountFor()
+        {
+            await Scatter.Connect();
+            Console.WriteLine(await Scatter.HasAccountFor());
+        }
 
         [TestMethod]
         [TestCategory("Scatter Tests")]
@@ -156,10 +156,7 @@ namespace ScatterSharp.UnitTests
                 network,
                 blockchain = Scatter.Blockchains.EOSIO,
                 requiredFields = new List<object>(),
-                messages = new List<object>(),
-                //payload.messages
-                //.map(message => message.authorization
-                //    .map(auth => `${ auth.actor}@${ auth.permission}`))
+                //TODO
                 origin = Scatter.AppName
             }));
         }

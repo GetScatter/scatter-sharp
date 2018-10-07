@@ -53,6 +53,17 @@ namespace ScatterSharp.UnitTests
             try
             {
                 await Scatter.Connect();
+
+                var identity = await Scatter.GetIdentity(new Api.IdentityRequiredFields()
+                {
+                    Accounts = new List<Api.Network>()
+                    {
+                        Scatter.Network
+                    },
+                    Location = new List<Api.LocationFields>(),
+                    Personal = new List<Api.PersonalFields>()
+                });
+
                 var eos = Scatter.Eos();
 
                 var result = await eos.CreateTransaction(new Transaction()
@@ -64,10 +75,10 @@ namespace ScatterSharp.UnitTests
                             Account = "eosio.token",
                             Authorization = new List<PermissionLevel>()
                             {
-                                new PermissionLevel() {Actor = "darksidemoon", Permission = "active" }
+                                new PermissionLevel() {Actor = "tester112345", Permission = "active" }
                             },
                             Name = "transfer",
-                            Data = new { from = "darksidemoon", to = "booleankings", quantity = "0.0001 EOS", memo = "hello crypto world!" }
+                            Data = new { from = "tester112345", to = "tester212345", quantity = "0.0001 EOS", memo = "hello crypto world!" }
                         }
                     }
                 });
