@@ -41,7 +41,7 @@ var identity = await Scatter.GetIdentity(new Api.IdentityRequiredFields()
 
 var eos = Scatter.Eos();
 
-... **Use all eos api methods as usual from EosSharp** ...
+... **Use all eos api methods as usual from eos-sharp** ...
 ```
 
 #### Scatter Api methods
