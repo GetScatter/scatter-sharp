@@ -46,4 +46,97 @@ var eos = Scatter.Eos();
 
 #### Scatter Api methods
 
-**TODO**
+- **GetVersion**
+Gets the Scatter version
+```csharp
+string version = await scatter.GetVersion();
+```
+
+- **GetIdentity**
+Prompts the users for an Identity if there is no permission, otherwise returns the permission without a prompt based on origin.
+```csharp
+Identity identity = await scatter.GetIdentity(new Api.IdentityRequiredFields() {
+    Accounts = new List<Api.Network>()
+    {
+        network
+    },
+    Location = new List<Api.LocationFields>(),
+    Personal = new List<Api.PersonalFields>()
+});
+```
+Returns:
+```csharp
+public class Identity
+{
+    public string Hash { get; set; }
+    public string PublicKey { get; set; }
+    public string Name { get; set; }
+    public bool Kyc { get; set; }
+    public List<IdentityAccount> Accounts { get; set; }
+}
+```
+
+- **GetIdentityFromPermissions**
+Checks if an Identity has permissions and return the identity based on origin.
+```csharp
+Identity identity = await scatter.GetIdentityFromPermissions();
+```
+Returns:
+```csharp
+public class Identity
+{
+    public string Hash { get; set; }
+    public string PublicKey { get; set; }
+    public string Name { get; set; }
+    public bool Kyc { get; set; }
+    public List<IdentityAccount> Accounts { get; set; }
+}
+```
+
+- **ForgetIdentity**
+Removes the identity permission for an origin from the user's Scatter, effectively logging them out.
+```csharp
+bool result = await scatter.ForgetIdentity();
+```
+
+- **Authenticate**
+Signs the origin with the Identity's private key.
+```csharp
+string signature = await scatter.Authenticate();
+```
+
+- **GetArbitrarySignature**
+Requests an arbitrary signature of data.
+```csharp
+string signature = await scatter.GetArbitrarySignature(string publicKey, string data, string whatfor = "", bool isHash = false);
+```
+
+- **GetPublicKey**
+Allows apps to request that the user provide a user-selected Public Key to the app. ( ONBOARDING HELPER )
+```csharp
+string pubKey = await scatter.GetPublicKey(string blockchain);
+```
+
+- **LinkAccount**
+Allows the app to suggest that the user link new accounts on top of public keys ( ONBOARDING HELPER )
+```csharp
+bool result = await scatter.LinkAccount(string publicKey);
+```
+
+- **HasAccountFor**
+Allows dapps to see if a user has an account for a specific blockchain. DOES NOT PROMPT and does not return an actual account, just a boolean.
+```csharp
+bool result = await scatter.HasAccountFor();
+```
+
+- **SuggestNetwork**
+Prompts the user to add a new network to their Scatter.
+```csharp
+bool result = await scatter.SuggestNetwork();
+```
+
+
+
+
+
+
