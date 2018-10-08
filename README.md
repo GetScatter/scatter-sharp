@@ -29,7 +29,7 @@ var scatter = new Scatter("MY-APP-NAME", network);
 
 await scatter.Connect();
 
-var identity = await Scatter.GetIdentity(new Api.IdentityRequiredFields()
+var identity = await scatter.GetIdentity(new Api.IdentityRequiredFields()
 {
     Accounts = new List<Api.Network>()
     {
@@ -39,7 +39,7 @@ var identity = await Scatter.GetIdentity(new Api.IdentityRequiredFields()
     Personal = new List<Api.PersonalFields>()
 });
 
-var eos = Scatter.Eos();
+var eos = scatter.Eos();
 
 ... **Use all eos api methods as usual from eos-sharp** ...
 ```
