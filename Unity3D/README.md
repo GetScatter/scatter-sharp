@@ -10,8 +10,13 @@ Visual Studio 2017
 ### Tutorial
 
 1 - Create a new Unity Project
+
 2 - execute .\create_plugins.bat that creates **Plugins** folder
+
 3 - On Project > Assets move the **Plugins** Plugins folder
+
 4 - On Project > Assets copy the TestScatterScript
+
 5 - Add a GameObject with a collider and this script as behaviour
+
 6 - Run and click the GameObject
