@@ -27,9 +27,9 @@ namespace ScatterSharp
             public static readonly string TRX = "trx";
         };
 
-        public Scatter(string appName, Network network)
+        public Scatter(string appName, Network network, IAppStorageProvider storageProvider = null)
         {
-            SocketService = new SocketService(new MemoryStorageProvider(), appName);
+            SocketService = new SocketService(storageProvider ?? new MemoryStorageProvider(), appName);
             AppName = appName;
             Network = network;
         }

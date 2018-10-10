@@ -4,11 +4,13 @@ using System.Text;
 
 namespace ScatterSharp.Storage
 {
-    public interface IStorageProvider
+    public interface IAppStorageProvider
     {
         string GetNonce();
-        bool SetNonce(string nonce);
+        void SetNonce(string nonce);
         string GetAppkey();
-        bool SetAppkey(string appkey);
+        void SetAppkey(string appkey);
+        void Save();
+        void Load();
     }
 }

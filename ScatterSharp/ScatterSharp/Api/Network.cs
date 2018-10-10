@@ -15,7 +15,14 @@ namespace ScatterSharp.Api
         public string Host { get; set; }
         [JsonProperty("port")]
         public int? Port { get; set; }
+        [JsonProperty("protocol")]
+        public string Protocol { get; set; }
         [JsonProperty("chainId")]
         public string ChainId { get; set; }
+
+        public Network()
+        {
+            Protocol = "https";
+        }
     }
 }

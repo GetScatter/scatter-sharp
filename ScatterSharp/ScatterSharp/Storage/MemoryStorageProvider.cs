@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ScatterSharp.Storage
 {
-    public class MemoryStorageProvider : IStorageProvider
+    public class MemoryStorageProvider : IAppStorageProvider
     {
         private string Appkey { get; set; }
         private string Nonce { get; set; }
@@ -23,16 +23,22 @@ namespace ScatterSharp.Storage
             return Nonce;
         }
 
-        public bool SetAppkey(string appkey)
+        public void SetAppkey(string appkey)
         {
             Appkey = appkey;
-            return true;
         }
 
-        public bool SetNonce(string nonce)
+        public void SetNonce(string nonce)
         {
             Nonce = nonce;
-            return true;
+        }
+
+        public void Save()
+        {
+        }
+
+        public void Load()
+        {
         }
     }
 }

@@ -20,7 +20,7 @@ namespace ScatterSharp
         private readonly string SCATTER_API_PREAMBLE = "42/scatter";
 
         private bool Paired { get; set; }
-        private IStorageProvider StorageProvider { get; set; }
+        private IAppStorageProvider StorageProvider { get; set; }
         private string AppName { get; set; }
         private int TimeoutMS { get; set; }
 
@@ -33,7 +33,7 @@ namespace ScatterSharp
         private Task ReceiverTask { get; set; }
         private Task TimoutTasksTask { get; set; }
 
-        public SocketService(IStorageProvider storageProvider, string appName, int timeout = 60000)
+        public SocketService(IAppStorageProvider storageProvider, string appName, int timeout = 60000)
         {
             Socket = new ClientWebSocket();
 
@@ -50,6 +50,7 @@ namespace ScatterSharp
         public void Dispose()
         {
             Socket.Dispose();
+            StorageProvider.Save();
         }
 
         public async Task Link(Uri uri, CancellationToken? cancellationToken)
