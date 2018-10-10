@@ -43,8 +43,6 @@ namespace ScatterSharp
             StorageProvider = storageProvider;
             AppName = appName;
             TimeoutMS = timeout;
-
-            GenerateNewAppKey();
         }
 
         public void Dispose()
