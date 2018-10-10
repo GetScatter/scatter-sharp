@@ -8,6 +8,7 @@ namespace ScatterSharp.Storage
 {
     public class FileStorageProvider : IAppStorageProvider
     {
+        [Serializable]
         public class AppData
         {
             public string Appkey;
