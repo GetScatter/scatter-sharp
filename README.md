@@ -22,6 +22,7 @@ var network = new Api.Network()
     Blockchain = Scatter.Blockchains.EOSIO,
     Host = "api.eossweden.se",
     Port = 443,
+    Protocol = "https",
     ChainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"
 };
 
@@ -42,6 +43,23 @@ var identity = await scatter.GetIdentity(new Api.IdentityRequiredFields()
 var eos = scatter.Eos();
 
 ... **Use all eos api methods as usual from eos-sharp** ...
+
+scatter.Dispose();
+```
+
+#### App Storage Provider
+
+Scatter uses a appKey and Nonce to help pair your application with the users permissions. By default this information is stored on memory but you may want to save on disk to be reused later.
+
+Create a new Scatter instance and configure a FileStorageProvider with the target filePath.
+```csharp
+var fileStorage = new FileStorageProvider(filePath);
+
+using (var scatter = new Scatter("UNITY-SCATTER-JUNGLE", network, fileStorage))
+{
+    await scatter.Connect();
+    ....    
+}
 ```
 
 #### Scatter Api methods
