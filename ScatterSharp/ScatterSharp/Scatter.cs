@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ScatterSharp
 {
-    public class Scatter
+    public class Scatter : IDisposable
     {
         private readonly string WSURI = "{0}://{1}:{2}/socket.io/?EIO=3&transport=websocket";
         private SocketService SocketService { get; set; }        
@@ -32,6 +32,11 @@ namespace ScatterSharp
             SocketService = new SocketService(storageProvider ?? new MemoryStorageProvider(), appName);
             AppName = appName;
             Network = network;
+        }
+
+        public void Dispose()
+        {
+            SocketService.Dispose();
         }
 
         public async Task Connect(CancellationToken? cancellationToken = null)
