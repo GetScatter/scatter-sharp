@@ -6,7 +6,10 @@ Scatter C# library to interact with ScatterDesktop / ScatterMobile
 Visual Studio 2017 
 
 ### Instalation
-
+scatter-sharp is now available throught nuget https://www.nuget.org/packages/scatter-sharp
+```
+Install-Package scatter-sharp
+```
 
 ### Usage
 
