@@ -7,7 +7,7 @@ if exist "%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe" (
   dotnet restore
   "%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe" ScatterSharp.sln /t:ScatterSharp /p:Configuration=Release
   cd ..\Unity3D
-  mkdir Plugins
+  mkdir ScatterSharpTest\Assets\Plugins\Plugins
   copy %userprofile%\.nuget\packages\cryptography.ecdsa.secp256k1\1.1.2\lib\netstandard2.0\Cryptography.ECDSA.dll ScatterSharpTest\Assets\Plugins\
   copy %userprofile%\.nuget\packages\eos-sharp\1.0.2\lib\netstandard2.0\EosSharp.dll ScatterSharpTest\Assets\Plugins\
   copy %userprofile%\.nuget\packages\fastmember\1.4.1\lib\netstandard2.0\FastMember.dll ScatterSharpTest\Assets\Plugins\
