@@ -10,3 +10,5 @@
 /ScatterSharp/ScatterSharp.UnitTests/bin
 /ScatterSharp/.vs
 /Unity3D/Plugins
+/Unity3D/ScatterSharpTest/.vs/ScatterSharpTest/v15
+/Unity3D/ScatterSharpTest/obj/Debug
