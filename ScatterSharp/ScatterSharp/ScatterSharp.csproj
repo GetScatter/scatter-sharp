@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Mário Silva</Authors>
+    <Company>GetScatter</Company>
+    <PackageId>scatter-sharp</PackageId>
+    <Product>scatter-sharp</Product>
+    <Description>Scatter C# library to interact with ScatterDesktop / ScatterMobile</Description>
+    <Copyright>Copyright 2018</Copyright>
+    <PackageLicenseUrl>https://github.com/GetScatter/scatter-sharp/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/GetScatter/scatter-sharp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/GetScatter/scatter-sharp</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>EOS, NetStandard, secp256k1, Blockchain, Scatter</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
