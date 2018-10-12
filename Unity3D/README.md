@@ -25,4 +25,4 @@ Inside your project:
   **Go to Edit -> Project Settings -> Player -> Other Settings -> Configuration -> Api Compatibility Level -> .NET 4.6**
 - Get the [`scatter_sharp.unitypackage` from this repository](https://raw.githubusercontent.com/GetScatter/scatter-sharp/master/Unity3D/scatter_sharp.unitypackage)
 - Then back inside Unity:
-  **Assets -> Import Package** and select the location you saved the above package to.
+  **Assets -> Import Package** and select the location you saved the above package to, or just open the unitypackage file with your project open.
