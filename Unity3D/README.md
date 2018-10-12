@@ -12,7 +12,7 @@ Visual Studio 2017
 - clone this repository ( `git clone https://github.com/GetScatter/scatter-sharp.git YOUR_PROJECT_NAME` )
 - `cd YOUR_PROJECT_NAME/Unity3d/`
 - run `.\create_plugins.bat`
-- Open the project in Unity!
+- Open the `ScatterSharpTest` project in Unity!
 
 
 ### Adding to existing project.
