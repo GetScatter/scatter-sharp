@@ -14,11 +14,11 @@ namespace ScatterSharp
     public class Scatter : IDisposable
     {
         private readonly string WSURI = "{0}://{1}:{2}/socket.io/?EIO=3&transport=websocket";
-        private SocketService SocketService { get; set; }        
-        private Identity Identity { get; set; }
-
+        private SocketService SocketService { get; set; } 
+               
         public string AppName { get; set; }
         public Network Network { get; set; }
+        public Identity Identity { get; set; }
 
         public class Blockchains
         {
@@ -105,8 +105,10 @@ namespace ScatterSharp
             });
 
             ThrowOnApiError(result);
+            
+            Identity = result.ToObject<Identity>();
 
-            return result.ToObject<Identity>();
+            return Identity;
         }
 
         public async Task<Identity> GetIdentityFromPermissions()
