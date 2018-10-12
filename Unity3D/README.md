@@ -2,8 +2,8 @@
 
 ### Prerequisite to build
 
-Unity >= 2018.1
-Visual Studio 2017
+- Unity >= 2018.1
+- Visual Studio 2017
 
 -------------------------------
 
