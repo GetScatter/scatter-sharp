@@ -39,6 +39,8 @@ public class TestScatterScript : MonoBehaviour
                 });
 
                 var eos = scatter.Eos();
+                
+                var account = scatter.Identity.Accounts.First();
 
                 var result = await eos.CreateTransaction(new Transaction()
                 {
@@ -47,12 +49,12 @@ public class TestScatterScript : MonoBehaviour
                         new EosSharp.Api.v1.Action()
                         {
                             Account = "eosio.token",
-                            Authorization = new List<PermissionLevel>()
+                            Authorization =  new List<PermissionLevel>()
                             {
-                                new PermissionLevel() {Actor = "tester112345", Permission = "active" }
+                                new PermissionLevel() {Actor = account.Name, Permission = account.Authority }
                             },
                             Name = "transfer",
-                            Data = new { from = "tester112345", to = "tester212345", quantity = "0.0001 EOS", memo = "Unity 3D hello crypto world!" }
+                            Data = new { from = account.Name, to = "eosio", quantity = "0.0001 EOS", memo = "Unity 3D hello crypto world!" }
                         }
                     }
                 });
