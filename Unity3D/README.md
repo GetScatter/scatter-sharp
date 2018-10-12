@@ -5,17 +5,18 @@
 Unity >= 2018.1
 Visual Studio 2017
 
+-------------------------------
 
-
-### Creating a new project
+## Creating a new project
 
 - clone this repository ( `git clone https://github.com/GetScatter/scatter-sharp.git YOUR_PROJECT_NAME` )
 - `cd YOUR_PROJECT_NAME/Unity3d/`
 - run `.\create_plugins.bat`
 - Open the `ScatterSharpTest` project in Unity!
 
+-------------------------------
 
-### Adding to existing project.
+## Adding to existing project.
 
 You will need to modify a few settings to allow for .NET 2.0.
 
