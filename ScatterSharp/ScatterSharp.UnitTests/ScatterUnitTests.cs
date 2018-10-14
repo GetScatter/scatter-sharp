@@ -143,7 +143,6 @@ namespace ScatterSharp.UnitTests
             Console.WriteLine(await Scatter.RequestTransfer("tester112345", "tester212345", "0.0001 EOS"));
         }
 
-        //TODO blocking
         [TestMethod]
         [TestCategory("Scatter Tests")]
         public async Task RequestSignature()
@@ -156,9 +155,23 @@ namespace ScatterSharp.UnitTests
                 network,
                 blockchain = Scatter.Blockchains.EOSIO,
                 requiredFields = new List<object>(),
-                //TODO
+                //TODO add transaction
                 origin = Scatter.AppName
             }));
+        }
+
+        //TODO test on new branch
+        [TestMethod]
+        [TestCategory("Scatter Tests")]
+        public async Task GetEncryptionKey()
+        {
+            await Scatter.Connect();
+
+            var fromKey = await Scatter.GetPublicKey(Scatter.Blockchains.EOSIO);
+            var toKey = await Scatter.GetPublicKey(Scatter.Blockchains.EOSIO);
+            var r = new Random();
+
+            Console.WriteLine(await Scatter.GetEncryptionKey(fromKey, toKey, (UInt64)r.Next()));
         }
 
         private async Task<Api.Identity> GetIdentityFromScatter()

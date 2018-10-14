@@ -266,6 +266,27 @@ namespace ScatterSharp
             return result.ToObject<SignaturesResult>();
         }
 
+        //TODO test on new branch
+        public async Task<string> GetEncryptionKey(string fromPublicKey, string toPublicKey, UInt64 nonce)
+        {
+            ThrowNoAuth();
+
+            var result = await SocketService.SendApiRequest(new Request()
+            {
+                Type = "getEncryptionKey",
+                Payload = new
+                {
+                    fromPublicKey,
+                    toPublicKey,
+                    nonce
+                }
+            });
+
+            ThrowOnApiError(result);
+
+            return result.ToObject<string>();
+        }
+
         #region Utils
         private void ThrowNoAuth()
         {
