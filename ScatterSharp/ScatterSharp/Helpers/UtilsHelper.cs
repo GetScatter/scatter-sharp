@@ -29,5 +29,14 @@ namespace ScatterSharp.Helpers
 
             return hex.ToString();
         }
+
+        public static byte[] HexStringToByteArray(string hex)
+        {
+            var l = hex.Length / 2;
+            var result = new byte[l];
+            for (var i = 0; i < l; ++i)
+                result[i] = (byte)Convert.ToInt32(hex.Substring(i * 2, 2), 16);
+            return result;
+        }
     }
 }

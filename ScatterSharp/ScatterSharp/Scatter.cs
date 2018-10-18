@@ -278,7 +278,8 @@ namespace ScatterSharp
                 {
                     fromPublicKey,
                     toPublicKey,
-                    nonce
+                    nonce,
+                    origin = AppName
                 }
             });
 
