@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="eos-sharp" Version="1.0.2" />
+    <PackageReference Include="eos-sharp" Version="1.0.5" />
   </ItemGroup>
 
   <ItemGroup>
