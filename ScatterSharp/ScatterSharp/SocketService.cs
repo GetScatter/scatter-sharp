@@ -232,28 +232,38 @@ namespace ScatterSharp
             {
                 var now = DateTime.Now;
                 int count = 0;
+                List<string> toRemoveKeys = new List<string>();
 
-                foreach(var ttKey in OpenTaskTimes.Keys)
+                foreach (var key in OpenTaskTimes.Keys.ToList())
                 {
-                    if ((now - OpenTaskTimes[ttKey]).TotalMilliseconds >= TimeoutMS)
+                    if ((now - OpenTaskTimes[key]).TotalMilliseconds >= TimeoutMS)
                     {
-                        TaskCompletionSource<JToken> openTask = OpenTasks[ttKey];
-                        
-                        OpenTasks.Remove(ttKey);
-                        OpenTaskTimes.Remove(ttKey);
-
-                        openTask.SetResult(JToken.FromObject(new ApiError() {
-                            Code = "0",
-                            IsError = "true",
-                            Message = "Request timeout."
-                        }));
+                        toRemoveKeys.Add(key);
                     }
 
                     //sleep checking each 10 requests
                     if((count % 10) == 0)
-                        Thread.Sleep(1000);
+                    {
+                        count = 0;
+                        Thread.Sleep(1000);                        
+                    }
 
                     count++;
+                }
+
+                foreach(var key in toRemoveKeys)
+                {
+                    TaskCompletionSource<JToken> openTask = OpenTasks[key];
+
+                    OpenTasks.Remove(key);
+                    OpenTaskTimes.Remove(key);
+
+                    openTask.SetResult(JToken.FromObject(new ApiError()
+                    {
+                        Code = "0",
+                        IsError = "true",
+                        Message = "Request timeout."
+                    }));
                 }
             }
         } 
