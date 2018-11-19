@@ -13,6 +13,11 @@
     <RepositoryUrl>https://github.com/GetScatter/scatter-sharp</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>EOS, NetStandard, secp256k1, Blockchain, Scatter</PackageTags>
+    <AssemblyVersion>1.0.5.0</AssemblyVersion>
+    <FileVersion>1.0.5.0</FileVersion>
+    <PackageReleaseNotes>- Update eos-sharp to 1.0.7
+- Fixes to openTasks timeout</PackageReleaseNotes>
+    <Version>1.0.5</Version>
   </PropertyGroup>
 
   <ItemGroup>
