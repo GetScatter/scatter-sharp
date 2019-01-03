@@ -1,10 +1,9 @@
 ﻿using EosSharp;
 using Newtonsoft.Json.Linq;
-using ScatterSharp.Api;
+using ScatterSharp.Core.Api;
+using ScatterSharp.Core.Storage;
 using ScatterSharp.Providers;
-using ScatterSharp.Storage;
 using System;
-using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -68,14 +67,14 @@ namespace ScatterSharp
 
             string httpEndpoint = "";
 
-            if (Network.Port == 443)
-                httpEndpoint += "https://" + Network.Host;
+            if (Network.port == 443)
+                httpEndpoint += "https://" + Network.host;
             else
-                httpEndpoint += "http://" + Network.Host + ":" + Network.Port;
+                httpEndpoint += "http://" + Network.host + ":" + Network.port;
 
             return new Eos(new EosConfigurator()
             {
-                ChainId = Network.ChainId,
+                ChainId = Network.chainId,
                 HttpEndpoint = httpEndpoint,
                 SignProvider = new ScatterSignatureProvider(this)
             });
@@ -85,8 +84,8 @@ namespace ScatterSharp
         {
             var result = await SocketService.SendApiRequest(new Request()
             {
-                Type = "getVersion",
-                Payload = new { origin = AppName }
+                type = "getVersion",
+                payload = new { origin = AppName }
             });
 
             ThrowOnApiError(result);
@@ -100,8 +99,8 @@ namespace ScatterSharp
 
             var result = await SocketService.SendApiRequest(new Request()
             {
-                Type = "getOrRequestIdentity",
-                Payload = new { fields = requiredFields, origin = AppName }
+                type = "getOrRequestIdentity",
+                payload = new { fields = requiredFields, origin = AppName }
             });
 
             ThrowOnApiError(result);
@@ -117,8 +116,8 @@ namespace ScatterSharp
 
             var result = await SocketService.SendApiRequest(new Request()
             {
-                Type = "identityFromPermissions",
-                Payload = new { origin = AppName }
+                type = "identityFromPermissions",
+                payload = new { origin = AppName }
             });
 
             ThrowOnApiError(result);
@@ -135,8 +134,8 @@ namespace ScatterSharp
 
             var result = await SocketService.SendApiRequest(new Request()
             {
-                Type = "forgetIdentity",
-                Payload = new { origin = AppName }
+                type = "forgetIdentity",
+                payload = new { origin = AppName }
             });
 
             ThrowOnApiError(result);
@@ -151,8 +150,8 @@ namespace ScatterSharp
 
             var result = await SocketService.SendApiRequest(new Request()
             {
-                Type = "authenticate",
-                Payload = new { nonce, origin = AppName }
+                type = "authenticate",
+                payload = new { nonce, origin = AppName }
             });
 
             ThrowOnApiError(result);
@@ -166,8 +165,8 @@ namespace ScatterSharp
 
             var result = await SocketService.SendApiRequest(new Request()
             {
-                Type = "requestArbitrarySignature",
-                Payload = new { publicKey, data, whatfor, isHash, origin = AppName }
+                type = "requestArbitrarySignature",
+                payload = new { publicKey, data, whatfor, isHash, origin = AppName }
             });
 
             ThrowOnApiError(result);
@@ -181,8 +180,8 @@ namespace ScatterSharp
 
             var result = await SocketService.SendApiRequest(new Request()
             {
-                Type = "getPublicKey",
-                Payload = new { blockchain, origin = AppName }
+                type = "getPublicKey",
+                payload = new { blockchain, origin = AppName }
             });
 
             ThrowOnApiError(result);
@@ -196,8 +195,8 @@ namespace ScatterSharp
 
             var result = await SocketService.SendApiRequest(new Request()
             {
-                Type = "linkAccount",
-                Payload = new { publicKey, network = Network, origin = AppName }
+                type = "linkAccount",
+                payload = new { publicKey, network = Network, origin = AppName }
             });
 
             ThrowOnApiError(result);
@@ -211,8 +210,8 @@ namespace ScatterSharp
 
             var result = await SocketService.SendApiRequest(new Request()
             {
-                Type = "hasAccountFor",
-                Payload = new { network = Network, origin = AppName }
+                type = "hasAccountFor",
+                payload = new { network = Network, origin = AppName }
             });
 
             ThrowOnApiError(result);
@@ -226,8 +225,8 @@ namespace ScatterSharp
 
             var result = await SocketService.SendApiRequest(new Request()
             {
-                Type = "requestAddNetwork",
-                Payload = new { network = Network, origin = AppName }
+                type = "requestAddNetwork",
+                payload = new { network = Network, origin = AppName }
             });
 
             ThrowOnApiError(result);
@@ -242,8 +241,8 @@ namespace ScatterSharp
 
             var result = await SocketService.SendApiRequest(new Request()
             {
-                Type = "requestTransfer",
-                Payload = new { network = Network, to, amount, options, origin = AppName }
+                type = "requestTransfer",
+                payload = new { network = Network, to, amount, options, origin = AppName }
             });
 
             ThrowOnApiError(result);
@@ -257,8 +256,8 @@ namespace ScatterSharp
 
             var result = await SocketService.SendApiRequest(new Request()
             {
-                Type = "requestSignature",
-                Payload = payload
+                type = "requestSignature",
+                payload = payload
             });
 
             ThrowOnApiError(result);
@@ -273,8 +272,8 @@ namespace ScatterSharp
 
             var result = await SocketService.SendApiRequest(new Request()
             {
-                Type = "getEncryptionKey",
-                Payload = new
+                type = "getEncryptionKey",
+                payload = new
                 {
                     fromPublicKey,
                     toPublicKey,
@@ -304,7 +303,7 @@ namespace ScatterSharp
             var apiError = result.ToObject<ApiError>();
 
             if (apiError != null)
-                throw new Exception(apiError.Message);
+                throw new Exception(apiError.message);
         }
         #endregion
     }

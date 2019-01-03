@@ -1,17 +1,17 @@
 ﻿using Cryptography.ECDSA;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using ScatterSharp.Api;
-using ScatterSharp.Helpers;
-using ScatterSharp.Storage;
+using ScatterSharp.Core.Api;
+using ScatterSharp.Core.Helpers;
+using ScatterSharp.Core.Storage;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
 
 namespace ScatterSharp
 {
@@ -92,7 +92,7 @@ namespace ScatterSharp
 
         public async Task<JToken> SendApiRequest(Request request)
         {
-            if (request.Type == "identityFromPermissions" && !Paired)
+            if (request.type == "identityFromPermissions" && !Paired)
                 return false;
 
             await Pair();
@@ -102,16 +102,16 @@ namespace ScatterSharp
 
             var tcs = new TaskCompletionSource<JToken>();
 
-            request.Id = UtilsHelper.RandomNumber(24);
-            request.Appkey = StorageProvider.GetAppkey();
-            request.Nonce = StorageProvider.GetNonce() ?? "";
+            request.id = UtilsHelper.RandomNumber(24);
+            request.appkey = StorageProvider.GetAppkey();
+            request.nonce = StorageProvider.GetNonce() ?? "";
 
             var nextNonce = UtilsHelper.RandomNumberBytes();
-            request.NextNonce = UtilsHelper.ByteArrayToHexString(Sha256Manager.GetHash(nextNonce));
+            request.nextNonce = UtilsHelper.ByteArrayToHexString(Sha256Manager.GetHash(nextNonce));
             StorageProvider.SetNonce(UtilsHelper.ByteArrayToHexString(nextNonce));
 
-            OpenTasks.Add(request.Id, tcs);
-            OpenTaskTimes.Add(request.Id, DateTime.Now);
+            OpenTasks.Add(request.id, tcs);
+            OpenTaskTimes.Add(request.id, DateTime.Now);
 
             await Send("api", new { data = request, plugin = AppName });
 
@@ -260,9 +260,9 @@ namespace ScatterSharp
 
                     openTask.SetResult(JToken.FromObject(new ApiError()
                     {
-                        Code = "0",
-                        IsError = "true",
-                        Message = "Request timeout."
+                        code = "0",
+                        isError = "true",
+                        message = "Request timeout."
                     }));
                 }
             }

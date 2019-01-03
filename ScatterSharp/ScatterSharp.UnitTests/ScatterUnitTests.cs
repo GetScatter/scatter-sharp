@@ -1,12 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
-using ScatterSharp.Helpers;
+using ScatterSharp.Core.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ScatterSharp.UnitTests
@@ -24,12 +21,12 @@ namespace ScatterSharp.UnitTests
         //};
 
         //Jungle testnet
-        public static readonly Api.Network network = new Api.Network()
+        public static readonly Core.Api.Network network = new Core.Api.Network()
         {
-            Blockchain = Scatter.Blockchains.EOSIO,
-            Host = "jungle.cryptolions.io",
-            Port = 18888,
-            ChainId = "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
+            blockchain = Scatter.Blockchains.EOSIO,
+            host = "jungle.cryptolions.io",
+            port = 18888,
+            chainId = "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
         };
 
         public Scatter Scatter { get; set; }
@@ -97,7 +94,7 @@ namespace ScatterSharp.UnitTests
 
             var identity = await GetIdentityFromScatter();
 
-            Console.WriteLine(await Scatter.GetArbitrarySignature(identity.PublicKey, "HELLO WORLD!"));
+            Console.WriteLine(await Scatter.GetArbitrarySignature(identity.publicKey, "HELLO WORLD!"));
         }
 
         [TestMethod]
@@ -232,16 +229,16 @@ namespace ScatterSharp.UnitTests
             Console.WriteLine("Round Trip: {0}", roundtrip);
         }
 
-        private async Task<Api.Identity> GetIdentityFromScatter()
+        private async Task<Core.Api.Identity> GetIdentityFromScatter()
         {
-            return await Scatter.GetIdentity(new Api.IdentityRequiredFields()
+            return await Scatter.GetIdentity(new Core.Api.IdentityRequiredFields()
             {
-                Accounts = new List<Api.Network>()
+                accounts = new List<Core.Api.Network>()
                 {
                     network
                 },
-                Location = new List<Api.LocationFields>(),
-                Personal = new List<Api.PersonalFields>()
+                location = new List<Core.Api.LocationFields>(),
+                personal = new List<Core.Api.PersonalFields>()
             });
         }
     }

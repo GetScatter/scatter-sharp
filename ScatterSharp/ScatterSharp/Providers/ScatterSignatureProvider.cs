@@ -1,11 +1,9 @@
 ﻿using EosSharp;
-using EosSharp.Api.v1;
+using ScatterSharp.Core.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using System.Linq;
-using ScatterSharp.Helpers;
+using System.Threading.Tasks;
 
 namespace ScatterSharp.Providers
 {
@@ -25,10 +23,10 @@ namespace ScatterSharp.Providers
             if (identity == null)
                 throw new ArgumentNullException("identity");
 
-            if (identity.Accounts == null)
+            if (identity.accounts == null)
                 throw new ArgumentNullException("identity.Accounts");
 
-            return identity.Accounts.Select(acc => acc.PublicKey);
+            return identity.accounts.Select(acc => acc.publicKey);
         }
 
         public async Task<IEnumerable<string>> Sign(string chainId, IEnumerable<string> requiredKeys, byte[] signBytes, IEnumerable<string> abiNames = null)
@@ -54,7 +52,7 @@ namespace ScatterSharp.Providers
                 origin = Scatter.AppName
             });
 
-            return result.Signatures;
+            return result.signatures;
         }
     }
 }

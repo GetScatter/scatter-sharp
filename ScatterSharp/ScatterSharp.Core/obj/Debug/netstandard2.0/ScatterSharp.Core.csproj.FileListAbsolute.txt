@@ -1,0 +1,8 @@
+C:\eosio-mmcs\operanditech\scatter-sharp\ScatterSharp\ScatterSharp.Core\bin\Debug\netstandard2.0\ScatterSharp.Core.deps.json
+C:\eosio-mmcs\operanditech\scatter-sharp\ScatterSharp\ScatterSharp.Core\bin\Debug\netstandard2.0\ScatterSharp.Core.dll
+C:\eosio-mmcs\operanditech\scatter-sharp\ScatterSharp\ScatterSharp.Core\bin\Debug\netstandard2.0\ScatterSharp.Core.pdb
+C:\eosio-mmcs\operanditech\scatter-sharp\ScatterSharp\ScatterSharp.Core\obj\Debug\netstandard2.0\ScatterSharp.Core.csproj.CoreCompileInputs.cache
+C:\eosio-mmcs\operanditech\scatter-sharp\ScatterSharp\ScatterSharp.Core\obj\Debug\netstandard2.0\ScatterSharp.Core.AssemblyInfoInputs.cache
+C:\eosio-mmcs\operanditech\scatter-sharp\ScatterSharp\ScatterSharp.Core\obj\Debug\netstandard2.0\ScatterSharp.Core.AssemblyInfo.cs
+C:\eosio-mmcs\operanditech\scatter-sharp\ScatterSharp\ScatterSharp.Core\obj\Debug\netstandard2.0\ScatterSharp.Core.dll
+C:\eosio-mmcs\operanditech\scatter-sharp\ScatterSharp\ScatterSharp.Core\obj\Debug\netstandard2.0\ScatterSharp.Core.pdb

@@ -70,6 +70,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ScatterSharp.Core\ScatterSharp.Core.csproj">
+      <Project>{d20f2a06-4626-4165-8df8-75081b742710}</Project>
+      <Name>ScatterSharp.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ScatterSharp\ScatterSharp.csproj">
       <Project>{a7498dea-becb-49ce-9e9d-e06fdfa29e5a}</Project>
       <Name>ScatterSharp</Name>

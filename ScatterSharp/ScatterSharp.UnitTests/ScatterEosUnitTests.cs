@@ -13,12 +13,12 @@ namespace ScatterSharp.UnitTests
     public class ScatterEosUnitTests
     {
         //mainnet
-        public static readonly Api.Network network = new Api.Network()
+        public static readonly Core.Api.Network network = new Core.Api.Network()
         {
-            Blockchain = Scatter.Blockchains.EOSIO,
-            Host = "api.eossweden.se",
-            Port = 443,
-            ChainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"
+            blockchain = Scatter.Blockchains.EOSIO,
+            host = "api.eossweden.se",
+            port = 443,
+            chainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"
         };
 
         //btuga testnet
@@ -54,14 +54,14 @@ namespace ScatterSharp.UnitTests
             {
                 await Scatter.Connect();
 
-                var identity = await Scatter.GetIdentity(new Api.IdentityRequiredFields()
+                var identity = await Scatter.GetIdentity(new Core.Api.IdentityRequiredFields()
                 {
-                    Accounts = new List<Api.Network>()
+                    accounts = new List<Core.Api.Network>()
                     {
                         Scatter.Network
                     },
-                    Location = new List<Api.LocationFields>(),
-                    Personal = new List<Api.PersonalFields>()
+                    location = new List<Core.Api.LocationFields>(),
+                    personal = new List<Core.Api.PersonalFields>()
                 });
 
                 var eos = Scatter.Eos();
