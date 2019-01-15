@@ -21,11 +21,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cryptography.ECDSA.Secp256K1" Version="1.1.2" />
-    <PackageReference Include="eos-sharp" Version="1.0.7" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\..\eos-sharp\EosSharp\EosSharp\EosSharp.csproj" />
+    <ProjectReference Include="..\..\socketio-sharp\SocketIOSharp\SocketIOSharp\SocketIOSharp.csproj" />
+    <ProjectReference Include="..\..\socketio-sharp\SocketIOSharp\WebSocketSharp\websocket-sharp\websocket-sharp.csproj" />
     <ProjectReference Include="..\ScatterSharp.Core\ScatterSharp.Core.csproj" />
   </ItemGroup>
 

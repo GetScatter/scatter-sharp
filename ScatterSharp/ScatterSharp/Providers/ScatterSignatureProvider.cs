@@ -1,4 +1,5 @@
 ﻿using EosSharp;
+using EosSharp.Core.Interfaces;
 using ScatterSharp.Core.Helpers;
 using System;
 using System.Collections.Generic;

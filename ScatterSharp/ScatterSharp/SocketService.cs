@@ -4,14 +4,15 @@ using Newtonsoft.Json.Linq;
 using ScatterSharp.Core.Api;
 using ScatterSharp.Core.Helpers;
 using ScatterSharp.Core.Storage;
+using SocketIOSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using WebSocketSharp;
 
 namespace ScatterSharp
 {
@@ -24,7 +25,7 @@ namespace ScatterSharp
         private string AppName { get; set; }
         private int TimeoutMS { get; set; }
 
-        private ClientWebSocket Socket { get; set; }
+        private SocketIO Socket { get; set; }
 
         TaskCompletionSource<bool> PairOpenTask { get; set; }
         private Dictionary<string, TaskCompletionSource<JToken>> OpenTasks { get; set; }
@@ -35,7 +36,7 @@ namespace ScatterSharp
 
         public SocketService(IAppStorageProvider storageProvider, string appName, int timeout = 60000)
         {
-            Socket = new ClientWebSocket();
+            Socket = new SocketIO();
 
             OpenTasks = new Dictionary<string, TaskCompletionSource<JToken>>();
             OpenTaskTimes = new Dictionary<string, DateTime>();
@@ -53,22 +54,22 @@ namespace ScatterSharp
 
         public async Task Link(Uri uri, CancellationToken? cancellationToken)
         {
-            if (Socket.State != WebSocketState.Open && Socket.State != WebSocketState.Connecting)
-            {
-                await Socket.ConnectAsync(uri, cancellationToken ?? CancellationToken.None);
-            }
+            //if (Socket.State != WebSocketState.Open && Socket.State != WebSocketState.Connecting)
+            //{
+                await Socket.Connect(uri);
+            //}
 
-            if (Socket.State == WebSocketState.Open)
-            {
-                await Send();
+            //if (Socket.State == WebSocketState.Open)
+            //{
+                //await Send();
 
-                ReceiverTask = Receive(cancellationToken);
-                TimoutTasksTask = Task.Run(() => TimeoutOpenTasksCheck());
+                //ReceiverTask = Receive(cancellationToken);
+                //TimoutTasksTask = Task.Run(() => TimeoutOpenTasksCheck());
 
-                await Pair(true);
-            }  
-            else
-                throw new Exception("Socket closed.");
+                //await Pair(true);
+            //}  
+            //else
+            //    throw new Exception("Socket closed.");
 
         }
 
@@ -76,16 +77,16 @@ namespace ScatterSharp
         {
             PairOpenTask = new TaskCompletionSource<bool>();
 
-            await Send("pair", new
-            {
-                data = new
-                {
-                    appkey = StorageProvider.GetAppkey(),
-                    passthrough,
-                    origin = AppName
-                },
-                plugin = AppName
-            });
+            //await Socket.Emit("pair", new
+            //{
+            //    data = new
+            //    {
+            //        appkey = StorageProvider.GetAppkey(),
+            //        passthrough,
+            //        origin = AppName
+            //    },
+            //    plugin = AppName
+            //});
 
             await PairOpenTask.Task;
         }
@@ -113,19 +114,20 @@ namespace ScatterSharp
             OpenTasks.Add(request.id, tcs);
             OpenTaskTimes.Add(request.id, DateTime.Now);
 
-            await Send("api", new { data = request, plugin = AppName });
+            //await Socket.Emit("api", new { data = request, plugin = AppName });
 
             return await tcs.Task;
         }
 
         public Task Disconnect(CancellationToken? cancellationToken = null)
         {
-            return Socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close socket received", cancellationToken ?? CancellationToken.None);
+            return Socket.Disconnect(cancellationToken ?? CancellationToken.None);
         }
 
         public bool IsConnected()
         {
-            return Socket.State == WebSocketState.Open;
+            //return Socket.State == WebSocketState.Open;
+            return true;
         }
 
         public bool IsPaired()
@@ -134,7 +136,7 @@ namespace ScatterSharp
         }
 
         #region Utils
-        private Task Send(string type = null, object data = null)
+        /*private Task Send(string type = null, object data = null)
         {
             if (string.IsNullOrWhiteSpace(type) && data == null)
             {
@@ -151,9 +153,9 @@ namespace ScatterSharp
                 );
                 return Socket.SendAsync(arraySeg, WebSocketMessageType.Text, true, CancellationToken.None);
             }
-        }
+        }*/
 
-        private async Task Receive(CancellationToken? cancellationToken = null)
+        /*private async Task Receive(CancellationToken? cancellationToken = null)
         {
             byte[] frame = new byte[4096];
             byte[] preamble = new byte[SCATTER_API_PREAMBLE.Length];
@@ -224,9 +226,9 @@ namespace ScatterSharp
                         break;
                 }
             }
-        }
+        }*/
 
-        private void TimeoutOpenTasksCheck()
+        /*private void TimeoutOpenTasksCheck()
         {
             while(Socket.State == WebSocketState.Open)
             {
@@ -266,9 +268,9 @@ namespace ScatterSharp
                     }));
                 }
             }
-        } 
+        }*/
 
-        private void HandleApiResponse(JToken data)
+        /*private void HandleApiResponse(JToken data)
         {
             if (data == null && data.Children().Count() != 2)
                 return;
@@ -332,7 +334,7 @@ namespace ScatterSharp
         private void GenerateNewAppKey()
         {
             StorageProvider.SetAppkey("appkey:" + UtilsHelper.RandomNumber(24));
-        }
+        }*/
 
         #endregion
     }

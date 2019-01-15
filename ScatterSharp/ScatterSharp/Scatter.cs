@@ -1,4 +1,5 @@
 ﻿using EosSharp;
+using EosSharp.Core;
 using Newtonsoft.Json.Linq;
 using ScatterSharp.Core.Api;
 using ScatterSharp.Core.Storage;

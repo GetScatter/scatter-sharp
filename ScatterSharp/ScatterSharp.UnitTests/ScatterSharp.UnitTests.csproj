@@ -38,15 +38,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Cryptography.ECDSA, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cryptography.ECDSA.Secp256K1.1.1.2\lib\netstandard2.0\Cryptography.ECDSA.dll</HintPath>
-    </Reference>
-    <Reference Include="EosSharp, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\eos-sharp.1.0.7\lib\netstandard2.0\EosSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="FastMember, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FastMember.1.4.1\lib\net461\FastMember.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTest.TestFramework.1.3.2\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
@@ -70,6 +61,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\eos-sharp\EosSharp\EosSharp.Core\EosSharp.Core.csproj">
+      <Project>{E750ADC2-6362-4614-A3B3-CC5CF8114F16}</Project>
+      <Name>EosSharp.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\eos-sharp\EosSharp\EosSharp\EosSharp.csproj">
+      <Project>{BB5D6616-77B7-4006-B4CB-FE84E2B368FC}</Project>
+      <Name>EosSharp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ScatterSharp.Core\ScatterSharp.Core.csproj">
       <Project>{d20f2a06-4626-4165-8df8-75081b742710}</Project>
       <Name>ScatterSharp.Core</Name>

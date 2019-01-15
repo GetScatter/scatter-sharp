@@ -1,10 +1,8 @@
-﻿using EosSharp.Api.v1;
+﻿using EosSharp.Core.Api.v1;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ScatterSharp.UnitTests
@@ -68,17 +66,22 @@ namespace ScatterSharp.UnitTests
 
                 var result = await eos.CreateTransaction(new Transaction()
                 {
-                    Actions = new List<EosSharp.Api.v1.Action>()
+                    actions = new List<EosSharp.Core.Api.v1.Action>()
                     {
-                        new EosSharp.Api.v1.Action()
+                        new EosSharp.Core.Api.v1.Action()
                         {
-                            Account = "eosio.token",
-                            Authorization = new List<PermissionLevel>()
+                            account = "eosio.token",
+                            authorization = new List<PermissionLevel>()
                             {
-                                new PermissionLevel() {Actor = "tester112345", Permission = "active" }
+                                new PermissionLevel() {actor = "tester112345", permission = "active" }
                             },
-                            Name = "transfer",
-                            Data = new { from = "tester112345", to = "tester212345", quantity = "0.0001 EOS", memo = "hello crypto world!" }
+                            name = "transfer",
+                            data = new Dictionary<string, object>() {
+                                { "from", "tester112345" },
+                                { "to", "tester212345" },
+                                { "quantity", "0.0001 EOS" },
+                                { "memo", "hello crypto world!" }
+                            }
                         }
                     }
                 });
