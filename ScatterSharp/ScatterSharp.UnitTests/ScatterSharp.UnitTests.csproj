@@ -65,9 +65,9 @@
       <Project>{E750ADC2-6362-4614-A3B3-CC5CF8114F16}</Project>
       <Name>EosSharp.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\eos-sharp\EosSharp\EosSharp\EosSharp.csproj">
-      <Project>{BB5D6616-77B7-4006-B4CB-FE84E2B368FC}</Project>
-      <Name>EosSharp</Name>
+    <ProjectReference Include="..\..\eos-sharp\EosSharp\EosSharp.Unity3D\EosSharp.Unity3D.csproj">
+      <Project>{71517f24-d1f3-4508-a95d-891d2d0eb779}</Project>
+      <Name>EosSharp.Unity3D</Name>
     </ProjectReference>
     <ProjectReference Include="..\ScatterSharp.Core\ScatterSharp.Core.csproj">
       <Project>{d20f2a06-4626-4165-8df8-75081b742710}</Project>
