@@ -146,14 +146,14 @@ namespace ScatterSharp
             return result.ToObject<bool>();
         }
 
-        public async Task<string> Authenticate(string nonce)
+        public async Task<string> Authenticate(string nonce, string data = null, string publicKey = null)
         {
             ThrowNoAuth();
 
             var result = await SocketService.SendApiRequest(new Request()
             {
                 type = "authenticate",
-                payload = new { nonce, origin = AppName }
+                payload = new { nonce, data, publicKey, origin = AppName }
             });
 
             ThrowOnApiError(result);
@@ -265,6 +265,17 @@ namespace ScatterSharp
             ThrowOnApiError(result);
 
             return result.ToObject<SignaturesResult>();
+        }
+
+        public async Task AddToken(Token token)
+        {
+            ThrowNoAuth();
+
+            var result = await SocketService.SendApiRequest(new Request()
+            {
+                type = "addToken",
+                payload = new { network = Network, origin = AppName }
+            });
         }
 
         //TODO test on new branch

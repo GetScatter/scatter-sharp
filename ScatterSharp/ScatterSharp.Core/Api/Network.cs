@@ -5,7 +5,7 @@
         public string name;
         public string blockchain;
         public string host;
-        public int port;
+        public int    port;
         public string protocol;
         public string chainId;
 
