@@ -4,10 +4,16 @@
 
 /ScatterSharp/ScatterSharp/obj
 /ScatterSharp/ScatterSharp.UnitTests/obj
+/ScatterSharp/ScatterSharp.Core/obj
+/ScatterSharp/ScatterSharp.UnitTests.Core/obj
+/ScatterSharp/ScatterSharp.Unity3D/obj
 /ScatterSharp/packages
 *.suo
 /ScatterSharp/ScatterSharp/bin
 /ScatterSharp/ScatterSharp.UnitTests/bin
+/ScatterSharp/ScatterSharp.Core/bin
+/ScatterSharp/ScatterSharp.UnitTests.Core/bin
+/ScatterSharp/ScatterSharp.Unity3D/bin
 /ScatterSharp/.vs
 /Unity3D/ScatterSharpTest/Assets/Plugins
 /Unity3D/ScatterSharpTest/.vs/ScatterSharpTest/v15

@@ -1,6 +1,8 @@
 ﻿using EosSharp.Core.Api.v1;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using ScatterSharp.Core.Api;
+using ScatterSharp.UnitTests.Core;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,7 +13,7 @@ namespace ScatterSharp.UnitTests
     public class ScatterEosUnitTests
     {
         //mainnet
-        public static readonly Core.Api.Network network = new Core.Api.Network()
+        public static readonly Network network = new Network()
         {
             blockchain = Scatter.Blockchains.EOSIO,
             host = "api.eossweden.se",
@@ -28,71 +30,26 @@ namespace ScatterSharp.UnitTests
         //    ChainId = "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
         //};
 
-        public Scatter Scatter { get; set; }
+        public ScatterEosUnitTestCases ScatterEosUnitTestCases { get; set; }
 
         public ScatterEosUnitTests()
         {
-            Scatter = new Scatter("SCATTER-SHARP-EOS", network);
+            var scatter = new Scatter("SCATTER-SHARP", network);
+            ScatterEosUnitTestCases = new ScatterEosUnitTestCases(scatter, network);
         }
 
         [TestMethod]
         [TestCategory("Scatter EOS Tests")]
         public async Task Connect()
         {
-            await Scatter.Connect();
-            var eos = Scatter.Eos();
+            await ScatterEosUnitTestCases.Connect();
         }
 
         [TestMethod]
         [TestCategory("Scatter EOS Tests")]
         public async Task PushTransaction()
-        {            
-            bool success = false;
-            try
-            {
-                await Scatter.Connect();
-
-                var identity = await Scatter.GetIdentity(new Core.Api.IdentityRequiredFields()
-                {
-                    accounts = new List<Core.Api.Network>()
-                    {
-                        Scatter.Network
-                    },
-                    location = new List<Core.Api.LocationFields>(),
-                    personal = new List<Core.Api.PersonalFields>()
-                });
-
-                var eos = Scatter.Eos();
-
-                var result = await eos.CreateTransaction(new Transaction()
-                {
-                    actions = new List<EosSharp.Core.Api.v1.Action>()
-                    {
-                        new EosSharp.Core.Api.v1.Action()
-                        {
-                            account = "eosio.token",
-                            authorization = new List<PermissionLevel>()
-                            {
-                                new PermissionLevel() {actor = "tester112345", permission = "active" }
-                            },
-                            name = "transfer",
-                            data = new Dictionary<string, object>() {
-                                { "from", "tester112345" },
-                                { "to", "tester212345" },
-                                { "quantity", "0.0001 EOS" },
-                                { "memo", "hello crypto world!" }
-                            }
-                        }
-                    }
-                });
-                success = true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(JsonConvert.SerializeObject(ex));
-            }
-
-            Assert.IsTrue(success);
+        {                        
+            Assert.IsTrue(await ScatterEosUnitTestCases.PushTransaction());
         }
     }
 }

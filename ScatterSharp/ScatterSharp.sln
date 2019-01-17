@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocketIOSharp", "..\socketi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "websocket-sharp", "..\socketio-sharp\SocketIOSharp\WebSocketSharp\websocket-sharp\websocket-sharp.csproj", "{B357BAC7-529E-4D81-A0D2-71041B19C8DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScatterSharp.UnitTests.Core", "ScatterSharp.UnitTests.Core\ScatterSharp.UnitTests.Core.csproj", "{1C962869-5F7D-4612-A9FE-BCB4CB7252B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug_Ubuntu|Any CPU = Debug_Ubuntu|Any CPU
@@ -101,6 +103,14 @@ Global
 		{B357BAC7-529E-4D81-A0D2-71041B19C8DE}.Release_Ubuntu|Any CPU.Build.0 = Release_Ubuntu|Any CPU
 		{B357BAC7-529E-4D81-A0D2-71041B19C8DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B357BAC7-529E-4D81-A0D2-71041B19C8DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C962869-5F7D-4612-A9FE-BCB4CB7252B5}.Debug_Ubuntu|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C962869-5F7D-4612-A9FE-BCB4CB7252B5}.Debug_Ubuntu|Any CPU.Build.0 = Debug|Any CPU
+		{1C962869-5F7D-4612-A9FE-BCB4CB7252B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C962869-5F7D-4612-A9FE-BCB4CB7252B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C962869-5F7D-4612-A9FE-BCB4CB7252B5}.Release_Ubuntu|Any CPU.ActiveCfg = Release|Any CPU
+		{1C962869-5F7D-4612-A9FE-BCB4CB7252B5}.Release_Ubuntu|Any CPU.Build.0 = Release|Any CPU
+		{1C962869-5F7D-4612-A9FE-BCB4CB7252B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C962869-5F7D-4612-A9FE-BCB4CB7252B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
