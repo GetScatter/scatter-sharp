@@ -6,7 +6,6 @@ using ScatterSharp.Core.Api;
 using ScatterSharp.Core.Storage;
 using ScatterSharp.Providers;
 using System;
-using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -40,20 +39,20 @@ namespace ScatterSharp
             SocketService.Dispose();
         }
 
-        public async Task Connect(CancellationToken? cancellationToken = null)
+        public async Task Connect()
         {
             try
             {
                 //Try connect with wss connection
                 Uri wssURI = new Uri(string.Format(WSURI, "wss", "local.get-scatter.com", "50006"));
-                await SocketService.Link(wssURI, cancellationToken);
+                await SocketService.Link(wssURI);
             }
-            catch(WebSocketException)
+            catch(Exception)
             {
                 //try normal ws connection
                 SocketService = new SocketService(new MemoryStorageProvider(), AppName);
                 Uri wsURI = new Uri(string.Format(WSURI, "ws", "127.0.0.1", "50005"));
-                await SocketService.Link(wsURI, cancellationToken);
+                await SocketService.Link(wsURI);
             }
 
             this.Identity = await this.GetIdentityFromPermissions();

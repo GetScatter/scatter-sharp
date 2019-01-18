@@ -23,7 +23,7 @@ namespace ScatterSharp
         private string AppName { get; set; }
         private int TimeoutMS { get; set; }
 
-        private SocketIO Socket { get; set; }
+        private SocketIO SockIO { get; set; }
 
         TaskCompletionSource<bool> PairOpenTask { get; set; }
         private Dictionary<string, TaskCompletionSource<JToken>> OpenTasks { get; set; }
@@ -33,7 +33,13 @@ namespace ScatterSharp
 
         public SocketService(IAppStorageProvider storageProvider, string appName, int timeout = 60000)
         {
-            Socket = new SocketIO(60000, "scatter");
+            SockIO = new SocketIO(new SocketIOConfigurator() {
+                Namespace = "scatter",
+                Proxy = new Proxy()
+                {
+                    Url = "http://127.0.0.1:8888"
+                }
+            });
 
             OpenTasks = new Dictionary<string, TaskCompletionSource<JToken>>();
             OpenTaskTimes = new Dictionary<string, DateTime>();
@@ -45,30 +51,30 @@ namespace ScatterSharp
 
         public void Dispose()
         {
-            Socket.Dispose();
+            SockIO.Dispose();
             StorageProvider.Save();
         }
 
-        public async Task Link(Uri uri, CancellationToken? cancellationToken)
+        public async Task Link(Uri uri)
         {
-            if (Socket.GetState() != WebSocketState.Open && Socket.GetState() != WebSocketState.Connecting)
+            if (SockIO.GetState() != WebSocketState.Open && SockIO.GetState() != WebSocketState.Connecting)
             {
-                await Socket.ConnectAsync(uri);
+                await SockIO.ConnectAsync(uri);
             }
 
-            if (Socket.GetState() == WebSocketState.Open)
+            if (SockIO.GetState() == WebSocketState.Open)
             {
-                Socket.On("paired", (args) =>
+                SockIO.On("paired", (args) =>
                 {
                     HandlePairedResponse(args.First().ToObject<bool?>());
                 });
 
-                Socket.On("rekey", (args) =>
+                SockIO.On("rekey", (args) =>
                 {
                     HandleRekeyResponse();
                 });
 
-                Socket.On("api", (args) =>
+                SockIO.On("api", (args) =>
                 {
                     HandleApiResponse(args.First());
                 });
@@ -86,7 +92,7 @@ namespace ScatterSharp
         {
             PairOpenTask = new TaskCompletionSource<bool>();
 
-            await Socket.EmitAsync("pair", new
+            await SockIO.EmitAsync("pair", new
             {
                 data = new
                 {
@@ -123,19 +129,19 @@ namespace ScatterSharp
             OpenTasks.Add(request.id, tcs);
             OpenTaskTimes.Add(request.id, DateTime.Now);
 
-            await Socket.EmitAsync("api", new { data = request, plugin = AppName });
+            await SockIO.EmitAsync("api", new { data = request, plugin = AppName });
 
             return await tcs.Task;
         }
 
         public Task Disconnect(CancellationToken? cancellationToken = null)
         {
-            return Socket.DisconnectAsync(cancellationToken ?? CancellationToken.None);
+            return SockIO.DisconnectAsync(cancellationToken ?? CancellationToken.None);
         }
 
         public bool IsConnected()
         {
-            return Socket.GetState() == WebSocketState.Open;
+            return SockIO.GetState() == WebSocketState.Open;
         }
 
         public bool IsPaired()
@@ -147,7 +153,7 @@ namespace ScatterSharp
 
         private void TimeoutOpenTasksCheck()
         {
-            while(Socket.GetState() == WebSocketState.Open)
+            while(SockIO.GetState() == WebSocketState.Open)
             {
                 var now = DateTime.Now;
                 int count = 0;
@@ -212,7 +218,7 @@ namespace ScatterSharp
         private void HandleRekeyResponse()
         {
             GenerateNewAppKey();
-            Socket.EmitAsync("rekeyed", new
+            SockIO.EmitAsync("rekeyed", new
             {
                 plugin = AppName,
                 data = new

@@ -1,7 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Cryptography.ECDSA;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using ScatterSharp.Core.Api;
 using ScatterSharp.Core.Helpers;
+using ScatterSharp.Core.Storage;
 using ScatterSharp.UnitTests.Core;
 using System;
 using System.Collections.Generic;
@@ -35,7 +37,10 @@ namespace ScatterSharp.UnitTests
 
         public ScatterUnitTests()
         {
-            var scatter = new Scatter("SCATTER-SHARP", network);
+            var storageProvider = new MemoryStorageProvider();
+            storageProvider.SetAppkey(UtilsHelper.ByteArrayToHexString(Sha256Manager.GetHash(Encoding.UTF8.GetBytes("appkey:0a182c0d054b6fd9f9361c82fcd040b46c41a6f61952a3ea"))));
+
+            var scatter = new Scatter("SCATTER-SHARP", network, storageProvider);
             ScatterUnitTestCases = new ScatterUnitTestCases(scatter, network);
         }
 
