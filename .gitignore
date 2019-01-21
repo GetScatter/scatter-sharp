@@ -18,3 +18,5 @@
 /Unity3D/ScatterSharpTest/Assets/Plugins
 /Unity3D/ScatterSharpTest/.vs/ScatterSharpTest/v15
 /Unity3D/ScatterSharpTest/obj/Debug
+/ScatterSharp/ScatterSharp.UnitTests.Unity3D/obj
+/ScatterSharp/ScatterSharp.UnitTests.Unity3D/bin/Debug/netstandard2.0
