@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 using ScatterSharp.Core.Api;
 using ScatterSharp.Core.Helpers;
 using ScatterSharp.Core.Interfaces;
-using SocketIOSharp;
+using SocketIOSharp.Unity3D;
 using SocketIOSharp.Core;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WebSocketSharp;
 
-namespace ScatterSharp
+namespace ScatterSharp.Unity3D
 {
     public class SocketService : IDisposable
     {

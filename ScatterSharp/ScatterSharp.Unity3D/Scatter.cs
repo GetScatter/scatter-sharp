@@ -5,7 +5,7 @@ using ScatterSharp.Core.Interfaces;
 using System;
 using System.Threading.Tasks;
 
-namespace ScatterSharp
+namespace ScatterSharp.Unity3D
 {
     public class Scatter : IScatter
     {

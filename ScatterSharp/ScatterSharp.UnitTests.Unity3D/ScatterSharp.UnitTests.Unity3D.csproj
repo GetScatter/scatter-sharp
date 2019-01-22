@@ -5,7 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Cryptography.ECDSA.Secp256K1" Version="1.1.2" />
+    <PackageReference Include="Json.NET.Aot" Version="9.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ScatterSharp.UnitTests.Core\ScatterSharp.UnitTests.Core.csproj" />
+    <ProjectReference Include="..\ScatterSharp.Unity3D\ScatterSharp.Unity3D.csproj" />
   </ItemGroup>
 
 </Project>

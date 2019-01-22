@@ -13,5 +13,13 @@
         {
             protocol = "https";
         }
+
+        public string GetHttpEndpoint()
+        {
+            if (port == 443)
+                return "https://" + host;
+            else
+                return "http://" + host + ":" + port;
+        }
     }
 }

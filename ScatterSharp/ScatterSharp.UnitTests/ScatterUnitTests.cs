@@ -1,6 +1,7 @@
 ﻿using Cryptography.ECDSA;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using ScatterSharp.Core;
 using ScatterSharp.Core.Api;
 using ScatterSharp.Core.Helpers;
 using ScatterSharp.Core.Storage;
@@ -18,7 +19,7 @@ namespace ScatterSharp.UnitTests
         //mainnet
         public static readonly Network network = new Network()
         {
-            blockchain = Scatter.Blockchains.EOSIO,
+            blockchain = ScatterConstants.Blockchains.EOSIO,
             host = "nodes.eos42.io",
             port = 443,
             chainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"

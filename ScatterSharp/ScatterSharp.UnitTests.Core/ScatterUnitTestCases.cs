@@ -1,20 +1,21 @@
-﻿using Newtonsoft.Json;
-using ScatterSharp.Core.Api;
+﻿using ScatterSharp.Core.Api;
 using ScatterSharp.Core.Helpers;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using ScatterSharp.Core.Interfaces;
+using ScatterSharp.Core;
 
 namespace ScatterSharp.UnitTests.Core
 {
     public class ScatterUnitTestCases
     {
-        private Scatter Scatter { get; set; }
+        private IScatter Scatter { get; set; }
         private Network Network { get; set; }
 
-        public ScatterUnitTestCases(Scatter scatter, Network network)
+        public ScatterUnitTestCases(IScatter scatter, Network network)
         {
             Scatter = scatter;
             Network = network;
@@ -66,7 +67,7 @@ namespace ScatterSharp.UnitTests.Core
         public async Task<string> GetPublicKey()
         {
             await Scatter.Connect();
-            return await Scatter.GetPublicKey(Scatter.Blockchains.EOSIO);
+            return await Scatter.GetPublicKey(ScatterConstants.Blockchains.EOSIO);
         }
 
         public async Task<bool> LinkAccount()
@@ -108,10 +109,10 @@ namespace ScatterSharp.UnitTests.Core
             return await Scatter.RequestSignature(new
             {
                 Network,
-                blockchain = Scatter.Blockchains.EOSIO,
+                blockchain = ScatterConstants.Blockchains.EOSIO,
                 requiredFields = new List<object>(),
                 //TODO add transaction
-                origin = Scatter.AppName
+                origin = Scatter.GetAppName()
             });
         }
 
@@ -131,8 +132,8 @@ namespace ScatterSharp.UnitTests.Core
         {
             await Scatter.Connect();
 
-            var fromKey = await Scatter.GetPublicKey(Scatter.Blockchains.EOSIO);
-            var toKey = await Scatter.GetPublicKey(Scatter.Blockchains.EOSIO);
+            var fromKey = await Scatter.GetPublicKey(ScatterConstants.Blockchains.EOSIO);
+            var toKey = await Scatter.GetPublicKey(ScatterConstants.Blockchains.EOSIO);
             var r = new Random();
 
             return await Scatter.GetEncryptionKey(fromKey, toKey, (UInt64)r.Next());
@@ -142,8 +143,8 @@ namespace ScatterSharp.UnitTests.Core
         {
             await Scatter.Connect();
 
-            var fromKey = await Scatter.GetPublicKey(Scatter.Blockchains.EOSIO);
-            var toKey = await Scatter.GetPublicKey(Scatter.Blockchains.EOSIO);
+            var fromKey = await Scatter.GetPublicKey(ScatterConstants.Blockchains.EOSIO);
+            var toKey = await Scatter.GetPublicKey(ScatterConstants.Blockchains.EOSIO);
             var r = new Random();
             var encryptionKey = await Scatter.GetEncryptionKey(fromKey, toKey, (UInt64)r.Next());
             var encryptionKeyBytes = UtilsHelper.HexStringToByteArray(encryptionKey);
@@ -163,8 +164,8 @@ namespace ScatterSharp.UnitTests.Core
         {
             await Scatter.Connect();
 
-            var fromKey = await Scatter.GetPublicKey(Scatter.Blockchains.EOSIO);
-            var toKey = await Scatter.GetPublicKey(Scatter.Blockchains.EOSIO);
+            var fromKey = await Scatter.GetPublicKey(ScatterConstants.Blockchains.EOSIO);
+            var toKey = await Scatter.GetPublicKey(ScatterConstants.Blockchains.EOSIO);
             var r = new Random();
             var nonce = (UInt64)r.Next();
             var text = "Hello crypto secret message!";

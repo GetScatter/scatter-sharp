@@ -1,9 +1,11 @@
 ﻿using Cryptography.ECDSA;
 using Newtonsoft.Json;
+using ScatterSharp.Core;
 using ScatterSharp.Core.Api;
 using ScatterSharp.Core.Helpers;
 using ScatterSharp.Core.Storage;
 using ScatterSharp.UnitTests.Core;
+using ScatterSharp.Unity3D;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +26,7 @@ namespace ScatterSharp.UnitTests
         //Jungle testnet
         public static readonly Network network = new Network()
         {
-            blockchain = Scatter.Blockchains.EOSIO,
+            blockchain = ScatterConstants.Blockchains.EOSIO,
             host = "jungle.cryptolions.io",
             port = 18888,
             chainId = "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"

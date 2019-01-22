@@ -1,4 +1,6 @@
-﻿namespace ScatterSharp.Core.Storage
+﻿using ScatterSharp.Core.Interfaces;
+
+namespace ScatterSharp.Core.Storage
 {
     public class MemoryStorageProvider : IAppStorageProvider
     {

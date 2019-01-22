@@ -1,18 +1,19 @@
-﻿using EosSharp;
-using EosSharp.Core.Interfaces;
+﻿using EosSharp.Core.Interfaces;
+using ScatterSharp.Core;
 using ScatterSharp.Core.Helpers;
+using ScatterSharp.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ScatterSharp.Providers
+namespace ScatterSharp.EosProvider
 {
     public class ScatterSignatureProvider : ISignProvider
     {
-        private Scatter Scatter { get; set; }
+        private IScatter Scatter { get; set; }
 
-        public ScatterSignatureProvider(Scatter scatter)
+        public ScatterSignatureProvider(IScatter scatter)
         {
             Scatter = scatter;
         }
@@ -41,8 +42,8 @@ namespace ScatterSharp.Providers
 
             var result = await Scatter.RequestSignature(new
             {
-                network = Scatter.Network,
-                blockchain = Scatter.Blockchains.EOSIO,
+                network = Scatter.GetNetwork(),
+                blockchain = ScatterConstants.Blockchains.EOSIO,
                 requiredFields = new List<object>(),
                 transaction = new
                 {
@@ -50,7 +51,7 @@ namespace ScatterSharp.Providers
                     serializedTransaction = UtilsHelper.ByteArrayToHexString(signBytes),
                     chainId
                 },
-                origin = Scatter.AppName
+                origin = Scatter.GetAppName()
             });
 
             return result.signatures;

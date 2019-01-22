@@ -21,9 +21,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\eos-sharp\EosSharp\EosSharp\EosSharp.csproj" />
+    <PackageReference Include="Cryptography.ECDSA.Secp256K1" Version="1.1.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\socketio-sharp\SocketIOSharp\SocketIOSharp\SocketIOSharp.csproj" />
-    <ProjectReference Include="..\..\socketio-sharp\SocketIOSharp\WebSocketSharp\websocket-sharp\websocket-sharp.csproj" />
     <ProjectReference Include="..\ScatterSharp.Core\ScatterSharp.Core.csproj" />
   </ItemGroup>
 

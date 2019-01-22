@@ -4,4 +4,15 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Cryptography.ECDSA.Secp256K1" Version="1.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\socketio-sharp\SocketIOSharp\SocketIOSharp.Core\SocketIOSharp.Core.csproj" />
+    <ProjectReference Include="..\..\..\socketio-sharp\SocketIOSharp\SocketIOSharp.Unity3D\SocketIOSharp.Unity3D.csproj" />
+    <ProjectReference Include="..\..\socketio-sharp\SocketIOSharp\WebSocketSharp\websocket-sharp\websocket-sharp.csproj" />
+    <ProjectReference Include="..\ScatterSharp.Core\ScatterSharp.Core.csproj" />
+  </ItemGroup>
+
 </Project>
