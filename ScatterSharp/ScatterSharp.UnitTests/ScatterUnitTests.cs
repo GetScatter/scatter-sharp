@@ -16,12 +16,12 @@ namespace ScatterSharp.UnitTests
     public class ScatterUnitTests
     {
         //mainnet
-        //public static readonly Api.Network network = new Api.Network()
+        //public static readonly Network network = new Network()
         //{
-        //    Blockchain = Scatter.Blockchains.EOSIO,
-        //    Host = "nodes.eos42.io",
-        //    Port = 443,
-        //    ChainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"
+        //    blockchain = Scatter.Blockchains.EOSIO,
+        //    host = "nodes.eos42.io",
+        //    port = 443,
+        //    chainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"
         //};
 
         //Jungle testnet
