@@ -1,12 +1,10 @@
 ﻿using EosSharp;
 using EosSharp.Core;
-using EosSharp.Unity3D;
 using Newtonsoft.Json.Linq;
 using ScatterSharp.Core.Api;
 using ScatterSharp.Core.Storage;
 using ScatterSharp.Providers;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ScatterSharp
@@ -190,14 +188,14 @@ namespace ScatterSharp
             return result.ToObject<string>();
         }
 
-        public async Task<bool> LinkAccount(string publicKey)
+        public async Task<bool> LinkAccount(LinkAccount account)
         {
             ThrowNoAuth();
 
             var result = await SocketService.SendApiRequest(new Request()
             {
                 type = "linkAccount",
-                payload = new { publicKey, network = Network, origin = AppName }
+                payload = new { account, network = Network, origin = AppName }
             });
 
             ThrowOnApiError(result);
@@ -273,7 +271,7 @@ namespace ScatterSharp
             var result = await SocketService.SendApiRequest(new Request()
             {
                 type = "addToken",
-                payload = new { network = Network, origin = AppName }
+                payload = new { token, network = Network, origin = AppName }
             });
         }
 

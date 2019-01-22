@@ -21,7 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\eos-sharp\EosSharp\EosSharp.Unity3D\EosSharp.Unity3D.csproj" />
+    <ProjectReference Include="..\..\eos-sharp\EosSharp\EosSharp\EosSharp.csproj" />
     <ProjectReference Include="..\..\socketio-sharp\SocketIOSharp\SocketIOSharp\SocketIOSharp.csproj" />
     <ProjectReference Include="..\..\socketio-sharp\SocketIOSharp\WebSocketSharp\websocket-sharp\websocket-sharp.csproj" />
     <ProjectReference Include="..\ScatterSharp.Core\ScatterSharp.Core.csproj" />

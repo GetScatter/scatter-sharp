@@ -2,6 +2,7 @@
 using ScatterSharp.Core.Api;
 using ScatterSharp.Core.Helpers;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -71,8 +72,13 @@ namespace ScatterSharp.UnitTests.Core
         public async Task<bool> LinkAccount()
         {
             await Scatter.Connect();
-            var pubKey = await Scatter.GetPublicKey(Scatter.Blockchains.EOSIO);
-            return await Scatter.LinkAccount(pubKey);
+            var identity = await GetIdentityFromScatter();
+            var account = identity.accounts.First();
+            return await Scatter.LinkAccount(new LinkAccount() {
+                publicKey = account.publicKey,
+                name = account.name,
+                authority = account.authority
+            });
         }
 
         public async Task<bool> HasAccountFor()
@@ -115,8 +121,8 @@ namespace ScatterSharp.UnitTests.Core
             var identity = await GetIdentityFromScatter();
             await Scatter.AddToken(new Token()
             {
-                name = "SYS",
-                symbol = "SYS",
+                name = "EOS",
+                symbol = "EOS",
                 contract = "eosio.token"
             });
         }

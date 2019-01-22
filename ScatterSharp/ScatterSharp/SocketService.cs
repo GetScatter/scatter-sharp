@@ -5,6 +5,7 @@ using ScatterSharp.Core.Api;
 using ScatterSharp.Core.Helpers;
 using ScatterSharp.Core.Storage;
 using SocketIOSharp;
+using SocketIOSharp.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;

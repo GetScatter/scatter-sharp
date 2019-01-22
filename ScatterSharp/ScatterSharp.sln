@@ -23,7 +23,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "websocket-sharp", "..\socke
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScatterSharp.UnitTests.Core", "ScatterSharp.UnitTests.Core\ScatterSharp.UnitTests.Core.csproj", "{1C962869-5F7D-4612-A9FE-BCB4CB7252B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScatterSharp.UnitTests.Unity3D", "ScatterSharp.UnitTests.Unity3D\ScatterSharp.UnitTests.Unity3D.csproj", "{23362DEA-4933-402F-ACB8-22ADAD36E782}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScatterSharp.UnitTests.Unity3D", "ScatterSharp.UnitTests.Unity3D\ScatterSharp.UnitTests.Unity3D.csproj", "{23362DEA-4933-402F-ACB8-22ADAD36E782}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocketIOSharp.Core", "..\..\socketio-sharp\SocketIOSharp\SocketIOSharp.Core\SocketIOSharp.Core.csproj", "{45F3AA32-DB9B-4526-A400-A7D96086CB7A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocketIOSharp.Unity3D", "..\..\socketio-sharp\SocketIOSharp\SocketIOSharp.Unity3D\SocketIOSharp.Unity3D.csproj", "{290D7B87-2B88-434C-8C66-CEC7742F780E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -121,6 +125,22 @@ Global
 		{23362DEA-4933-402F-ACB8-22ADAD36E782}.Release_Ubuntu|Any CPU.Build.0 = Release|Any CPU
 		{23362DEA-4933-402F-ACB8-22ADAD36E782}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23362DEA-4933-402F-ACB8-22ADAD36E782}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45F3AA32-DB9B-4526-A400-A7D96086CB7A}.Debug_Ubuntu|Any CPU.ActiveCfg = Debug|Any CPU
+		{45F3AA32-DB9B-4526-A400-A7D96086CB7A}.Debug_Ubuntu|Any CPU.Build.0 = Debug|Any CPU
+		{45F3AA32-DB9B-4526-A400-A7D96086CB7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45F3AA32-DB9B-4526-A400-A7D96086CB7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45F3AA32-DB9B-4526-A400-A7D96086CB7A}.Release_Ubuntu|Any CPU.ActiveCfg = Release|Any CPU
+		{45F3AA32-DB9B-4526-A400-A7D96086CB7A}.Release_Ubuntu|Any CPU.Build.0 = Release|Any CPU
+		{45F3AA32-DB9B-4526-A400-A7D96086CB7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45F3AA32-DB9B-4526-A400-A7D96086CB7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{290D7B87-2B88-434C-8C66-CEC7742F780E}.Debug_Ubuntu|Any CPU.ActiveCfg = Debug|Any CPU
+		{290D7B87-2B88-434C-8C66-CEC7742F780E}.Debug_Ubuntu|Any CPU.Build.0 = Debug|Any CPU
+		{290D7B87-2B88-434C-8C66-CEC7742F780E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{290D7B87-2B88-434C-8C66-CEC7742F780E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{290D7B87-2B88-434C-8C66-CEC7742F780E}.Release_Ubuntu|Any CPU.ActiveCfg = Release|Any CPU
+		{290D7B87-2B88-434C-8C66-CEC7742F780E}.Release_Ubuntu|Any CPU.Build.0 = Release|Any CPU
+		{290D7B87-2B88-434C-8C66-CEC7742F780E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{290D7B87-2B88-434C-8C66-CEC7742F780E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
