@@ -37,7 +37,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scatter-sharp", "scatter-sh
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scatter-sharp-providers", "scatter-sharp-providers", "{F3030BB4-F4C7-4CC4-9DC4-BE24306930E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScatterSharp.EosProvider", "ScatterSharp.Eos\ScatterSharp.EosProvider.csproj", "{3DC847A8-8FF2-4DF3-ACA5-F3C62023457D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScatterSharp.EosProvider", "ScatterSharp.EosProvider\ScatterSharp.EosProvider.csproj", "{3DC847A8-8FF2-4DF3-ACA5-F3C62023457D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
