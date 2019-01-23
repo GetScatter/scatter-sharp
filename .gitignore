@@ -2,21 +2,23 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
+/ScatterSharp/.vs
+/ScatterSharp/packages
 /ScatterSharp/ScatterSharp/obj
 /ScatterSharp/ScatterSharp.UnitTests/obj
 /ScatterSharp/ScatterSharp.Core/obj
 /ScatterSharp/ScatterSharp.UnitTests.Core/obj
 /ScatterSharp/ScatterSharp.Unity3D/obj
-/ScatterSharp/packages
-*.suo
+/ScatterSharp/ScatterSharp.UnitTests.Unity3D/obj
+/ScatterSharp/ScatterSharp.EosProvider/obj
 /ScatterSharp/ScatterSharp/bin
 /ScatterSharp/ScatterSharp.UnitTests/bin
 /ScatterSharp/ScatterSharp.Core/bin
 /ScatterSharp/ScatterSharp.UnitTests.Core/bin
 /ScatterSharp/ScatterSharp.Unity3D/bin
-/ScatterSharp/.vs
+/ScatterSharp/ScatterSharp.UnitTests.Unity3D/bin
+/ScatterSharp/ScatterSharp.EosProvider/bin
 /Unity3D/ScatterSharpTest/Assets/Plugins
 /Unity3D/ScatterSharpTest/.vs/ScatterSharpTest/v15
 /Unity3D/ScatterSharpTest/obj/Debug
-/ScatterSharp/ScatterSharp.UnitTests.Unity3D/obj
-/ScatterSharp/ScatterSharp.UnitTests.Unity3D/bin/Debug/netstandard2.0
+*.suo
