@@ -20,5 +20,5 @@
 /ScatterSharp/ScatterSharp.EosProvider/bin
 /Unity3D/ScatterSharpTest/Assets/Plugins
 /Unity3D/ScatterSharpTest/.vs/ScatterSharpTest/v15
-/Unity3D/ScatterSharpTest/obj/Debug
+/Unity3D/ScatterSharpTest/obj
 *.suo
