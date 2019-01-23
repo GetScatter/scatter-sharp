@@ -1,8 +1,0 @@
-C:\eosio-mmcs\operanditech\scatter-sharp\ScatterSharp\ScatterSharp.Unity3D\bin\Debug\netstandard2.0\ScatterSharp.Unity3D.deps.json
-C:\eosio-mmcs\operanditech\scatter-sharp\ScatterSharp\ScatterSharp.Unity3D\bin\Debug\netstandard2.0\ScatterSharp.Unity3D.dll
-C:\eosio-mmcs\operanditech\scatter-sharp\ScatterSharp\ScatterSharp.Unity3D\bin\Debug\netstandard2.0\ScatterSharp.Unity3D.pdb
-C:\eosio-mmcs\operanditech\scatter-sharp\ScatterSharp\ScatterSharp.Unity3D\obj\Debug\netstandard2.0\ScatterSharp.Unity3D.csproj.CoreCompileInputs.cache
-C:\eosio-mmcs\operanditech\scatter-sharp\ScatterSharp\ScatterSharp.Unity3D\obj\Debug\netstandard2.0\ScatterSharp.Unity3D.AssemblyInfoInputs.cache
-C:\eosio-mmcs\operanditech\scatter-sharp\ScatterSharp\ScatterSharp.Unity3D\obj\Debug\netstandard2.0\ScatterSharp.Unity3D.AssemblyInfo.cs
-C:\eosio-mmcs\operanditech\scatter-sharp\ScatterSharp\ScatterSharp.Unity3D\obj\Debug\netstandard2.0\ScatterSharp.Unity3D.dll
-C:\eosio-mmcs\operanditech\scatter-sharp\ScatterSharp\ScatterSharp.Unity3D\obj\Debug\netstandard2.0\ScatterSharp.Unity3D.pdb
