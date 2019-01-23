@@ -3,7 +3,6 @@ using Newtonsoft.Json.Linq;
 using ScatterSharp.Core.Api;
 using ScatterSharp.Core.Helpers;
 using ScatterSharp.Core.Interfaces;
-using SocketIOSharp;
 using SocketIOSharp.Core;
 using SocketIOSharp.Unity3D;
 using System;
@@ -13,7 +12,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using UnityEngine;
 using WebSocketSharp;
 
 namespace ScatterSharp.Unity3D
