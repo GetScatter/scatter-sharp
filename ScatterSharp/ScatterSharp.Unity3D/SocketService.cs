@@ -3,19 +3,22 @@ using Newtonsoft.Json.Linq;
 using ScatterSharp.Core.Api;
 using ScatterSharp.Core.Helpers;
 using ScatterSharp.Core.Interfaces;
-using SocketIOSharp.Unity3D;
+using SocketIOSharp;
 using SocketIOSharp.Core;
+using SocketIOSharp.Unity3D;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UnityEngine;
 using WebSocketSharp;
 
 namespace ScatterSharp.Unity3D
 {
-    public class SocketService : IDisposable
+    public class SocketService : ISocketService
     {
         private bool Paired { get; set; }
         private IAppStorageProvider StorageProvider { get; set; }
@@ -78,7 +81,11 @@ namespace ScatterSharp.Unity3D
                     HandleApiResponse(args.First());
                 });
 
-                TimoutTasksTask = Task.Run(() => TimeoutOpenTasksCheck());
+#if UNITY_WEBGL && !UNITY_EDITOR
+                TimoutTasksTask = Task.FromResult(TimeoutOpenTasksCheck());
+#else
+                TimoutTasksTask = Task.Run( () => TimeoutOpenTasksCheck());
+#endif
 
                 await Pair(true);
             }
@@ -105,10 +112,10 @@ namespace ScatterSharp.Unity3D
             await PairOpenTask.Task;
         }
 
-        public async Task<JToken> SendApiRequest(Request request)
+        public async Task<TReturn> SendApiRequest<TReturn>(Request request)
         {
             if (request.type == "identityFromPermissions" && !Paired)
-                return false;
+                return default(TReturn);
 
             await Pair();
 
@@ -130,12 +137,16 @@ namespace ScatterSharp.Unity3D
 
             await SockIO.EmitAsync("api", new { data = request, plugin = AppName });
 
-            return await tcs.Task;
+            var result = await tcs.Task;
+
+            ThrowOnApiError(result);
+
+            return result.ToObject<TReturn>();
         }
 
-        public Task Disconnect(CancellationToken? cancellationToken = null)
+        public Task Disconnect()
         {
-            return SockIO.DisconnectAsync(cancellationToken ?? CancellationToken.None);
+            return SockIO.DisconnectAsync(CancellationToken.None);
         }
 
         public bool IsConnected()
@@ -150,7 +161,7 @@ namespace ScatterSharp.Unity3D
 
         #region Utils
 
-        private void TimeoutOpenTasksCheck()
+        private IEnumerable TimeoutOpenTasksCheck()
         {
             while(SockIO.GetState() == WebSocketState.Open)
             {
@@ -169,7 +180,12 @@ namespace ScatterSharp.Unity3D
                     if((count % 10) == 0)
                     {
                         count = 0;
-                        Thread.Sleep(1000);                        
+#if UNITY_WEBGL && !UNITY_EDITOR
+                        yield return new WaitForSeconds(1);
+#else
+                        Thread.Sleep(1000);
+                        yield return null;
+#endif   
                     }
 
                     count++;
@@ -189,6 +205,12 @@ namespace ScatterSharp.Unity3D
                         message = "Request timeout."
                     }));
                 }
+#if UNITY_WEBGL && !UNITY_EDITOR
+                yield return new WaitForSeconds(1);
+#else
+                Thread.Sleep(1000);
+                yield return null;
+#endif
             }
         }
 
@@ -256,6 +278,18 @@ namespace ScatterSharp.Unity3D
         private void GenerateNewAppKey()
         {
             StorageProvider.SetAppkey("appkey:" + UtilsHelper.RandomNumber(24));
+        }
+
+        private static void ThrowOnApiError(JToken result)
+        {
+            if (result.Type != JTokenType.Object ||
+               result.SelectToken("isError") == null)
+                return;
+
+            var apiError = result.ToObject<ApiError>();
+
+            if (apiError != null)
+                throw new Exception(apiError.message);
         }
 
         #endregion

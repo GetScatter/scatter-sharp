@@ -15,7 +15,7 @@ using WebSocketSharp;
 
 namespace ScatterSharp
 {
-    public class SocketService : IDisposable
+    public class SocketService : ISocketService
     {
         private bool Paired { get; set; }
         private IAppStorageProvider StorageProvider { get; set; }
@@ -105,10 +105,10 @@ namespace ScatterSharp
             await PairOpenTask.Task;
         }
 
-        public async Task<JToken> SendApiRequest(Request request)
+        public async Task<TReturn> SendApiRequest<TReturn>(Request request)
         {
             if (request.type == "identityFromPermissions" && !Paired)
-                return false;
+                return default(TReturn);
 
             await Pair();
 
@@ -130,12 +130,16 @@ namespace ScatterSharp
 
             await SockIO.EmitAsync("api", new { data = request, plugin = AppName });
 
-            return await tcs.Task;
+            var result = await tcs.Task;
+
+            ThrowOnApiError(result);
+
+            return result.ToObject<TReturn>();
         }
 
-        public Task Disconnect(CancellationToken? cancellationToken = null)
+        public Task Disconnect()
         {
-            return SockIO.DisconnectAsync(cancellationToken ?? CancellationToken.None);
+            return SockIO.DisconnectAsync(CancellationToken.None);
         }
 
         public bool IsConnected()
@@ -256,6 +260,18 @@ namespace ScatterSharp
         private void GenerateNewAppKey()
         {
             StorageProvider.SetAppkey("appkey:" + UtilsHelper.RandomNumber(24));
+        }
+
+        private static void ThrowOnApiError(JToken result)
+        {
+            if (result.Type != JTokenType.Object ||
+               result.SelectToken("isError") == null)
+                return;
+
+            var apiError = result.ToObject<ApiError>();
+
+            if (apiError != null)
+                throw new Exception(apiError.message);
         }
 
         #endregion
