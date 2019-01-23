@@ -1,13 +1,11 @@
 ﻿using Newtonsoft.Json;
-using ScatterSharp;
-using ScatterSharp.Core.Storage;
+using ScatterSharp.Core;
 using ScatterSharp.Core.Api;
+using ScatterSharp.Core.Storage;
+using ScatterSharp.Unity3D;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using EosSharp.Core.Api.v1;
-using ScatterSharp.UnitTests;
 
 public class TestScatterScript : MonoBehaviour
 {
@@ -17,7 +15,7 @@ public class TestScatterScript : MonoBehaviour
         {
             var network = new ScatterSharp.Core.Api.Network()
             {
-                blockchain = Scatter.Blockchains.EOSIO,
+                blockchain = ScatterConstants.Blockchains.EOSIO,
                 host = "api.jungle.alohaeos.com",
                 port = 443,
                 protocol = "https",
@@ -40,28 +38,28 @@ public class TestScatterScript : MonoBehaviour
                     personal = new List<PersonalFields>()
                 });
 
-                var eos = scatter.Eos();
+                //var eos = scatter.Eos();
                 
-                var account = scatter.Identity.accounts.First();
+                //var account = scatter.Identity.accounts.First();
 
-                var result = await eos.CreateTransaction(new Transaction()
-                {
-                    actions = new List<EosSharp.Core.Api.v1.Action>()
-                    {
-                        new EosSharp.Core.Api.v1.Action()
-                        {
-                            account = "eosio.token",
-                            authorization =  new List<PermissionLevel>()
-                            {
-                                new PermissionLevel() {actor = account.name, permission = account.authority }
-                            },
-                            name = "transfer",
-                            data = new { from = account.name, to = "eosio", quantity = "0.0001 EOS", memo = "Unity 3D hello crypto world!" }
-                        }
-                    }
-                });
+                //var result = await eos.CreateTransaction(new Transaction()
+                //{
+                //    actions = new List<EosSharp.Core.Api.v1.Action>()
+                //    {
+                //        new EosSharp.Core.Api.v1.Action()
+                //        {
+                //            account = "eosio.token",
+                //            authorization =  new List<PermissionLevel>()
+                //            {
+                //                new PermissionLevel() {actor = account.name, permission = account.authority }
+                //            },
+                //            name = "transfer",
+                //            data = new { from = account.name, to = "eosio", quantity = "0.0001 EOS", memo = "Unity 3D hello crypto world!" }
+                //        }
+                //    }
+                //});
 
-                print(result);
+                //print(result);
             }
         }
         catch (Exception ex)
@@ -76,7 +74,7 @@ public class TestScatterScript : MonoBehaviour
 
         var network = new ScatterSharp.Core.Api.Network()
         {
-            blockchain = Scatter.Blockchains.EOSIO,
+            blockchain = ScatterConstants.Blockchains.EOSIO,
             host = "api.jungle.alohaeos.com",
             port = 443,
             protocol = "https",
