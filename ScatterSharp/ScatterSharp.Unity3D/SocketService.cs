@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UnityEngine;
 using WebSocketSharp;
 
 namespace ScatterSharp.Unity3D
@@ -31,15 +32,9 @@ namespace ScatterSharp.Unity3D
 
         private Task TimoutTasksTask { get; set; }
 
-        public SocketService(IAppStorageProvider storageProvider, string appName, int timeout = 60000)
+        public SocketService(IAppStorageProvider storageProvider, SocketIOConfigurator config, string appName, int timeout = 5000, MonoBehaviour scriptInstance = null)
         {
-            SockIO = new SocketIO(new SocketIOConfigurator() {
-                Namespace = "scatter",
-                Proxy = new Proxy()
-                {
-                    Url = "http://127.0.0.1:8888"
-                }
-            });
+            SockIO = new SocketIO(config, scriptInstance);
 
             OpenTasks = new Dictionary<string, TaskCompletionSource<JToken>>();
             OpenTaskTimes = new Dictionary<string, DateTime>();
@@ -79,11 +74,14 @@ namespace ScatterSharp.Unity3D
                     HandleApiResponse(args.First());
                 });
 
-#if UNITY_WEBGL && !UNITY_EDITOR
-                TimoutTasksTask = Task.FromResult(TimeoutOpenTasksCheck());
-#else
-                TimoutTasksTask = Task.Run( () => TimeoutOpenTasksCheck());
-#endif
+                if (Application.platform == RuntimePlatform.WebGLPlayer)
+                {
+                    TimoutTasksTask = Task.FromResult(TimeoutOpenTasksCheck());
+                }
+                else
+                {
+                    TimoutTasksTask = Task.Run(() => TimeoutOpenTasksCheck());
+                }
 
                 await Pair(true);
             }
@@ -178,12 +176,15 @@ namespace ScatterSharp.Unity3D
                     if((count % 10) == 0)
                     {
                         count = 0;
-#if UNITY_WEBGL && !UNITY_EDITOR
-                        yield return new WaitForSeconds(1);
-#else
-                        Thread.Sleep(1000);
-                        yield return null;
-#endif   
+                        if (Application.platform == RuntimePlatform.WebGLPlayer)
+                        {
+                            yield return new WaitForSeconds(1);
+                        }
+                        else
+                        {
+                            Thread.Sleep(1000);
+                            yield return null;
+                        }
                     }
 
                     count++;
@@ -203,12 +204,16 @@ namespace ScatterSharp.Unity3D
                         message = "Request timeout."
                     }));
                 }
-#if UNITY_WEBGL && !UNITY_EDITOR
-                yield return new WaitForSeconds(1);
-#else
-                Thread.Sleep(1000);
-                yield return null;
-#endif
+
+                if (Application.platform == RuntimePlatform.WebGLPlayer)
+                {
+                    yield return new WaitForSeconds(1);
+                }
+                else
+                {
+                    Thread.Sleep(1000);
+                    yield return null;
+                }
             }
         }
 

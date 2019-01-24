@@ -14,11 +14,14 @@ namespace ScatterSharp
         public Network Network { get; set; }
         public Identity Identity { get; set; }
 
-        public ScatterBase(string appName, Network network, ISocketService socketService)
+        public ScatterBase(ScatterConfigurator config, ISocketService socketService)
         {
+            if (config == null)
+                config = new ScatterConfigurator();
+
             SocketService = socketService;
-            AppName = appName;
-            Network = network;
+            AppName = config.AppName;
+            Network = config.Network;
         }
 
         public void Dispose()
@@ -38,13 +41,16 @@ namespace ScatterSharp
 
                 await SocketService.Link(wssURI);
             }
-            catch(Exception)
+            catch(Exception ex)
             {
+                Console.WriteLine("ex: " + ex.Message);
+                Console.WriteLine("stacktrace: " + ex.StackTrace);
+
                 //try normal ws connection
                 Uri wsURI = new Uri(string.Format(ScatterConstants.WSURI,
                                                    ScatterConstants.WS_PROTOCOL,
                                                    ScatterConstants.WS_HOST,
-                                                   ScatterConstants.WSS_PORT));
+                                                   ScatterConstants.WS_PORT));
 
                 await SocketService.Link(wsURI);
             }

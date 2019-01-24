@@ -1,18 +1,21 @@
 ﻿using ScatterSharp.Core;
-using ScatterSharp.Core.Api;
-using ScatterSharp.Core.Interfaces;
 using ScatterSharp.Core.Storage;
-using System;
-using System.Threading.Tasks;
+using SocketIOSharp.Core;
+using UnityEngine;
 
 namespace ScatterSharp.Unity3D
 {
     public class Scatter : ScatterBase
     {
-        private ISocketService SocketService { get; set; }
-
-        public Scatter(string appName, Network network, IAppStorageProvider storageProvider = null) :
-            base(appName, network, new SocketService(storageProvider ?? new MemoryStorageProvider(), appName))
+        public Scatter(ScatterConfigurator config, MonoBehaviour scriptInstance = null) :
+            base(config, new SocketService(config.StorageProvider ?? new MemoryStorageProvider(), new SocketIOConfigurator()
+            {
+                Namespace = "scatter",
+                Proxy = new Proxy()
+                {
+                    Url = "http://127.0.0.1:8888"
+                }
+            }, config.AppName, 5000, scriptInstance))
         {
         }
     }

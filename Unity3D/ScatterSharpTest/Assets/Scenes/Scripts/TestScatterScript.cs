@@ -24,7 +24,12 @@ public class TestScatterScript : MonoBehaviour
 
             var fileStorage = new FileStorageProvider(Application.persistentDataPath + "/scatterapp.dat");
 
-            using (var scatter = new Scatter("UNITY-SCATTER-JUNGLE", network, fileStorage))
+            using (var scatter = new Scatter(new ScatterConfigurator()
+            {
+                AppName = "UNITY-SCATTER-JUNGLE",
+                Network = network,
+                StorageProvider = fileStorage
+            }, this))
             {
                 await scatter.Connect();
 
@@ -83,7 +88,12 @@ public class TestScatterScript : MonoBehaviour
 
         var fileStorage = new FileStorageProvider(Application.persistentDataPath + "/scatterapp.dat");
 
-        using (var scatter = new Scatter("UNITY-SCATTER-JUNGLE", network, fileStorage))
+        using (var scatter = new Scatter(new ScatterConfigurator()
+                {
+                    AppName = "UNITY-SCATTER-JUNGLE",
+                    Network = network,
+                    StorageProvider = fileStorage
+                }, this))
         {
             print("connecting");
 
