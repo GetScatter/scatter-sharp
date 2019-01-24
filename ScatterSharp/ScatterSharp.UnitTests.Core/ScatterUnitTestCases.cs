@@ -10,7 +10,7 @@ using ScatterSharp.Core;
 
 namespace ScatterSharp.UnitTests.Core
 {
-    public class ScatterUnitTestCases
+    public class ScatterUnitTestCases : IDisposable
     {
         private IScatter Scatter { get; set; }
         private Network Network { get; set; }
@@ -19,6 +19,11 @@ namespace ScatterSharp.UnitTests.Core
         {
             Scatter = scatter;
             Network = network;
+        }
+
+        public void Dispose()
+        {
+            Scatter.Dispose();
         }
 
         public async Task Connect()

@@ -2,6 +2,7 @@
 using ScatterSharp.Core;
 using ScatterSharp.Core.Api;
 using ScatterSharp.Core.Storage;
+using ScatterSharp.UnitTests;
 using ScatterSharp.Unity3D;
 using System;
 using System.Collections.Generic;
@@ -108,5 +109,11 @@ public class TestScatterScript : MonoBehaviour
 
             print("connected");
         }
+    }
+
+    public async void TestAllUnitTests()
+    {
+        var scatterUnitTests = new ScatterUnitTests(this);
+        await scatterUnitTests.TestAll();
     }
 }

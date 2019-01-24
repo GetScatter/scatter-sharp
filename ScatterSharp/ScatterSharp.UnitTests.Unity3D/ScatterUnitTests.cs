@@ -1,52 +1,53 @@
-﻿using Cryptography.ECDSA;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using ScatterSharp.Core;
-using ScatterSharp.Core.Api;
-using ScatterSharp.Core.Helpers;
 using ScatterSharp.Core.Storage;
 using ScatterSharp.UnitTests.Core;
 using ScatterSharp.Unity3D;
 using System;
-using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace ScatterSharp.UnitTests
 {
-    public class ScatterUnitTests
+    public class ScatterUnitTests : IDisposable
     {
         //mainnet
-        //public static readonly Api.Network network = new Api.Network()
-        //{
-        //    Blockchain = Scatter.Blockchains.EOSIO,
-        //    Host = "nodes.eos42.io",
-        //    Port = 443,
-        //    ChainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"
-        //};
-
-        //Jungle testnet
-        public static readonly Network network = new Network()
+        public static readonly ScatterSharp.Core.Api.Network network = new ScatterSharp.Core.Api.Network()
         {
             blockchain = ScatterConstants.Blockchains.EOSIO,
-            host = "jungle.cryptolions.io",
-            port = 18888,
-            chainId = "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
+            host = "nodes.eos42.io",
+            port = 443,
+            chainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"
         };
+
+        //Jungle testnet
+        //public static readonly ScatterSharp.Core.Api.Network network = new ScatterSharp.Core.Api.Network()
+        //{
+        //    blockchain = ScatterConstants.Blockchains.EOSIO,
+        //    host = "jungle.cryptolions.io",
+        //    port = 18888,
+        //    chainId = "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
+        //};
 
         public ScatterUnitTestCases ScatterUnitTestCases { get; set; }
 
-        public ScatterUnitTests()
+        public ScatterUnitTests(MonoBehaviour scriptInstance)
         {
-            var storageProvider = new MemoryStorageProvider();
-            storageProvider.SetAppkey(UtilsHelper.ByteArrayToHexString(Sha256Manager.GetHash(Encoding.UTF8.GetBytes("appkey:0a182c0d054b6fd9f9361c82fcd040b46c41a6f61952a3ea"))));
-
+            var fileStorage = new FileStorageProvider(Application.persistentDataPath + "/scatterapp.dat");
+            
             var scatter = new Scatter(new ScatterConfigurator()
             {
-                AppName = "SCATTER-SHARP",
+                AppName = "UNITY-WEBGL-SCATTER-SHARP",
                 Network = network,
-                StorageProvider = storageProvider
-            });
+                StorageProvider = fileStorage
+            }, scriptInstance);
 
             ScatterUnitTestCases = new ScatterUnitTestCases(scatter, network);
+        }
+
+        public void Dispose()
+        {
+            ScatterUnitTestCases.Dispose();
         }
 
         public async Task Connect()
@@ -388,6 +389,22 @@ namespace ScatterSharp.UnitTests
                 Console.WriteLine("Test OneWayEncryptDecrypt run successfuly.");
             else
                 Console.WriteLine("Test OneWayEncryptDecrypt run failed.");
+        }
+
+        public async Task TestAll()
+        {
+            await Connect();
+            await GetVersion();
+            await GetIdentity();
+            await GetIdentityFromPermissions();
+            await ForgetIdentity();
+            await Authenticate();
+            await GetArbitrarySignature();
+            await GetPublicKey();
+            await LinkAccount();
+            await HasAccountFor();
+            await SuggestNetwork();
+            await AddToken();
         }
     }
 }

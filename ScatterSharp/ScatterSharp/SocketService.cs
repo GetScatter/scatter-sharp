@@ -56,6 +56,9 @@ namespace ScatterSharp
 
         public async Task<bool> Link(Uri uri)
         {
+            if (SockIO.GetState() == WebSocketState.Open)
+                return true;
+
             if (SockIO.GetState() != WebSocketState.Open && SockIO.GetState() != WebSocketState.Connecting)
             {
                 await SockIO.ConnectAsync(uri);
