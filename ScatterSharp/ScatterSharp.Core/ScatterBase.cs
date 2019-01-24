@@ -31,28 +31,27 @@ namespace ScatterSharp
 
         public async Task Connect()
         {
-            try
-            {
-                //Try connect with wss connection
-                Uri wssURI = new Uri(string.Format(ScatterConstants.WSURI, 
-                                                   ScatterConstants.WSS_PROTOCOL, 
-                                                   ScatterConstants.WSS_HOST, 
-                                                   ScatterConstants.WSS_PORT));
+            //Try connect with wss connection
+            Uri wssURI = new Uri(string.Format(ScatterConstants.WSURI,
+                                               ScatterConstants.WSS_PROTOCOL,
+                                               ScatterConstants.WSS_HOST,
+                                               ScatterConstants.WSS_PORT));
 
-                await SocketService.Link(wssURI);
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine("ex: " + ex.Message);
-                Console.WriteLine("stacktrace: " + ex.StackTrace);
+            bool linked = await SocketService.Link(wssURI);
 
+            if (!linked)
+            {
                 //try normal ws connection
                 Uri wsURI = new Uri(string.Format(ScatterConstants.WSURI,
                                                    ScatterConstants.WS_PROTOCOL,
                                                    ScatterConstants.WS_HOST,
                                                    ScatterConstants.WS_PORT));
 
-                await SocketService.Link(wsURI);
+                linked = await SocketService.Link(wsURI);
+
+                //TODO check for errors
+                if (!linked)
+                    throw new Exception("socket not available.");
             }
 
             this.Identity = await this.GetIdentityFromPermissions();

@@ -8,7 +8,7 @@ namespace ScatterSharp.Core.Interfaces
 {
     public interface ISocketService : IDisposable
     {
-        Task Link(Uri uri);
+        Task<bool> Link(Uri uri);
         Task Pair(bool passthrough = false);
         Task<TReturn> SendApiRequest<TReturn>(Request request);
         Task Disconnect();

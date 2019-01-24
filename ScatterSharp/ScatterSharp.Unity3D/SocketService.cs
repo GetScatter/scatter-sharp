@@ -23,6 +23,7 @@ namespace ScatterSharp.Unity3D
         private IAppStorageProvider StorageProvider { get; set; }
         private string AppName { get; set; }
         private int TimeoutMS { get; set; }
+        private MonoBehaviour ScriptInstance { get; set; }
 
         private SocketIO SockIO { get; set; }
 
@@ -42,6 +43,8 @@ namespace ScatterSharp.Unity3D
             StorageProvider = storageProvider;
             AppName = appName;
             TimeoutMS = timeout;
+
+            ScriptInstance = scriptInstance;
         }
 
         public void Dispose()
@@ -50,44 +53,43 @@ namespace ScatterSharp.Unity3D
             StorageProvider.Save();
         }
 
-        public async Task Link(Uri uri)
+        public async Task<bool> Link(Uri uri)
         {
             if (SockIO.GetState() != WebSocketState.Open && SockIO.GetState() != WebSocketState.Connecting)
             {
                 await SockIO.ConnectAsync(uri);
             }
 
-            if (SockIO.GetState() == WebSocketState.Open)
+            if (SockIO.GetState() != WebSocketState.Open)
+                return false;
+
+            SockIO.On("paired", (args) =>
             {
-                SockIO.On("paired", (args) =>
-                {
-                    HandlePairedResponse(args.First().ToObject<bool?>());
-                });
+                HandlePairedResponse(args.First().ToObject<bool?>());
+            });
 
-                SockIO.On("rekey", (args) =>
-                {
-                    HandleRekeyResponse();
-                });
+            SockIO.On("rekey", (args) =>
+            {
+                HandleRekeyResponse();
+            });
 
-                SockIO.On("api", (args) =>
-                {
-                    HandleApiResponse(args.First());
-                });
+            SockIO.On("api", (args) =>
+            {
+                HandleApiResponse(args.First());
+            });
 
-                if (Application.platform == RuntimePlatform.WebGLPlayer)
-                {
-                    TimoutTasksTask = Task.FromResult(TimeoutOpenTasksCheck());
-                }
-                else
-                {
-                    TimoutTasksTask = Task.Run(() => TimeoutOpenTasksCheck());
-                }
-
-                await Pair(true);
+            if (Application.platform == RuntimePlatform.WebGLPlayer)
+            {
+                if(ScriptInstance != null)
+                    ScriptInstance.StartCoroutine(TimeoutOpenTasksCheck());
             }
             else
-                throw new Exception("Socket closed.");
+            {
+                TimoutTasksTask = Task.Run(() => TimeoutOpenTasksCheck());
+            }
 
+            await Pair(true);
+            return true;
         }
 
         public async Task Pair(bool passthrough = false)
@@ -157,7 +159,7 @@ namespace ScatterSharp.Unity3D
 
         #region Utils
 
-        private IEnumerable TimeoutOpenTasksCheck()
+        private IEnumerator TimeoutOpenTasksCheck()
         {
             while(SockIO.GetState() == WebSocketState.Open)
             {

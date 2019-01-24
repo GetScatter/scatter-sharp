@@ -54,37 +54,35 @@ namespace ScatterSharp
             StorageProvider.Save();
         }
 
-        public async Task Link(Uri uri)
+        public async Task<bool> Link(Uri uri)
         {
             if (SockIO.GetState() != WebSocketState.Open && SockIO.GetState() != WebSocketState.Connecting)
             {
                 await SockIO.ConnectAsync(uri);
             }
 
-            if (SockIO.GetState() == WebSocketState.Open)
+            if (SockIO.GetState() != WebSocketState.Open)
+                return false;
+
+            SockIO.On("paired", (args) =>
             {
-                SockIO.On("paired", (args) =>
-                {
-                    HandlePairedResponse(args.First().ToObject<bool?>());
-                });
+                HandlePairedResponse(args.First().ToObject<bool?>());
+            });
 
-                SockIO.On("rekey", (args) =>
-                {
-                    HandleRekeyResponse();
-                });
+            SockIO.On("rekey", (args) =>
+            {
+                HandleRekeyResponse();
+            });
 
-                SockIO.On("api", (args) =>
-                {
-                    HandleApiResponse(args.First());
-                });
+            SockIO.On("api", (args) =>
+            {
+                HandleApiResponse(args.First());
+            });
 
-                TimoutTasksTask = Task.Run(() => TimeoutOpenTasksCheck());
+            TimoutTasksTask = Task.Run(() => TimeoutOpenTasksCheck());
 
-                await Pair(true);
-            }
-            else
-                throw new Exception("Socket closed.");
-
+            await Pair(true);
+            return true;
         }
 
         public async Task Pair(bool passthrough = false)
