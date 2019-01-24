@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ScatterSharp.Core.Api
 {
+    [Serializable]
     public class IdentityRequiredFields
     {
         public List<Network> accounts;

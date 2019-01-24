@@ -1,5 +1,8 @@
-﻿namespace ScatterSharp.Core.Api
+﻿using System;
+
+namespace ScatterSharp.Core.Api
 {
+    [Serializable]
     public class LocationFields
     {
         public string phone;
