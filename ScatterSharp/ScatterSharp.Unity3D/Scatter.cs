@@ -15,7 +15,7 @@ namespace ScatterSharp.Unity3D
                 {
                     Url = "http://127.0.0.1:8888"
                 }
-            }, config.AppName, 5000, scriptInstance))
+            }, config.AppName, 60000, scriptInstance))
         {
         }
     }

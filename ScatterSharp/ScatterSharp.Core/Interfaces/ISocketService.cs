@@ -10,7 +10,7 @@ namespace ScatterSharp.Core.Interfaces
     {
         Task<bool> Link(Uri uri);
         Task Pair(bool passthrough = false);
-        Task<TReturn> SendApiRequest<TReturn>(Request request);
+        Task<TReturn> SendApiRequest<TReturn>(Request request, int? timeout = null);
         Task Disconnect();
         bool IsConnected();
         bool IsPaired();

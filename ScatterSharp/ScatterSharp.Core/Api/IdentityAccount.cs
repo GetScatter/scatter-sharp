@@ -9,5 +9,7 @@ namespace ScatterSharp.Core.Api
         public string authority;
         public string publicKey;
         public string blockchain;
+        public bool   isHardware;
+        public string chainId;
     }
 }
