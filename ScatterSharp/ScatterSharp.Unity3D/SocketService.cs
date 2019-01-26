@@ -58,7 +58,7 @@ namespace ScatterSharp.Unity3D
         {
             var result = jtoken as JToken;
 
-            if (result.Type == JTokenType.Object ||
+            if (result.Type == JTokenType.Object &&
                result.SelectToken("isError") != null)
             {
                 var apiError = result.ToObject<ApiError>();
