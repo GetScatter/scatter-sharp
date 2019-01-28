@@ -31,6 +31,12 @@ namespace ScatterSharp
             TimoutTasksTask = Task.Run(() => TimeoutOpenTasksCheck());
         }
 
+        protected override object WaitForOpenTasksCheck(int openTaskCheckIntervalSecs)
+        {
+            Thread.Sleep(openTaskCheckIntervalSecs * 1000);
+            return null;
+        }
+
         protected override object BuildApiError()
         {
             return JToken.FromObject(new ApiError()
@@ -82,6 +88,11 @@ namespace ScatterSharp
             OpenTasks.Remove(id);
 
             openTask.PromiseTask.SetResult(data.SelectToken("result"));
+        }
+
+        protected override void HandleEventResponse(IEnumerable<object> args)
+        {
+            throw new NotImplementedException();
         }
 
         private void HandleRekeyResponse(IEnumerable<object> args)

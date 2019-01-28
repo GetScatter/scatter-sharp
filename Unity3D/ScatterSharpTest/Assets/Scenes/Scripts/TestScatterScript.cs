@@ -87,43 +87,6 @@ public class TestScatterScript : MonoBehaviour
         }
     }
 
-    public async void TestScatterConnect()
-    {
-        print("test connect");
-
-        var network = new ScatterSharp.Core.Api.Network()
-        {
-            blockchain = ScatterConstants.Blockchains.EOSIO,
-            host = "api.jungle.alohaeos.com",
-            port = 443,
-            protocol = "https",
-            chainId = "038f4b0fc8ff18a4f0842a8f0564611f6e96e8535901dd45e43ac8691a1c4dca"
-        };
-
-        var fileStorage = new FileStorageProvider(Application.persistentDataPath + "/scatterapp.dat");
-
-        using (var scatter = new Scatter(new ScatterConfigurator()
-                {
-                    AppName = "UNITY-SCATTER-JUNGLE",
-                    Network = network,
-                    StorageProvider = fileStorage
-                }, this))
-        {
-            print("connecting");
-
-            try
-            {
-                await scatter.Connect();
-            }
-            catch (Exception ex)
-            {
-                print(JsonConvert.SerializeObject(ex));
-            }
-
-            print("connected");
-        }
-    }
-
     public async void TestAllUnitTests()
     {
         var scatterUnitTests = new ScatterUnitTests(this);

@@ -260,6 +260,31 @@ namespace ScatterSharp
             return result;
         }
 
+        public void On(string type, Action<object> callback)
+        {
+            SocketService.On(type, callback);
+        }
+
+        public void Off(string type)
+        {
+            SocketService.Off(type);
+        }
+
+        public void Off(string type, int index)
+        {
+            SocketService.Off(type, index);
+        }
+
+        public void Off(Action<object> callback)
+        {
+            SocketService.Off(callback);
+        }
+
+        public void Off(string type, Action<object> callback)
+        {
+            SocketService.Off(type, callback);
+        }
+
         #region Utils
         private void ThrowNoAuth()
         {

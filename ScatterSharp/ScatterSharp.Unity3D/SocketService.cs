@@ -44,6 +44,19 @@ namespace ScatterSharp.Unity3D
             }
         }
 
+        protected override object WaitForOpenTasksCheck(int openTaskCheckIntervalSecs)
+        {
+            if (Application.platform == RuntimePlatform.WebGLPlayer)
+            {
+                return new WaitForSeconds(openTaskCheckIntervalSecs);
+            }
+            else
+            {
+                Thread.Sleep(openTaskCheckIntervalSecs * 1000);
+                return null;
+            }
+        }
+
         protected override object BuildApiError()
         {
             return JToken.FromObject(new ApiError()
@@ -57,6 +70,9 @@ namespace ScatterSharp.Unity3D
         protected override TReturn BuildApiResponse<TReturn>(object jtoken)
         {
             var result = jtoken as JToken;
+
+            if (result == null)
+                return default(TReturn);
 
             if (result.Type == JTokenType.Object &&
                result.SelectToken("isError") != null)
@@ -95,6 +111,26 @@ namespace ScatterSharp.Unity3D
             OpenTasks.Remove(id);
 
             openTask.PromiseTask.SetResult(data.SelectToken("result"));
+        }
+
+        protected override void HandleEventResponse(IEnumerable<object> args)
+        {
+            if (args.Count() < 2)
+                return;
+
+            var data = args.ToArray();
+
+            string type = ((JToken)data[0]).ToObject<string>();
+
+            List<Action<object>> eventListeners = null;
+
+            if (EventListenersDict.TryGetValue(type, out eventListeners))
+            {
+                foreach (var listener in eventListeners)
+                {
+                    listener(data[1]);
+                }
+            }
         }
 
         private void HandleRekeyResponse(IEnumerable<object> args)

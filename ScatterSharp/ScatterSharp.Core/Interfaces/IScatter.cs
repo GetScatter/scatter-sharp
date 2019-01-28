@@ -27,6 +27,10 @@ namespace ScatterSharp.Core.Interfaces
         Task<SignaturesResult> RequestSignature(object payload);
         Task<bool> AddToken(Token token);
         Task<string> GetEncryptionKey(string fromPublicKey, string toPublicKey, UInt64 nonce);
-        
+        void On(string type, Action<object> callback);
+        void Off(string type);
+        void Off(string type, int index);
+        void Off(Action<object> callback);
+        void Off(string type, Action<object> callback);
     }
 }

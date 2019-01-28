@@ -14,5 +14,10 @@ namespace ScatterSharp.Core.Interfaces
         Task Disconnect();
         bool IsConnected();
         bool IsPaired();
+        void On(string type, Action<object> callback);
+        void Off(string type);
+        void Off(string type, int index);
+        void Off(Action<object> callback);
+        void Off(string type, Action<object> callback);
     }
 }

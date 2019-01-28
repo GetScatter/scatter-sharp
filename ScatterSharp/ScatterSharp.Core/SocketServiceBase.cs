@@ -27,9 +27,12 @@ namespace ScatterSharp.Core
         protected TaskCompletionSource<bool> PairOpenTask { get; set; }
         protected Task TimoutTasksTask { get; set; }
 
+        protected Dictionary<string, List<Action<object>>> EventListenersDict { get; set; }
+
         public SocketServiceBase(IAppStorageProvider storageProvider, SocketIOConfigurator config, string appName, int timeout = 60000)
         {
             OpenTasks = new Dictionary<string, OpenTask>();
+            EventListenersDict = new Dictionary<string, List<Action<object>>>();
 
             StorageProvider = storageProvider;
             AppName = appName;
@@ -81,6 +84,7 @@ namespace ScatterSharp.Core
             SockIO.On("paired", HandlePairedResponse);
             SockIO.On("rekey", HandleRekeyResponse);
             SockIO.On("api", HandleApiResponse);
+            SockIO.On("event", HandleEventResponse);
 
             StartTimeoutOpenTasksCheck();
 
@@ -132,6 +136,49 @@ namespace ScatterSharp.Core
             return SockIO.GetState() == WebSocketState.Open;
         }
 
+        public void On(string type, Action<object> callback)
+        {
+            if (callback == null)
+                return;
+
+            List<Action<object>> eventListeners = null;
+
+            if (EventListenersDict.TryGetValue(type, out eventListeners))
+            {
+                eventListeners.Add(callback);
+            }
+            else
+            {
+                EventListenersDict.Add(type, new List<Action<object>>() { callback });
+            }
+        }
+
+        public void Off(string type)
+        {
+            if (EventListenersDict.ContainsKey(type))
+                EventListenersDict[type].Clear();
+        }
+
+        public void Off(string type, int index)
+        {
+            if (EventListenersDict.ContainsKey(type))
+                EventListenersDict[type].RemoveAt(index);
+        }
+
+        public void Off(Action<object> callback)
+        {
+            foreach (var el in EventListenersDict.Values)
+            {
+                el.Remove(callback);
+            }
+        }
+
+        public void Off(string type, Action<object> callback)
+        {
+            if (EventListenersDict.ContainsKey(type))
+                EventListenersDict[type].Remove(callback);
+        }
+
         #region Utils
 
         protected IEnumerator TimeoutOpenTasksCheck()
@@ -159,8 +206,7 @@ namespace ScatterSharp.Core
                     if ((count % 10) == 0)
                     {
                         count = 0;
-                        Thread.Sleep(OPEN_TASK_CHECK_INTERVAL_SECS * 1000);
-                        yield return null;
+                        yield return WaitForOpenTasksCheck(OPEN_TASK_CHECK_INTERVAL_SECS);
                     }
 
                     count++;
@@ -176,9 +222,7 @@ namespace ScatterSharp.Core
 
                     openTask.PromiseTask.SetResult(BuildApiError());
                 }
-
-                Thread.Sleep(OPEN_TASK_CHECK_INTERVAL_SECS * 1000);
-                yield return null;
+                yield return WaitForOpenTasksCheck(OPEN_TASK_CHECK_INTERVAL_SECS);
             }
         }
 
@@ -216,11 +260,15 @@ namespace ScatterSharp.Core
 
         protected abstract void StartTimeoutOpenTasksCheck();
 
+        protected abstract object WaitForOpenTasksCheck(int openTaskCheckIntervalSecs);
+
         protected abstract object BuildApiError();
 
         protected abstract void HandlePairedResponse(IEnumerable<object> args);
 
         protected abstract void HandleApiResponse(IEnumerable<object> args);
+
+        protected abstract void HandleEventResponse(IEnumerable<object> args);
 
         private void HandleRekeyResponse(IEnumerable<object> args)
         {
