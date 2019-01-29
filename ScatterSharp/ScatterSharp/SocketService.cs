@@ -88,7 +88,24 @@ namespace ScatterSharp
 
         protected override void HandleEventResponse(IEnumerable<object> args)
         {
-            throw new NotImplementedException();
+            var data = args.Cast<JToken>().First();
+
+            var eventToken = data.SelectToken("event");
+
+            if (eventToken == null)
+                throw new Exception("event type not found.");
+
+            string type = eventToken.ToObject<string>();
+
+            List<Action<object>> eventListeners = null;
+
+            if (EventListenersDict.TryGetValue(type, out eventListeners))
+            {
+                foreach (var listener in eventListeners)
+                {
+                    listener(data.SelectToken("payload"));
+                }
+            }
         }
 
         private void HandleRekeyResponse(IEnumerable<object> args)

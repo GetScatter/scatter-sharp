@@ -110,12 +110,14 @@ namespace ScatterSharp.Unity3D
 
         protected override void HandleEventResponse(IEnumerable<object> args)
         {
-            if (args.Count() < 2)
-                return;
+            var data = args.Cast<JToken>().First();
 
-            var data = args.ToArray();
+            var eventToken = data.SelectToken("event");
 
-            string type = ((JToken)data[0]).ToObject<string>();
+            if (eventToken == null)
+                throw new Exception("event type not found.");
+
+            string type = eventToken.ToObject<string>();
 
             List<Action<object>> eventListeners = null;
 
@@ -123,7 +125,7 @@ namespace ScatterSharp.Unity3D
             {
                 foreach (var listener in eventListeners)
                 {
-                    listener(data[1]);
+                    listener(data.SelectToken("payload"));
                 }
             }
         }

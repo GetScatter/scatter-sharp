@@ -1,5 +1,6 @@
 ﻿using EosSharp.Core.Interfaces;
 using ScatterSharp.Core;
+using ScatterSharp.Core.Api;
 using ScatterSharp.Core.Helpers;
 using ScatterSharp.Core.Interfaces;
 using System;
@@ -40,16 +41,16 @@ namespace ScatterSharp.EosProvider
             else
                 abis = new List<object>();
 
-            var result = await Scatter.RequestSignature(new
+            var result = await Scatter.RequestSignature(new SignatureRequest()
             {
                 network = Scatter.GetNetwork(),
                 blockchain = ScatterConstants.Blockchains.EOSIO,
                 requiredFields = new List<object>(),
-                transaction = new
+                transaction = new Transaction()
                 {
-                    abis,
+                    abis = abis,
                     serializedTransaction = UtilsHelper.ByteArrayToHexString(signBytes),
-                    chainId
+                    chainId = chainId
                 },
                 origin = Scatter.GetAppName()
             });

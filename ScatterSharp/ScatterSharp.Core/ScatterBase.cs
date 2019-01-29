@@ -22,6 +22,16 @@ namespace ScatterSharp
             SocketService = socketService;
             AppName = config.AppName;
             Network = config.Network;
+
+            SocketService.On(ScatterConstants.Events.Disconnected, (payload) =>
+            {
+                Identity = null;
+            });
+
+            SocketService.On(ScatterConstants.Events.LoggedOut, async (payload) =>
+            {
+                await GetIdentityFromPermissions();
+            });
         }
 
         public void Dispose()
