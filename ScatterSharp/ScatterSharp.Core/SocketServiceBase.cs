@@ -57,8 +57,6 @@ namespace ScatterSharp.Core
         {
             PairOpenTask = new TaskCompletionSource<bool>();
 
-            Console.WriteLine("pair origin: " + AppName);
-
             await SockIO.EmitAsync("pair", new RequestWrapper()
             {
                 data = new PairRequest()
@@ -223,8 +221,6 @@ namespace ScatterSharp.Core
 
                 foreach (var key in toRemoveKeys)
                 {
-                    Console.WriteLine("timeout task: " + key);
-
                     OpenTask openTask;
                     if (!OpenTasks.TryGetValue(key, out openTask))
                         continue;
