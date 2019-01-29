@@ -38,6 +38,8 @@ if exist "%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe" (
   copy ..\ScatterSharp\ScatterSharp.Core\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.Core.dll %ScatterSharpTestDir%
   copy ..\ScatterSharp\ScatterSharp.Unity3D\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.Unity3D.dll %ScatterSharpTestDir%
   copy ..\ScatterSharp\ScatterSharp.EosProvider\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.EosProvider.dll %ScatterSharpTestDir%
+  copy ..\ScatterSharp\ScatterSharp.UnitTests.Core\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.UnitTests.Core.dll %ScatterSharpTestDir%
+  copy ..\ScatterSharp\ScatterSharp.UnitTests.Unity3D\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.UnitTests.Core.dll %ScatterSharpTestDir%
   
   echo Project Assets Plugins build successfully
 )
