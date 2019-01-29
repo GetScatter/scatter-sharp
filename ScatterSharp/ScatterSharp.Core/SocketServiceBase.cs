@@ -34,6 +34,9 @@ namespace ScatterSharp.Core
             OpenTasks = new Dictionary<string, OpenTask>();
             EventListenersDict = new Dictionary<string, List<Action<object>>>();
 
+            if (storageProvider == null)
+                throw new ArgumentNullException("storageProvider");
+
             StorageProvider = storageProvider;
             AppName = appName;
             TimeoutMS = timeout;
@@ -54,12 +57,14 @@ namespace ScatterSharp.Core
         {
             PairOpenTask = new TaskCompletionSource<bool>();
 
-            await SockIO.EmitAsync("pair", new
+            Console.WriteLine("pair origin: " + AppName);
+
+            await SockIO.EmitAsync("pair", new RequestWrapper()
             {
-                data = new
+                data = new PairRequest()
                 {
                     appkey = StorageProvider.GetAppkey(),
-                    passthrough,
+                    passthrough = passthrough,
                     origin = AppName
                 },
                 plugin = AppName
@@ -92,7 +97,7 @@ namespace ScatterSharp.Core
             return true;
         }
 
-        public async Task<TReturn> SendApiRequest<TReturn>(Request request, int? timeout = null)
+        public async Task<TReturn> SendApiRequest<TRequest, TReturn>(Request<TRequest> request, int? timeout = null)
         {
             if (request.type == "identityFromPermissions" && !Paired)
             {
@@ -121,11 +126,15 @@ namespace ScatterSharp.Core
                 TaskTimeoutMS = timeout.HasValue ? timeout.Value : TimeoutMS
             });
 
-            await SockIO.EmitAsync("api", new { data = request, plugin = AppName });
+            await SockIO.EmitAsync("api", new RequestWrapper()
+            {
+                data = request,
+                plugin = AppName
+            });
 
             return BuildApiResponse<TReturn>(await tcs.Task);
         }
-
+        
         public Task Disconnect()
         {
             return SockIO.DisconnectAsync();
@@ -203,10 +212,10 @@ namespace ScatterSharp.Core
                     }
 
                     //sleep checking each 10 requests
-                    if ((count % 10) == 0)
+                    if ((count % ScatterConstants.OPEN_TASK_NR_CHECK) == 0)
                     {
                         count = 0;
-                        yield return WaitForOpenTasksCheck(OPEN_TASK_CHECK_INTERVAL_SECS);
+                        yield return WaitForOpenTasksCheck(ScatterConstants.OPEN_TASK_CHECK_INTERVAL_SECS);
                     }
 
                     count++;
@@ -214,6 +223,8 @@ namespace ScatterSharp.Core
 
                 foreach (var key in toRemoveKeys)
                 {
+                    Console.WriteLine("timeout task: " + key);
+
                     OpenTask openTask;
                     if (!OpenTasks.TryGetValue(key, out openTask))
                         continue;
@@ -222,7 +233,7 @@ namespace ScatterSharp.Core
 
                     openTask.PromiseTask.SetResult(BuildApiError());
                 }
-                yield return WaitForOpenTasksCheck(OPEN_TASK_CHECK_INTERVAL_SECS);
+                yield return WaitForOpenTasksCheck(ScatterConstants.OPEN_TASK_CHECK_INTERVAL_SECS);
             }
         }
 
@@ -273,10 +284,10 @@ namespace ScatterSharp.Core
         private void HandleRekeyResponse(IEnumerable<object> args)
         {
             GenerateNewAppKey();
-            SockIO.EmitAsync("rekeyed", new
+            SockIO.EmitAsync("rekeyed", new RequestWrapper()
             {
                 plugin = AppName,
-                data = new
+                data = new RekeyRequest()
                 {
                     origin = AppName,
                     appkey = StorageProvider.GetAppkey()

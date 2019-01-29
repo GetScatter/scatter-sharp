@@ -3,7 +3,7 @@
 namespace ScatterSharp.Core.Api
 {
     [Serializable]
-    public class Request
+    public class Request<T>
     {
         public string id;
         public string appkey;
@@ -11,6 +11,6 @@ namespace ScatterSharp.Core.Api
         public string nextNonce;
 
         public string type;
-        public object payload;
+        public T payload;
     }
 }

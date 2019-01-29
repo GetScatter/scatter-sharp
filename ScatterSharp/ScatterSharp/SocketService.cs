@@ -1,18 +1,14 @@
-﻿using Cryptography.ECDSA;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using ScatterSharp.Core;
 using ScatterSharp.Core.Api;
-using ScatterSharp.Core.Helpers;
 using ScatterSharp.Core.Interfaces;
 using SocketIOSharp;
 using SocketIOSharp.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using WebSocketSharp;
 
 namespace ScatterSharp
 {
@@ -61,7 +57,7 @@ namespace ScatterSharp
 
             return result.ToObject<TReturn>();
         }
-
+        
         protected override void HandlePairedResponse(IEnumerable<object> args)
         {
             HandlePairedResponse(args.Cast<JToken>().First().ToObject<bool?>());

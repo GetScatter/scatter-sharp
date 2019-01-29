@@ -69,10 +69,13 @@ namespace ScatterSharp
 
         public async Task<string> GetVersion()
         {
-            var result = await SocketService.SendApiRequest<string>(new Request()
+            var result = await SocketService.SendApiRequest<ApiBase, string>(new Request<ApiBase>()
             {
                 type = "getVersion",
-                payload = new { origin = AppName }
+                payload = new ApiBase()
+                {
+                    origin = AppName
+                }
             });
 
             return result;
@@ -82,10 +85,14 @@ namespace ScatterSharp
         {
             ThrowNoAuth();
 
-            var result = await SocketService.SendApiRequest<Identity>(new Request()
+            var result = await SocketService.SendApiRequest<IdentityRequest, Identity>(new Request<IdentityRequest>()
             {
                 type = "getOrRequestIdentity",
-                payload = new { fields = requiredFields, origin = AppName }
+                payload = new IdentityRequest()
+                {
+                    fields = requiredFields,
+                    origin = AppName
+                }
             });
 
             return Identity = result;
@@ -95,10 +102,13 @@ namespace ScatterSharp
         {
             ThrowNoAuth();
 
-            var result = await SocketService.SendApiRequest<Identity>(new Request()
+            var result = await SocketService.SendApiRequest<ApiBase, Identity>(new Request<ApiBase>()
             {
                 type = "identityFromPermissions",
-                payload = new { origin = AppName }
+                payload = new ApiBase()
+                {
+                    origin = AppName
+                }
             });
 
             if(result != null)
@@ -111,25 +121,34 @@ namespace ScatterSharp
         {
             ThrowNoAuth();
 
-            var result = await SocketService.SendApiRequest<bool>(new Request()
+            var result = await SocketService.SendApiRequest<ApiBase, string>(new Request<ApiBase>()
             {
                 type = "forgetIdentity",
-                payload = new { origin = AppName }
+                payload = new ApiBase()
+                {
+                    origin = AppName
+                }
             });
 
             Identity = null;
 
-            return result;
+            return bool.Parse(result);
         }
 
         public async Task<string> Authenticate(string nonce, string data = null, string publicKey = null)
         {
             ThrowNoAuth();
 
-            var result = await SocketService.SendApiRequest<string>(new Request()
+            var result = await SocketService.SendApiRequest<AuthenticateRequest, string>(new Request<AuthenticateRequest>()
             {
                 type = "authenticate",
-                payload = new { nonce, data, publicKey, origin = AppName }
+                payload = new AuthenticateRequest()
+                {
+                    nonce = nonce,
+                    data = data,
+                    publicKey = publicKey,
+                    origin = AppName
+                }
             });
 
             return result;
@@ -139,10 +158,17 @@ namespace ScatterSharp
         {
             ThrowNoAuth();
 
-            var result = await SocketService.SendApiRequest<string>(new Request()
+            var result = await SocketService.SendApiRequest<ArbitrarySignatureRequest, string>(new Request<ArbitrarySignatureRequest>()
             {
                 type = "requestArbitrarySignature",
-                payload = new { publicKey, data, whatfor, isHash, origin = AppName }
+                payload = new ArbitrarySignatureRequest()
+                {
+                    publicKey = publicKey,
+                    data = data,
+                    whatfor = whatfor,
+                    isHash = isHash,
+                    origin = AppName
+                }
             });
 
             return result;
@@ -152,10 +178,14 @@ namespace ScatterSharp
         {
             ThrowNoAuth();
 
-            var result = await SocketService.SendApiRequest<string>(new Request()
+            var result = await SocketService.SendApiRequest<GetPublicKeyRequest, string>(new Request<GetPublicKeyRequest>()
             {
                 type = "getPublicKey",
-                payload = new { blockchain, origin = AppName }
+                payload = new GetPublicKeyRequest()
+                {
+                    blockchain = blockchain,
+                    origin = AppName
+                }
             });
 
             return result;
@@ -165,39 +195,52 @@ namespace ScatterSharp
         {
             ThrowNoAuth();
 
-            var result = await SocketService.SendApiRequest<bool>(new Request()
+            var result = await SocketService.SendApiRequest<LinkAccountRequest, string>(new Request<LinkAccountRequest>()
             {
                 type = "linkAccount",
-                payload = new { account, network = Network, origin = AppName }
+                payload = new LinkAccountRequest()
+                {
+                    account = account,
+                    network = Network,
+                    origin = AppName
+                }
             });
 
-            return result;
+            return bool.Parse(result);
         }
 
         public async Task<bool> HasAccountFor()
         {
             ThrowNoAuth();
 
-            var result = await SocketService.SendApiRequest<bool>(new Request()
+            var result = await SocketService.SendApiRequest<NetworkRequest, string>(new Request<NetworkRequest>()
             {
                 type = "hasAccountFor",
-                payload = new { network = Network, origin = AppName }
+                payload = new NetworkRequest()
+                {
+                    network = Network,
+                    origin = AppName
+                }
             });
 
-            return result;
+            return bool.Parse(result);
         }
 
         public async Task<bool> SuggestNetwork()
         {
             ThrowNoAuth();
 
-            var result = await SocketService.SendApiRequest<bool>(new Request()
+            var result = await SocketService.SendApiRequest<NetworkRequest, string>(new Request<NetworkRequest>()
             {
                 type = "requestAddNetwork",
-                payload = new { network = Network, origin = AppName }
+                payload = new NetworkRequest()
+                {
+                    network = Network,
+                    origin = AppName
+                }
             });
 
-            return result;
+            return bool.Parse(result);
         }
 
         //TODO check
@@ -205,10 +248,17 @@ namespace ScatterSharp
         {
             ThrowNoAuth();
 
-            var result = await SocketService.SendApiRequest<object>(new Request()
+            var result = await SocketService.SendApiRequest<TransferRequest, object>(new Request<TransferRequest>()
             {
                 type = "requestTransfer",
-                payload = new { network = Network, to, amount, options, origin = AppName }
+                payload = new TransferRequest()
+                {
+                    network = Network,
+                    to = to,
+                    amount = amount,
+                    options = options,
+                    origin = AppName
+                }
             });
 
             return result;
@@ -218,7 +268,7 @@ namespace ScatterSharp
         {
             ThrowNoAuth();
 
-            var result = await SocketService.SendApiRequest<SignaturesResult>(new Request()
+            var result = await SocketService.SendApiRequest<object, SignaturesResult>(new Request<object>()
             {
                 type = "requestSignature",
                 payload = payload
@@ -231,13 +281,18 @@ namespace ScatterSharp
         {
             ThrowNoAuth();
 
-            var result = await SocketService.SendApiRequest<bool>(new Request()
+            var result = await SocketService.SendApiRequest<TokenRequest, string>(new Request<TokenRequest>()
             {
                 type = "addToken",
-                payload = new { token, network = Network, origin = AppName }
+                payload = new TokenRequest()
+                {
+                    token = token,
+                    network = Network,
+                    origin = AppName
+                }
             });
 
-            return result;
+            return bool.Parse(result);
         }
 
         //TODO test on new branch
@@ -245,14 +300,14 @@ namespace ScatterSharp
         {
             ThrowNoAuth();
 
-            var result = await SocketService.SendApiRequest<string>(new Request()
+            var result = await SocketService.SendApiRequest<GetEncryptionKeyRequest, string>(new Request<GetEncryptionKeyRequest>()
             {
                 type = "getEncryptionKey",
-                payload = new
+                payload = new GetEncryptionKeyRequest()
                 {
-                    fromPublicKey,
-                    toPublicKey,
-                    nonce,
+                    fromPublicKey = fromPublicKey,
+                    toPublicKey = toPublicKey,
+                    nonce = nonce,
                     origin = AppName
                 }
             });
