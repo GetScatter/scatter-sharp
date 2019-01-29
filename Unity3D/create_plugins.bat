@@ -33,13 +33,13 @@ if exist "%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe" (
   copy ..\eos-sharp\EosSharp\EosSharp.Unity3D\bin\%CONFIGURATION%\netstandard2.0\EosSharp.Unity3D.dll %ScatterSharpTestDir%
   copy ..\..\socketio-sharp\SocketIOSharp\WebSocketSharp\websocket-sharp\bin\Debug_Ubuntu\websocket-sharp.dll %ScatterSharpTestDir%
   copy ..\..\socketio-sharp\SocketIOSharp\SocketIOSharp.Core\bin\%CONFIGURATION%\netstandard2.0\SocketIOSharp.Core.dll %ScatterSharpTestDir%
-  copy ..\..\socketio-sharp\SocketIOSharp\SocketIOSharp.Unity3D\bin\%CONFIGURATION%\netstandard2.0\SocketIOSharp.Core.dll %ScatterSharpTestDir%
+  copy ..\..\socketio-sharp\SocketIOSharp\SocketIOSharp.Unity3D\bin\%CONFIGURATION%\netstandard2.0\SocketIOSharp.Unity3D.dll %ScatterSharpTestDir%
   copy ..\..\socketio-sharp\SocketIOSharp\SocketIOSharp.Unity3D\WebSocket.jslib %ScatterSharpTestDir%
   copy ..\ScatterSharp\ScatterSharp.Core\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.Core.dll %ScatterSharpTestDir%
   copy ..\ScatterSharp\ScatterSharp.Unity3D\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.Unity3D.dll %ScatterSharpTestDir%
   copy ..\ScatterSharp\ScatterSharp.EosProvider\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.EosProvider.dll %ScatterSharpTestDir%
   copy ..\ScatterSharp\ScatterSharp.UnitTests.Core\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.UnitTests.Core.dll %ScatterSharpTestDir%
-  copy ..\ScatterSharp\ScatterSharp.UnitTests.Unity3D\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.UnitTests.Core.dll %ScatterSharpTestDir%
+  copy ..\ScatterSharp\ScatterSharp.UnitTests.Unity3D\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.UnitTests.Unity3D.dll %ScatterSharpTestDir%
   
   echo Project Assets Plugins build successfully
 )
