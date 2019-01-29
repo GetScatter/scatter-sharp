@@ -34,12 +34,12 @@ namespace ScatterSharp.EosProvider
 
         public async Task<IEnumerable<string>> Sign(string chainId, IEnumerable<string> requiredKeys, byte[] signBytes, IEnumerable<string> abiNames = null)
         {
-            IEnumerable<object> abis = null;
+            IEnumerable<AbiRequest> abis = null;
 
             if (abiNames != null)
-                abis = abiNames.Select(a => new { account_name = a });
+                abis = abiNames.Select(a => new AbiRequest() { account_name = a });
             else
-                abis = new List<object>();
+                abis = new List<AbiRequest>();
 
             var result = await Scatter.RequestSignature(new SignatureRequest()
             {

@@ -305,6 +305,24 @@ namespace ScatterSharp
             return bool.Parse(result);
         }
 
+        public async Task<string> UpdateIdentity(string name, string kyc = null)
+        {
+            ThrowNoAuth();
+
+            var result = await SocketService.SendApiRequest<UpdateIdentityRequest, string>(new Request<UpdateIdentityRequest>()
+            {
+                type = "updateIdentity",
+                payload = new UpdateIdentityRequest()
+                {
+                    name = name,
+                    kyc = kyc,
+                    origin = AppName
+                }
+            });
+
+            return result;
+        }
+
         //TODO test on new branch
         public async Task<string> GetEncryptionKey(string fromPublicKey, string toPublicKey, UInt64 nonce)
         {
