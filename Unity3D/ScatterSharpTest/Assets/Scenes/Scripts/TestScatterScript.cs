@@ -70,7 +70,7 @@ public class TestScatterScript : MonoBehaviour
                             data = new Dictionary<string, object>()
                             {
                                 { "from", account.name },
-                                { "to", "darksidemoon" },
+                                { "to", "eosio" },
                                 { "quantity", "0.0001 EOS" },
                                 { "memo", "Unity3D WEBGL hello crypto world!" }
                             }

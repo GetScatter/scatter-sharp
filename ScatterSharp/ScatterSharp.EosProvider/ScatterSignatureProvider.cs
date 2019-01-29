@@ -45,7 +45,7 @@ namespace ScatterSharp.EosProvider
             {
                 network = Scatter.GetNetwork(),
                 blockchain = ScatterConstants.Blockchains.EOSIO,
-                requiredFields = new List<object>(),
+                requiredFields = new List<object>(), //TODO create concrete object for requiredFields
                 transaction = new Transaction()
                 {
                     abis = abis,
