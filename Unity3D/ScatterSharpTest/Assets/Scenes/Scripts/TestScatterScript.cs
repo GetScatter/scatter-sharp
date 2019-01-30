@@ -1,11 +1,16 @@
-﻿using EosSharp.Api.v1;
+﻿using EosSharp.Unity3D;
 using Newtonsoft.Json;
-using ScatterSharp;
-using ScatterSharp.Storage;
+using ScatterSharp.Core;
+using ScatterSharp.Core.Api;
+using ScatterSharp.Core.Storage;
+using ScatterSharp.EosProvider;
+using ScatterSharp.UnitTests;
+using ScatterSharp.Unity3D;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
+using EosSharp.Core.Api.v1;
 
 public class TestScatterScript : MonoBehaviour
 {
@@ -13,48 +18,62 @@ public class TestScatterScript : MonoBehaviour
     {
         try
         {
-            var network = new ScatterSharp.Api.Network()
+            ScatterSharp.Core.Api.Network network = new ScatterSharp.Core.Api.Network()
             {
-                Blockchain = Scatter.Blockchains.EOSIO,
-                Host = "api.jungle.alohaeos.com",
-                Port = 443,
-                Protocol = "https",
-                ChainId = "038f4b0fc8ff18a4f0842a8f0564611f6e96e8535901dd45e43ac8691a1c4dca"
+                blockchain = ScatterConstants.Blockchains.EOSIO,
+                host = "nodes.eos42.io",
+                port = 443,
+                chainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"
             };
 
             var fileStorage = new FileStorageProvider(Application.persistentDataPath + "/scatterapp.dat");
 
-            using (var scatter = new Scatter("UNITY-SCATTER-JUNGLE", network, fileStorage))
+            using (var scatter = new Scatter(new ScatterConfigurator()
+            {
+                AppName = "UNITY-WEBGL-SCATTER",
+                Network = network,
+                StorageProvider = fileStorage
+            }, this))
             {
                 await scatter.Connect();
 
-                await scatter.GetIdentity(new ScatterSharp.Api.IdentityRequiredFields()
+                await scatter.GetIdentity(new IdentityRequiredFields()
                 {
-                    Accounts = new List<ScatterSharp.Api.Network>()
+                    accounts = new List<ScatterSharp.Core.Api.Network>()
                     {
                         network
                     },
-                    Location = new List<ScatterSharp.Api.LocationFields>(),
-                    Personal = new List<ScatterSharp.Api.PersonalFields>()
+                    location = new List<LocationFields>(),
+                    personal = new List<PersonalFields>()
                 });
 
-                var eos = scatter.Eos();
-                
-                var account = scatter.Identity.Accounts.First();
+                var eos = new Eos(new EosSharp.Core.EosConfigurator() {
+                    ChainId = network.chainId,
+                    HttpEndpoint = network.GetHttpEndpoint(),
+                    SignProvider = new ScatterSignatureProvider(scatter)
+                });
 
-                var result = await eos.CreateTransaction(new Transaction()
+                var account = scatter.Identity.accounts.First();
+
+                var result = await eos.CreateTransaction(new EosSharp.Core.Api.v1.Transaction()
                 {
-                    Actions = new List<EosSharp.Api.v1.Action>()
+                    actions = new List<EosSharp.Core.Api.v1.Action>()
                     {
-                        new EosSharp.Api.v1.Action()
+                        new EosSharp.Core.Api.v1.Action()
                         {
-                            Account = "eosio.token",
-                            Authorization =  new List<PermissionLevel>()
+                            account = "eosio.token",
+                            authorization =  new List<PermissionLevel>()
                             {
-                                new PermissionLevel() {Actor = account.Name, Permission = account.Authority }
+                                new PermissionLevel() {actor = account.name, permission = account.authority }
                             },
-                            Name = "transfer",
-                            Data = new { from = account.Name, to = "eosio", quantity = "0.0001 EOS", memo = "Unity 3D hello crypto world!" }
+                            name = "transfer",
+                            data = new Dictionary<string, object>()
+                            {
+                                { "from", account.name },
+                                { "to", "eosio" },
+                                { "quantity", "0.0001 EOS" },
+                                { "memo", "Unity3D WEBGL hello crypto world!" }
+                            }
                         }
                     }
                 });
@@ -66,5 +85,11 @@ public class TestScatterScript : MonoBehaviour
         {
             print(JsonConvert.SerializeObject(ex));
         }
+    }
+
+    public async void TestAllUnitTests()
+    {
+        var scatterUnitTests = new ScatterUnitTests(this);
+        await scatterUnitTests.TestAll();
     }
 }
