@@ -11,7 +11,7 @@ for /f "usebackq tokens=1* delims=: " %%i in (`"%ProgramFiles(x86)%\Microsoft Vi
   if /i "%%i"=="installationPath" set InstallDir=%%j
 )
 
-set ScatterSharpTestDir=ScatterSharpTest\Assets\Plugins\
+set ScatterSharpUnity3DDir=ScatterSharpUnity3D\Assets\Plugins\
 
 if exist "%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe" (
 
@@ -23,23 +23,23 @@ if exist "%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe" (
   echo Copying ScatterSharp project to Assets Plugins
   cd ..\Unity3D
   
-  if not exist "%ScatterSharpTestDir%" ( 
-	mkdir %ScatterSharpTestDir% 
+  if not exist "%ScatterSharpUnity3DDir%" ( 
+	mkdir %ScatterSharpUnity3DDir% 
   )
   
-  copy %userprofile%\.nuget\packages\cryptography.ecdsa.secp256k1\1.1.2\lib\netstandard2.0\Cryptography.ECDSA.dll %ScatterSharpTestDir%
-  copy %userprofile%\.nuget\packages\json.net.aot\9.0.1\lib\netstandard2.0\Newtonsoft.Json.dll %ScatterSharpTestDir%
-  copy ..\eos-sharp\EosSharp\EosSharp.Core\bin\%CONFIGURATION%\netstandard2.0\EosSharp.Core.dll %ScatterSharpTestDir%
-  copy ..\eos-sharp\EosSharp\EosSharp.Unity3D\bin\%CONFIGURATION%\netstandard2.0\EosSharp.Unity3D.dll %ScatterSharpTestDir%
-  copy ..\..\socketio-sharp\SocketIOSharp\WebSocketSharp\websocket-sharp\bin\Debug_Ubuntu\websocket-sharp.dll %ScatterSharpTestDir%
-  copy ..\..\socketio-sharp\SocketIOSharp\SocketIOSharp.Core\bin\%CONFIGURATION%\netstandard2.0\SocketIOSharp.Core.dll %ScatterSharpTestDir%
-  copy ..\..\socketio-sharp\SocketIOSharp\SocketIOSharp.Unity3D\bin\%CONFIGURATION%\netstandard2.0\SocketIOSharp.Unity3D.dll %ScatterSharpTestDir%
-  copy ..\..\socketio-sharp\SocketIOSharp\SocketIOSharp.Unity3D\WebSocket.jslib %ScatterSharpTestDir%
-  copy ..\ScatterSharp\ScatterSharp.Core\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.Core.dll %ScatterSharpTestDir%
-  copy ..\ScatterSharp\ScatterSharp.Unity3D\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.Unity3D.dll %ScatterSharpTestDir%
-  copy ..\ScatterSharp\ScatterSharp.EosProvider\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.EosProvider.dll %ScatterSharpTestDir%
-  copy ..\ScatterSharp\ScatterSharp.UnitTests.Core\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.UnitTests.Core.dll %ScatterSharpTestDir%
-  copy ..\ScatterSharp\ScatterSharp.UnitTests.Unity3D\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.UnitTests.Unity3D.dll %ScatterSharpTestDir%
+  copy %userprofile%\.nuget\packages\cryptography.ecdsa.secp256k1\1.1.2\lib\netstandard2.0\Cryptography.ECDSA.dll %ScatterSharpUnity3DDir%
+  copy %userprofile%\.nuget\packages\json.net.aot\9.0.1\lib\netstandard2.0\Newtonsoft.Json.dll %ScatterSharpUnity3DDir%
+  copy ..\eos-sharp\EosSharp\EosSharp.Core\bin\%CONFIGURATION%\netstandard2.0\EosSharp.Core.dll %ScatterSharpUnity3DDir%
+  copy ..\eos-sharp\EosSharp\EosSharp.Unity3D\bin\%CONFIGURATION%\netstandard2.0\EosSharp.Unity3D.dll %ScatterSharpUnity3DDir%
+  copy ..\..\socketio-sharp\SocketIOSharp\WebSocketSharp\websocket-sharp\bin\Release\websocket-sharp.dll %ScatterSharpUnity3DDir%
+  copy ..\..\socketio-sharp\SocketIOSharp\SocketIOSharp.Core\bin\%CONFIGURATION%\netstandard2.0\SocketIOSharp.Core.dll %ScatterSharpUnity3DDir%
+  copy ..\..\socketio-sharp\SocketIOSharp\SocketIOSharp.Unity3D\bin\%CONFIGURATION%\netstandard2.0\SocketIOSharp.Unity3D.dll %ScatterSharpUnity3DDir%
+  copy ..\..\socketio-sharp\SocketIOSharp\SocketIOSharp.Unity3D\WebSocket.jslib %ScatterSharpUnity3DDir%
+  copy ..\ScatterSharp\ScatterSharp.Core\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.Core.dll %ScatterSharpUnity3DDir%
+  copy ..\ScatterSharp\ScatterSharp.Unity3D\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.Unity3D.dll %ScatterSharpUnity3DDir%
+  copy ..\ScatterSharp\ScatterSharp.EosProvider\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.EosProvider.dll %ScatterSharpUnity3DDir%
+  copy ..\ScatterSharp\ScatterSharp.UnitTests.Core\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.UnitTests.Core.dll %ScatterSharpUnity3DDir%
+  copy ..\ScatterSharp\ScatterSharp.UnitTests.Unity3D\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.UnitTests.Unity3D.dll %ScatterSharpUnity3DDir%
   
   echo Project Assets Plugins build successfully
 )
