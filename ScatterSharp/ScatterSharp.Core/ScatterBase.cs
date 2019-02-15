@@ -2,6 +2,7 @@
 using ScatterSharp.Core.Api;
 using ScatterSharp.Core.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ScatterSharp
@@ -91,9 +92,22 @@ namespace ScatterSharp
             return result;
         }
 
-        public async Task<Identity> GetIdentity(IdentityRequiredFields requiredFields)
+        public async Task<Identity> GetIdentity(IdentityRequiredFields requiredFields = null)
         {
             ThrowNoAuth();
+
+            if(requiredFields == null)
+            {
+                requiredFields = new IdentityRequiredFields()
+                {
+                    accounts = new List<Network>()
+                    {
+                        Network
+                    },
+                    location = new List<LocationFields>(),
+                    personal = new List<PersonalFields>()
+                };
+            }
 
             var result = await SocketService.SendApiRequest<IdentityRequest, Identity>(new Request<IdentityRequest>()
             {

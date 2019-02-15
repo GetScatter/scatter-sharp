@@ -14,7 +14,7 @@ namespace ScatterSharp.Core.Interfaces
         string GetAppName();
 
         Task<string> GetVersion();
-        Task<Identity> GetIdentity(IdentityRequiredFields requiredFields);
+        Task<Identity> GetIdentity(IdentityRequiredFields requiredFields = null);
         Task<Identity> GetIdentityFromPermissions();
         Task<bool> ForgetIdentity();
         Task<string> Authenticate(string nonce, string data = null, string publicKey = null);
