@@ -3,7 +3,7 @@
 ### Prerequisite to build
 
 - Unity >= 2018.1
-- Visual Studio 2017
+- Visual Studio 2017+
 
 -------------------------------
 
@@ -17,6 +17,9 @@
 -------------------------------
 
 ## Adding to existing project.
+
+### Build package windows
+- run `.\build_package_win.bat`
 
 You will need to modify a few settings to allow for .NET 2.0.
 

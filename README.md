@@ -1,9 +1,15 @@
 # scatter-sharp
 Scatter C# library to interact with ScatterDesktop / ScatterMobile
 
+# Clone repo
+
+```
+git clone https://github.com/GetScatter/scatter-sharp --recursive
+```
+
 ### Prerequisite to build
 
-Visual Studio 2017 
+Visual Studio 2017+ 
 
 ### Instalation
 scatter-sharp is now available throught nuget https://www.nuget.org/packages/scatter-sharp
@@ -209,5 +215,4 @@ scatter.Off(string type);
 scatter.Off(string type, int index);
 scatter.Off(Action<object> callback);
 scatter.Off(string type, Action<object> callback);
-
 ```
