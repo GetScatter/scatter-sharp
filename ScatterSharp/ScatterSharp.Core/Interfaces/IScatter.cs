@@ -33,26 +33,26 @@ namespace ScatterSharp.Core.Interfaces
         Task<string> GetVersion();
 
         /// <summary>
-        /// Get scatter identity (login)
+        /// Prompts the users for an Identity if there is no permission, otherwise returns the permission without a prompt based on origin.
         /// </summary>
         /// <param name="requiredFields">Optional required fields</param>
         /// <returns></returns>
         Task<Identity> GetIdentity(IdentityRequiredFields requiredFields = null);
 
         /// <summary>
-        /// Get scatter identity from available permissions
+        /// Checks if an Identity has permissions and return the identity based on origin.
         /// </summary>
         /// <returns></returns>
         Task<Identity> GetIdentityFromPermissions();
 
         /// <summary>
-        /// Forget loggedin identity 
+        /// Removes the identity permission for an origin from the user's Scatter, effectively logging them out.
         /// </summary>
         /// <returns></returns>
         Task<bool> ForgetIdentity();
 
         /// <summary>
-        /// Authenticate by signing origin (appName) or custom data with custom publicKey
+        /// Sign origin (appName) with the Identity's private key. Or custom data with custom publicKey
         /// </summary>
         /// <param name="nonce">entropy nonce</param>
         /// <param name="data">custom data</param>
@@ -71,33 +71,33 @@ namespace ScatterSharp.Core.Interfaces
         Task<string> GetArbitrarySignature(string publicKey, string data, string whatfor = "", bool isHash = false);
 
         /// <summary>
-        /// Ask user to provide a publickey inside the wallet
+        /// Allows apps to request that the user provide a user-selected Public Key to the app. ( ONBOARDING HELPER )
         /// </summary>
         /// <param name="blockchain"></param>
         /// <returns></returns>
         Task<string> GetPublicKey(string blockchain);
 
         /// <summary>
-        /// link account to the given network
+        /// Allows the app to suggest that the user link new accounts on top of public keys ( ONBOARDING HELPER )
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
         Task<bool> LinkAccount(LinkAccount account);
 
         /// <summary>
-        /// Does the account exists for given network
+        /// Allows dapps to see if a user has an account for a specific blockchain. DOES NOT PROMPT and does not return an actual account, just a boolean.
         /// </summary>
         /// <returns></returns>
         Task<bool> HasAccountFor();
 
         /// <summary>
-        /// Suggest network change
+        /// Prompts the user to add a new network to their Scatter.
         /// </summary>
         /// <returns></returns>
         Task<bool> SuggestNetwork();
 
         /// <summary>
-        /// Request transfer of funds
+        /// Request transfer of funds.
         /// </summary>
         /// <param name="to"></param>
         /// <param name="amount"></param>
