@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace ScatterSharp.EosProvider
 {
+    /// <summary>
+    /// Signature provider implementation for comunnicating with ScatterDesktop
+    /// </summary>
     public class ScatterSignatureProvider : ISignProvider
     {
         private IScatter Scatter { get; set; }
@@ -19,6 +22,10 @@ namespace ScatterSharp.EosProvider
             Scatter = scatter;
         }
 
+        /// <summary>
+        /// Get available public keys from signature provider
+        /// </summary>
+        /// <returns>List of public keys</returns>
         public async Task<IEnumerable<string>> GetAvailableKeys()
         {
             var identity = await Scatter.GetIdentityFromPermissions();
@@ -32,6 +39,14 @@ namespace ScatterSharp.EosProvider
             return identity.accounts.Select(acc => acc.publicKey);
         }
 
+        /// <summary>
+        /// Sign bytes using the signature provider
+        /// </summary>
+        /// <param name="chainId">EOSIO Chain id</param>
+        /// <param name="requiredKeys">required public keys for signing this bytes</param>
+        /// <param name="signBytes">signature bytes</param>
+        /// <param name="abiNames">abi contract names to get abi information from</param>
+        /// <returns>List of signatures per required keys</returns>
         public async Task<IEnumerable<string>> Sign(string chainId, IEnumerable<string> requiredKeys, byte[] signBytes, IEnumerable<string> abiNames = null)
         {
             IEnumerable<AbiRequest> abis = null;
