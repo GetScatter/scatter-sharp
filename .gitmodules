@@ -1,0 +1,6 @@
+[submodule "eos-sharp"]
+	path = eos-sharp
+	url = https://github.com/getscatter/eos-sharp
+[submodule "socketio-sharp"]
+	path = socketio-sharp
+	url = https://github.com/getscatter/socketio-sharp

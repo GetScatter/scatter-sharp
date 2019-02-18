@@ -1,12 +1,14 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Cryptography.ECDSA;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
-using ScatterSharp.Helpers;
+using ScatterSharp.Core;
+using ScatterSharp.Core.Api;
+using ScatterSharp.Core.Helpers;
+using ScatterSharp.Core.Storage;
+using ScatterSharp.UnitTests.Core;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ScatterSharp.UnitTests
@@ -15,124 +17,115 @@ namespace ScatterSharp.UnitTests
     public class ScatterUnitTests
     {
         //mainnet
-        //public static readonly Api.Network network = new Api.Network()
-        //{
-        //    Blockchain = Scatter.Blockchains.EOSIO,
-        //    Host = "nodes.eos42.io",
-        //    Port = 443,
-        //    ChainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"
-        //};
-
-        //Jungle testnet
-        public static readonly Api.Network network = new Api.Network()
+        public static readonly Network network = new Network()
         {
-            Blockchain = Scatter.Blockchains.EOSIO,
-            Host = "jungle.cryptolions.io",
-            Port = 18888,
-            ChainId = "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
+            blockchain = ScatterConstants.Blockchains.EOSIO,
+            host = "nodes.eos42.io",
+            port = 443,
+            chainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"
         };
 
-        public Scatter Scatter { get; set; }
+        //Jungle testnet
+        //public static readonly Network network = new Network()
+        //{
+        //    blockchain = Scatter.Blockchains.EOSIO,
+        //    host = "jungle.cryptolions.io",
+        //    port = 18888,
+        //    chainId = "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
+        //};
+
+        public ScatterUnitTestCases ScatterUnitTestCases { get; set; }
 
         public ScatterUnitTests()
         {
-            Scatter = new Scatter("SCATTER-SHARP", network);
+            var storageProvider = new MemoryStorageProvider();
+            storageProvider.SetAppkey(UtilsHelper.ByteArrayToHexString(Sha256Manager.GetHash(Encoding.UTF8.GetBytes("appkey:0a182c0d054b6fd9f9361c82fcd040b46c41a6f61952a3ea"))));
+
+            var scatter = new Scatter(new ScatterConfigurator()
+            {
+                AppName = "SCATTER-SHARP",
+                Network = network,
+                StorageProvider = storageProvider
+            });
+
+            ScatterUnitTestCases = new ScatterUnitTestCases(scatter, network);
         }
 
         [TestMethod]
         [TestCategory("Scatter Tests")]
         public async Task Connect()
         {
-            await Scatter.Connect();
+            await ScatterUnitTestCases.Connect();
         }
 
         [TestMethod]
         [TestCategory("Scatter Tests")]
         public async Task GetVersion()
         {
-            await Scatter.Connect();
-            Console.WriteLine(await Scatter.GetVersion());
+            Console.WriteLine(await ScatterUnitTestCases.GetVersion());
         }
 
         [TestMethod]
         [TestCategory("Scatter Tests")]
         public async Task GetIdentity()
         {
-            await Scatter.Connect();
-            Console.WriteLine(JsonConvert.SerializeObject(await GetIdentityFromScatter()));
+            Console.WriteLine(JsonConvert.SerializeObject(await ScatterUnitTestCases.GetIdentity()));
         }
 
         [TestMethod]
         [TestCategory("Scatter Tests")]
         public async Task GetIdentityFromPermissions()
         {
-            await Scatter.Connect();
-            Console.WriteLine(await Scatter.GetIdentityFromPermissions());
+            Console.WriteLine(await ScatterUnitTestCases.GetIdentityFromPermissions());
         }
 
         [TestMethod]
         [TestCategory("Scatter Tests")]
         public async Task ForgetIdentity()
         {
-            await Scatter.Connect();
-            Console.WriteLine(await Scatter.ForgetIdentity());
+            Console.WriteLine(await ScatterUnitTestCases.ForgetIdentity());
         }
 
         [TestMethod]
         [TestCategory("Scatter Tests")]
         public async Task Authenticate()
         {
-            await Scatter.Connect();
-
-            var identity = await GetIdentityFromScatter();
-
-            Console.WriteLine(await Scatter.Authenticate(UtilsHelper.RandomNumber()));
+            Console.WriteLine(await ScatterUnitTestCases.Authenticate());
         }
 
         [TestMethod]
         [TestCategory("Scatter Tests")]
         public async Task GetArbitrarySignature()
         {
-            await Scatter.Connect();
-
-            var identity = await GetIdentityFromScatter();
-
-            Console.WriteLine(await Scatter.GetArbitrarySignature(identity.PublicKey, "HELLO WORLD!"));
+            Console.WriteLine(await ScatterUnitTestCases.GetArbitrarySignature());
         }
 
         [TestMethod]
         [TestCategory("Scatter Tests")]
         public async Task GetPublicKey()
         {
-            await Scatter.Connect();
-            Console.WriteLine(await Scatter.GetPublicKey(Scatter.Blockchains.EOSIO));
+            Console.WriteLine(await ScatterUnitTestCases.GetPublicKey());
         }
 
         [TestMethod]
         [TestCategory("Scatter Tests")]
         public async Task LinkAccount()
         {
-            await Scatter.Connect();
-
-            var pubKey = await Scatter.GetPublicKey(Scatter.Blockchains.EOSIO);
-
-            Console.WriteLine(await Scatter.LinkAccount(pubKey));
+            Console.WriteLine(await ScatterUnitTestCases.LinkAccount());
         }
 
         [TestMethod]
         [TestCategory("Scatter Tests")]
         public async Task HasAccountFor()
         {
-            await Scatter.Connect();
-            Console.WriteLine(await Scatter.HasAccountFor());
+            Console.WriteLine(await ScatterUnitTestCases.HasAccountFor());
         }
 
         [TestMethod]
         [TestCategory("Scatter Tests")]
         public async Task SuggestNetwork()
         {
-            await Scatter.Connect();
-            Console.WriteLine(await Scatter.SuggestNetwork());
+            Console.WriteLine(await ScatterUnitTestCases.SuggestNetwork());
         }
 
         //TODO parse "error": "to account does not exist"
@@ -140,109 +133,42 @@ namespace ScatterSharp.UnitTests
         [TestCategory("Scatter Tests")]
         public async Task RequestTransfer()
         {
-            await Scatter.Connect();
-            Console.WriteLine(await Scatter.RequestTransfer("tester112345", "tester212345", "0.0001 EOS"));
+            Console.WriteLine(await ScatterUnitTestCases.RequestTransfer());
         }
 
         [TestMethod]
         [TestCategory("Scatter Tests")]
         public async Task RequestSignature()
         {
-            await Scatter.Connect();
+            Console.WriteLine(await ScatterUnitTestCases.RequestSignature());
+        }
 
-            var identity = await GetIdentityFromScatter();
-
-            Console.WriteLine(await Scatter.RequestSignature(new {
-                network,
-                blockchain = Scatter.Blockchains.EOSIO,
-                requiredFields = new List<object>(),
-                //TODO add transaction
-                origin = Scatter.AppName
-            }));
+        [TestMethod]
+        [TestCategory("Scatter Tests")]
+        public async Task AddToken()
+        {
+            await ScatterUnitTestCases.AddToken();
         }
 
         [TestMethod]
         [TestCategory("Scatter Tests")]
         public async Task GetEncryptionKey()
         {
-            await Scatter.Connect();
-
-            var fromKey = await Scatter.GetPublicKey(Scatter.Blockchains.EOSIO);
-            var toKey = await Scatter.GetPublicKey(Scatter.Blockchains.EOSIO);
-            var r = new Random();
-
-            Console.WriteLine(await Scatter.GetEncryptionKey(fromKey, toKey, (UInt64)r.Next()));
+            Console.WriteLine(await ScatterUnitTestCases.GetEncryptionKey());
         }
 
         [TestMethod]
         [TestCategory("Scatter Tests")]
         public async Task OneWayEncryptDecrypt()
         {
-            await Scatter.Connect();
-
-            var fromKey = await Scatter.GetPublicKey(Scatter.Blockchains.EOSIO);
-            var toKey = await Scatter.GetPublicKey(Scatter.Blockchains.EOSIO);
-            var r = new Random();
-            var encryptionKey = await Scatter.GetEncryptionKey(fromKey, toKey, (UInt64)r.Next());
-            var encryptionKeyBytes = UtilsHelper.HexStringToByteArray(encryptionKey);
-
-            string text = "Hello crypto secret message!";
-            var encrypted = CryptoHelper.AesEncrypt(encryptionKeyBytes, text);
-            var roundtrip = CryptoHelper.AesDecrypt(encryptionKeyBytes, encrypted);
-
-            Console.WriteLine("FromKey:    {0}", fromKey);
-            Console.WriteLine("ToKey:      {0}", toKey);
-            Console.WriteLine("Original:   {0}", text);
-            Console.WriteLine("Encrypted:  {0}", Encoding.UTF8.GetString(encrypted));
-            Console.WriteLine("Round Trip: {0}", roundtrip);
+            await ScatterUnitTestCases.OneWayEncryptDecrypt();
         }
 
         [TestMethod]
         [TestCategory("Scatter Tests")]
         public async Task SimulateSendSecretMessage()
         {
-            await Scatter.Connect();
-
-            var fromKey = await Scatter.GetPublicKey(Scatter.Blockchains.EOSIO);
-            var toKey = await Scatter.GetPublicKey(Scatter.Blockchains.EOSIO);
-            var r = new Random();
-            var nonce = (UInt64)r.Next();
-            var text = "Hello crypto secret message!";
-            var encryptionKeyA = await Scatter.GetEncryptionKey(fromKey, toKey, nonce);
-            var encryptionKeyABytes = UtilsHelper.HexStringToByteArray(encryptionKeyA);
-
-            Console.WriteLine("FromKey:    {0}", fromKey);
-            Console.WriteLine("ToKey:      {0}", toKey);
-            Console.WriteLine("Original:   {0}", text);
-
-            var encrypted = CryptoHelper.AesEncrypt(encryptionKeyABytes, text);
-            Console.WriteLine("Encrypted:  {0}", Encoding.UTF8.GetString(encrypted));
-
-            //...Send over the wire...
-
-            var encryptionKeyB = await Scatter.GetEncryptionKey(toKey, fromKey, nonce);
-            var encryptionKeyBBytes = UtilsHelper.HexStringToByteArray(encryptionKeyB);
-
-            Console.WriteLine("A_PVT_KEY + B_PUB_KEY:    {0}", encryptionKeyA);
-            Console.WriteLine("B_PVT_KEY + A_PUB_KEY:    {0}", encryptionKeyB);
-
-            Assert.IsTrue(encryptionKeyA == encryptionKeyB);
-
-            var roundtrip = CryptoHelper.AesDecrypt(encryptionKeyBBytes, encrypted);
-            Console.WriteLine("Round Trip: {0}", roundtrip);
-        }
-
-        private async Task<Api.Identity> GetIdentityFromScatter()
-        {
-            return await Scatter.GetIdentity(new Api.IdentityRequiredFields()
-            {
-                Accounts = new List<Api.Network>()
-                {
-                    network
-                },
-                Location = new List<Api.LocationFields>(),
-                Personal = new List<Api.PersonalFields>()
-            });
+            Assert.IsTrue(await ScatterUnitTestCases.SimulateSendSecretMessage());
         }
     }
 }

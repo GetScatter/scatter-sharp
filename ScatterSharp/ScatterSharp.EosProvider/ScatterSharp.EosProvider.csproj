@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\eos-sharp\EosSharp\EosSharp.Core\EosSharp.Core.csproj" />
+    <ProjectReference Include="..\ScatterSharp.Core\ScatterSharp.Core.csproj" />
+  </ItemGroup>
+
+</Project>

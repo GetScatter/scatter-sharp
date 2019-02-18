@@ -1,9 +1,15 @@
 # scatter-sharp
 Scatter C# library to interact with ScatterDesktop / ScatterMobile
 
+# Clone repo
+
+```
+git clone https://github.com/GetScatter/scatter-sharp --recursive
+```
+
 ### Prerequisite to build
 
-Visual Studio 2017 
+Visual Studio 2017+ 
 
 ### Instalation
 scatter-sharp is now available throught nuget https://www.nuget.org/packages/scatter-sharp
@@ -22,11 +28,11 @@ Example:
 ```csharp
 var network = new Api.Network()
 {
-    Blockchain = Scatter.Blockchains.EOSIO,
-    Host = "api.eossweden.se",
-    Port = 443,
-    Protocol = "https",
-    ChainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"
+    blockchain = Scatter.Blockchains.EOSIO,
+    host = "api.eossweden.se",
+    port = 443,
+    protocol = "https",
+    chainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"
 };
 
 var scatter = new Scatter("MY-APP-NAME", network);
@@ -35,15 +41,45 @@ await scatter.Connect();
 
 var identity = await scatter.GetIdentity(new Api.IdentityRequiredFields()
 {
-    Accounts = new List<Api.Network>()
+    accounts = new List<Api.Network>()
     {
         network
     },
-    Location = new List<Api.LocationFields>(),
-    Personal = new List<Api.PersonalFields>()
+    location = new List<Api.LocationFields>(),
+    personal = new List<Api.PersonalFields>()
 });
 
-var eos = scatter.Eos();
+var eos = new Eos(new EosSharp.Core.EosConfigurator() {
+    ChainId = network.chainId,
+    HttpEndpoint = network.GetHttpEndpoint(),
+    SignProvider = new ScatterSignatureProvider(scatter)
+});
+
+var account = scatter.Identity.accounts.First();
+
+var result = await eos.CreateTransaction(new EosSharp.Core.Api.v1.Transaction()
+{
+    actions = new List<EosSharp.Core.Api.v1.Action>()
+    {
+        new EosSharp.Core.Api.v1.Action()
+        {
+            account = "eosio.token",
+            authorization =  new List<PermissionLevel>()
+            {
+                new PermissionLevel() {actor = account.name, permission = account.authority }
+            },
+            name = "transfer",
+			//Using a dictionary with key, object works on WEBGL
+            data = new Dictionary<string, object>()
+            {
+                { "from", account.name },
+                { "to", "eosio" },
+                { "quantity", "0.0001 EOS" },
+                { "memo", "Unity3D hello crypto world!" }
+            }
+        }
+    }
+});
 
 ... **Use all eos api methods as usual from eos-sharp** ...
 
@@ -66,6 +102,10 @@ using (var scatter = new Scatter("UNITY-SCATTER-JUNGLE", network, fileStorage))
 ```
 
 #### Scatter Api methods
+- **Connect**
+Connect to scatter
+```csharp
+await scatter.Connect();
 
 - **GetVersion**
 Gets the Scatter version
@@ -77,23 +117,23 @@ string version = await scatter.GetVersion();
 Prompts the users for an Identity if there is no permission, otherwise returns the permission without a prompt based on origin.
 ```csharp
 Identity identity = await scatter.GetIdentity(new Api.IdentityRequiredFields() {
-    Accounts = new List<Api.Network>()
+    accounts = new List<Api.Network>()
     {
         network
     },
-    Location = new List<Api.LocationFields>(),
-    Personal = new List<Api.PersonalFields>()
+    location = new List<Api.LocationFields>(),
+    personal = new List<Api.PersonalFields>()
 });
 ```
 Returns:
 ```csharp
 public class Identity
 {
-    public string Hash { get; set; }
-    public string PublicKey { get; set; }
-    public string Name { get; set; }
-    public bool Kyc { get; set; }
-    public List<IdentityAccount> Accounts { get; set; }
+    public string hash;
+    public string publicKey;
+    public string name;
+    public bool kyc;
+    public List<IdentityAccount> accounts;
 }
 ```
 
@@ -106,11 +146,11 @@ Returns:
 ```csharp
 public class Identity
 {
-    public string Hash { get; set; }
-    public string PublicKey { get; set; }
-    public string Name { get; set; }
-    public bool Kyc { get; set; }
-    public List<IdentityAccount> Accounts { get; set; }
+    public string hash;
+    public string publicKey;
+    public string name;
+    public bool kyc;
+    public List<IdentityAccount> accounts;
 }
 ```
 
@@ -121,13 +161,13 @@ bool result = await scatter.ForgetIdentity();
 ```
 
 - **Authenticate**
-Signs the origin with the Identity's private key.
+Sign origin (appName) with the Identity's private key. Or custom data with custom publicKey
 ```csharp
 string signature = await scatter.Authenticate();
 ```
 
 - **GetArbitrarySignature**
-Requests an arbitrary signature of data.
+Request arbitrary data with the constraint of max 12 words
 ```csharp
 string signature = await scatter.GetArbitrarySignature(string publicKey, string data, string whatfor = "", bool isHash = false);
 ```
@@ -156,8 +196,23 @@ Prompts the user to add a new network to their Scatter.
 bool result = await scatter.SuggestNetwork();
 ```
 
+- **AddToken**
+Add token to wallet
+```csharp
+bool result = await scatter.AddToken(Token token);
+```
 
+- **On**
+Register listener for scatter event type
+```csharp
+scatter.On(string type, Action<object> callback);
+```
 
-
-
-
+- **Off**
+Remove listeners
+```csharp
+scatter.Off(string type);
+scatter.Off(string type, int index);
+scatter.Off(Action<object> callback);
+scatter.Off(string type, Action<object> callback);
+```
