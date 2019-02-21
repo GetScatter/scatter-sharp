@@ -13,8 +13,8 @@
     <RepositoryUrl>https://github.com/GetScatter/scatter-sharp</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>EOS, NetStandard, secp256k1, Blockchain, Scatter</PackageTags>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.0</FileVersion>
+    <AssemblyVersion>2.0.0.1</AssemblyVersion>
+    <FileVersion>2.0.0.1</FileVersion>
     <PackageReleaseNotes>This release introduces breaking changes! Developers are advised to upgrate to this version that has WebGL unity exports support.
 
 - Make getIdentity requiredFields optional
@@ -24,7 +24,8 @@
 - Add scatter event system support
 - Refactor scatter-sharp to use eos-sharp + new socketio-sharp as submodules
 </PackageReleaseNotes>
-    <Version>2.0.0</Version>
+    <Version>2.0.1</Version>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,12 +34,29 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\socketio-sharp\SocketIOSharp\SocketIOSharp\SocketIOSharp.csproj" />
-    <ProjectReference Include="..\ScatterSharp.Core\ScatterSharp.Core.csproj" />
+    <ProjectReference Include="..\..\socketio-sharp\SocketIOSharp\SocketIOSharp\SocketIOSharp.csproj"  PrivateAssets="all" />
+    <ProjectReference Include="..\ScatterSharp.Core\ScatterSharp.Core.csproj"  PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
+  
+  <!--
+    The following solves the problem that 'dotnet pack' does not include the DLLs from referenced projects.
+    See https://github.com/NuGet/Home/issues/3891 for a description of the problem
+    and for newer versions / workarounds / built-in methods.
+  -->
+  <PropertyGroup>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+    <!-- include PDBs in the NuGet package -->
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+  
+  <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
+    </ItemGroup>
+  </Target>
 
 </Project>
