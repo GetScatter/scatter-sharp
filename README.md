@@ -149,7 +149,11 @@ static function OnBeforeRequest(oSession: Session) {
 
 Double click "ws" icon to open websocket tab
 
+![alt text](data/ws.png)
 
+In websocket tab you can view in real-time all the communication between scatter-sharp <-> ScatterDesktop
+
+![alt text](data/ws-detail.png)
 
 #### Scatter Api methods
 - **Connect**
