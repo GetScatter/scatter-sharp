@@ -10,10 +10,7 @@ namespace ScatterSharp
             base(config, new SocketService(config.StorageProvider ?? new MemoryStorageProvider(), new SocketIOConfigurator()
             {
                 Namespace = "scatter",
-                Proxy = new Proxy()
-                {
-                    Url = "http://127.0.0.1:8888"
-                }
+                Proxy = config.Proxy
             }, config.AppName))
         {
         }
