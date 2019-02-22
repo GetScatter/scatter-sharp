@@ -113,7 +113,7 @@ using (var scatter = new Scatter(new ScatterConfigurator()
 
 #### Generic / Fiddler proxy
 
-Is useful to configure a proxy to investigate and debug all the information that goes thru scatter-sharp <-> ScatterDesktop. Fiddler is a popular http/websocket proxy solution but you can configure any other.
+Is useful to configure a proxy to investigate and debug all the information that goes through scatter-sharp <-> ScatterDesktop. Fiddler is a popular http/websocket proxy solution but you can configure any other.
 
 ##### Enabling proxy
 
