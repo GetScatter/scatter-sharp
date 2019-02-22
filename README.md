@@ -117,7 +117,7 @@ Is useful to configure a proxy to investigate and debug all the information that
 
 ##### Enabling proxy
 
-Add a proxy object to scatter configurator that accepts Url and optionaly User and Password. Note that this is used in websocket-sharp and not the implementation for WebGL (not needed).
+Add a proxy object to scatter configurator that accepts Url and optionaly User and Password. **Note that this is used in websocket-sharp and not the implementation for WebGL (not needed).**
 
 ```csharp
 var scatter = new Scatter(new ScatterConfigurator()
@@ -160,6 +160,7 @@ In websocket tab you can view in real-time all the communication between scatter
 Connect to scatter
 ```csharp
 await scatter.Connect();
+```
 
 - **GetVersion**
 Gets the Scatter version
