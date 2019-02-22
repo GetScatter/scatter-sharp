@@ -13,17 +13,10 @@
     <RepositoryUrl>https://github.com/GetScatter/scatter-sharp</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>EOS, NetStandard, secp256k1, Blockchain, Scatter</PackageTags>
-    <AssemblyVersion>2.0.0.1</AssemblyVersion>
-    <FileVersion>2.0.0.1</FileVersion>
-    <PackageReleaseNotes>This release introduces breaking changes! Developers are advised to upgrate to this version that has WebGL unity exports support.
-
-- Make getIdentity requiredFields optional
-- Create script to generate unityasset
-- Add support for scatter 10+
-- Add support for WebGL unity exports
-- Add scatter event system support
-- Refactor scatter-sharp to use eos-sharp + new socketio-sharp as submodules
-</PackageReleaseNotes>
+    <AssemblyVersion>2.0.0.2</AssemblyVersion>
+    <FileVersion>2.0.0.2</FileVersion>
+    <PackageReleaseNotes>- Add proxy configuration to ScatterConfiguration
+- Fix nuget packages for multiple project dependencies</PackageReleaseNotes>
     <Version>2.0.1</Version>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
@@ -34,8 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\socketio-sharp\SocketIOSharp\SocketIOSharp\SocketIOSharp.csproj"  PrivateAssets="all" />
-    <ProjectReference Include="..\ScatterSharp.Core\ScatterSharp.Core.csproj"  PrivateAssets="all" />
+    <ProjectReference Include="..\..\socketio-sharp\SocketIOSharp\SocketIOSharp\SocketIOSharp.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\ScatterSharp.Core\ScatterSharp.Core.csproj" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,7 +48,7 @@
   
   <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
     <ItemGroup>
-      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
     </ItemGroup>
   </Target>
 
