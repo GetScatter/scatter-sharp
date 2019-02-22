@@ -1,7 +1,7 @@
 # scatter-sharp
 Scatter C# library to interact with ScatterDesktop / ScatterMobile
 
-# Clone repo
+## Clone repo
 
 ```
 git clone https://github.com/GetScatter/scatter-sharp --recursive
