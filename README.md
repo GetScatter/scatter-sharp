@@ -35,7 +35,12 @@ var network = new Api.Network()
     chainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"
 };
 
-var scatter = new Scatter("MY-APP-NAME", network);
+var scatter = new Scatter(new ScatterConfigurator()
+{
+   AppName = "SCATTER-SHARP",
+   Network = network,
+   StorageProvider = storageProvider
+});
 
 await scatter.Connect();
 
@@ -94,12 +99,57 @@ Create a new Scatter instance and configure a FileStorageProvider with the targe
 ```csharp
 var fileStorage = new FileStorageProvider(filePath);
 
-using (var scatter = new Scatter("UNITY-SCATTER-JUNGLE", network, fileStorage))
+using (var scatter = new Scatter(new ScatterConfigurator()
+{
+   AppName = "SCATTER-SHARP",
+   Network = network,
+   StorageProvider = fileStorage
+})
 {
     await scatter.Connect();
     ....    
 }
 ```
+
+#### Generic / Fiddler proxy
+
+Is useful to configure a proxy to investigate and debug all the information that goes thru scatter-sharp <-> ScatterDesktop. Fiddler is a popular http/websocket proxy solution but you can configure any other.
+
+##### Enabling proxy
+
+Add a proxy object to scatter configurator that accepts Url and optionaly User and Password. Note that this is used in websocket-sharp and not the implementation for WebGL (not needed).
+
+```csharp
+var scatter = new Scatter(new ScatterConfigurator()
+{
+   AppName = "SCATTER-SHARP",
+   Network = network,
+   StorageProvider = storageProvider,
+   Proxy = new Proxy()
+   {
+       Url = "http://127.0.0.1:8888"
+   }
+});
+```
+
+##### Fiddler unmask websocket traffic
+
+On tab "FiddlerScript" add this code in the end of function "OnBeforeRequest"
+
+```
+static function OnBeforeRequest(oSession: Session) {
+...
+	if (oSession.RequestHeaders.ExistsAndContains ("Sec-WebSocket-Extensions", "permessage-deflate")) {
+	    oSession.RequestHeaders.Remove ( "Sec-WebSocket-Extensions");
+	}
+}
+```
+
+##### Fiddler check websocket traffic
+
+Double click "ws" icon to open websocket tab
+
+
 
 #### Scatter Api methods
 - **Connect**
