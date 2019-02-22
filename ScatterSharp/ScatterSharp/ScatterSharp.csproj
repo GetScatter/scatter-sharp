@@ -17,7 +17,7 @@
     <FileVersion>2.0.0.2</FileVersion>
     <PackageReleaseNotes>- Add proxy configuration to ScatterConfiguration
 - Fix nuget packages for multiple project dependencies</PackageReleaseNotes>
-    <Version>2.0.1</Version>
+    <Version>2.0.2</Version>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
