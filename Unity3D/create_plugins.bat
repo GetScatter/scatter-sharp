@@ -31,10 +31,10 @@ if exist "%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe" (
   copy %userprofile%\.nuget\packages\json.net.aot\9.0.1\lib\netstandard2.0\Newtonsoft.Json.dll %ScatterSharpUnity3DDir%
   copy ..\eos-sharp\EosSharp\EosSharp.Core\bin\%CONFIGURATION%\netstandard2.0\EosSharp.Core.dll %ScatterSharpUnity3DDir%
   copy ..\eos-sharp\EosSharp\EosSharp.Unity3D\bin\%CONFIGURATION%\netstandard2.0\EosSharp.Unity3D.dll %ScatterSharpUnity3DDir%
-  copy ..\..\socketio-sharp\SocketIOSharp\WebSocketSharp\websocket-sharp\bin\Release\websocket-sharp.dll %ScatterSharpUnity3DDir%
-  copy ..\..\socketio-sharp\SocketIOSharp\SocketIOSharp.Core\bin\%CONFIGURATION%\netstandard2.0\SocketIOSharp.Core.dll %ScatterSharpUnity3DDir%
-  copy ..\..\socketio-sharp\SocketIOSharp\SocketIOSharp.Unity3D\bin\%CONFIGURATION%\netstandard2.0\SocketIOSharp.Unity3D.dll %ScatterSharpUnity3DDir%
-  copy ..\..\socketio-sharp\SocketIOSharp\SocketIOSharp.Unity3D\WebSocket.jslib %ScatterSharpUnity3DDir%
+  copy ..\socketio-sharp\SocketIOSharp\WebSocketSharp\websocket-sharp\bin\Release\websocket-sharp.dll %ScatterSharpUnity3DDir%
+  copy ..\socketio-sharp\SocketIOSharp\SocketIOSharp.Core\bin\%CONFIGURATION%\netstandard2.0\SocketIOSharp.Core.dll %ScatterSharpUnity3DDir%
+  copy ..\socketio-sharp\SocketIOSharp\SocketIOSharp.Unity3D\bin\%CONFIGURATION%\netstandard2.0\SocketIOSharp.Unity3D.dll %ScatterSharpUnity3DDir%
+  copy ..\socketio-sharp\SocketIOSharp\SocketIOSharp.Unity3D\WebSocket.jslib %ScatterSharpUnity3DDir%
   copy ..\ScatterSharp\ScatterSharp.Core\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.Core.dll %ScatterSharpUnity3DDir%
   copy ..\ScatterSharp\ScatterSharp.Unity3D\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.Unity3D.dll %ScatterSharpUnity3DDir%
   copy ..\ScatterSharp\ScatterSharp.EosProvider\bin\%CONFIGURATION%\netstandard2.0\ScatterSharp.EosProvider.dll %ScatterSharpUnity3DDir%
