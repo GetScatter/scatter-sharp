@@ -9,7 +9,7 @@
 
 ## Creating a new project
 
-- clone this repository ( `git clone https://github.com/GetScatter/scatter-sharp.git YOUR_PROJECT_NAME` )
+- clone this repository ( `git clone https://github.com/GetScatter/scatter-sharp.git YOUR_PROJECT_NAME --recursive` )
 - `cd YOUR_PROJECT_NAME/Unity3d/`
 - run `.\create_plugins.bat`
 - Open the `ScatterSharpUnity3D` project in Unity!
