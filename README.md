@@ -1,7 +1,7 @@
 # scatter-sharp
 Scatter C# library to interact with ScatterDesktop / ScatterMobile
 
-# Clone repo
+## Clone repo
 
 ```
 git clone https://github.com/GetScatter/scatter-sharp --recursive
@@ -113,11 +113,11 @@ using (var scatter = new Scatter(new ScatterConfigurator()
 
 #### Generic / Fiddler proxy
 
-Is useful to configure a proxy to investigate and debug all the information that goes thru scatter-sharp <-> ScatterDesktop. Fiddler is a popular http/websocket proxy solution but you can configure any other.
+Is useful to configure a proxy to investigate and debug all the information that goes through scatter-sharp <-> ScatterDesktop. Fiddler is a popular http/websocket proxy solution but you can configure any other.
 
 ##### Enabling proxy
 
-Add a proxy object to scatter configurator that accepts Url and optionaly User and Password. Note that this is used in websocket-sharp and not the implementation for WebGL (not needed).
+Add a proxy object to scatter configurator that accepts Url and optionaly User and Password. **Note that this is used in websocket-sharp and not the implementation for WebGL (not needed).**
 
 ```csharp
 var scatter = new Scatter(new ScatterConfigurator()
@@ -160,6 +160,7 @@ In websocket tab you can view in real-time all the communication between scatter
 Connect to scatter
 ```csharp
 await scatter.Connect();
+```
 
 - **GetVersion**
 Gets the Scatter version
