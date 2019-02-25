@@ -2,11 +2,39 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>scatter-sharp-eos</PackageId>
+    <Authors>Mário Silva</Authors>
+    <Company>GetScatter</Company>
+    <Product>scatter-sharp-eos</Product>
+    <Description>Scatter C# library to interact with ScatterDesktop / ScatterMobile - eos signature provider implementation</Description>
+    <Copyright>Copyright 2019</Copyright>
+    <PackageLicenseUrl>https://github.com/GetScatter/scatter-sharp/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/GetScatter/scatter-sharp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/GetScatter/scatter-sharp</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>EOS, NetStandard, secp256k1, Blockchain, Scatter</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\eos-sharp\EosSharp\EosSharp.Core\EosSharp.Core.csproj" />
-    <ProjectReference Include="..\ScatterSharp.Core\ScatterSharp.Core.csproj" />
+    <ProjectReference Include="..\..\eos-sharp\EosSharp\EosSharp.Core\EosSharp.Core.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\ScatterSharp.Core\ScatterSharp.Core.csproj" PrivateAssets="all" />
   </ItemGroup>
 
+  <!--
+    The following solves the problem that 'dotnet pack' does not include the DLLs from referenced projects.
+    See https://github.com/NuGet/Home/issues/3891 for a description of the problem
+    and for newer versions / workarounds / built-in methods.
+  -->
+  <PropertyGroup>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+    <!-- include PDBs in the NuGet package -->
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+  
+  <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
+    </ItemGroup>
+  </Target>
+  
 </Project>

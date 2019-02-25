@@ -7,18 +7,17 @@
     <PackageId>scatter-sharp</PackageId>
     <Product>scatter-sharp</Product>
     <Description>Scatter C# library to interact with ScatterDesktop / ScatterMobile</Description>
-    <Copyright>Copyright 2018</Copyright>
+    <Copyright>Copyright 2019</Copyright>
     <PackageLicenseUrl>https://github.com/GetScatter/scatter-sharp/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/GetScatter/scatter-sharp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GetScatter/scatter-sharp</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>EOS, NetStandard, secp256k1, Blockchain, Scatter</PackageTags>
-    <AssemblyVersion>2.0.0.2</AssemblyVersion>
-    <FileVersion>2.0.0.2</FileVersion>
-    <PackageReleaseNotes>- Add proxy configuration to ScatterConfiguration
-- Fix nuget packages for multiple project dependencies</PackageReleaseNotes>
-    <Version>2.0.2</Version>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <AssemblyVersion>2.0.0.3</AssemblyVersion>
+    <FileVersion>2.0.0.3</FileVersion>
+    <PackageReleaseNotes>Update licence back to MIT</PackageReleaseNotes>
+    <Version>2.0.3</Version>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
