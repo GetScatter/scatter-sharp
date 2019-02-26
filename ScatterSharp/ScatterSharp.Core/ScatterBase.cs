@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace ScatterSharp
 {
+    /// <summary>
+    /// Base implementation for scatter client
+    /// </summary>
     public class ScatterBase : IScatter
     {
         private ISocketService SocketService { get; set; }
@@ -15,6 +18,11 @@ namespace ScatterSharp
         public Network Network { get; set; }
         public Identity Identity { get; set; }
 
+        /// <summary>
+        /// Constructor for scatter client with init configuration and socket service
+        /// </summary>        
+        /// <param name="config">Configuration object</param>
+        /// <param name="socketService">Socket service implementation</param>
         public ScatterBase(ScatterConfigurator config, ISocketService socketService)
         {
             if (config == null)
@@ -35,11 +43,18 @@ namespace ScatterSharp
             });
         }
 
+        /// <summary>
+        /// Dispose socket service
+        /// </summary>
         public void Dispose()
         {
             SocketService.Dispose();
         }
 
+        /// <summary>
+        /// Connect to scatter
+        /// </summary>
+        /// <returns></returns>
         public async Task Connect()
         {
             //Try connect with wss connection
@@ -68,16 +83,28 @@ namespace ScatterSharp
             this.Identity = await this.GetIdentityFromPermissions();
         }
 
+        /// <summary>
+        /// Get configured network
+        /// </summary>
+        /// <returns></returns>
         public Network GetNetwork()
         {
             return Network;
         }
 
+        /// <summary>
+        /// Get configured app name
+        /// </summary>
+        /// <returns></returns>
         public string GetAppName()
         {
             return AppName;
         }
 
+        /// <summary>
+        /// Get Scatter version
+        /// </summary>
+        /// <returns></returns>
         public async Task<string> GetVersion()
         {
             var result = await SocketService.SendApiRequest<ApiBase, string>(new Request<ApiBase>()
@@ -92,6 +119,11 @@ namespace ScatterSharp
             return result;
         }
 
+        /// <summary>
+        /// Prompts the users for an Identity if there is no permission, otherwise returns the permission without a prompt based on origin.
+        /// </summary>
+        /// <param name="requiredFields">Optional required fields</param>
+        /// <returns></returns>
         public async Task<Identity> GetIdentity(IdentityRequiredFields requiredFields = null)
         {
             ThrowNoAuth();
@@ -122,6 +154,10 @@ namespace ScatterSharp
             return Identity = result;
         }
 
+        /// <summary>
+        /// Checks if an Identity has permissions and return the identity based on origin.
+        /// </summary>
+        /// <returns></returns>
         public async Task<Identity> GetIdentityFromPermissions()
         {
             ThrowNoAuth();
@@ -141,6 +177,10 @@ namespace ScatterSharp
             return Identity;
         }
 
+        /// <summary>
+        /// Removes the identity permission for an origin from the user's Scatter, effectively logging them out.
+        /// </summary>
+        /// <returns></returns>
         public async Task<bool> ForgetIdentity()
         {
             ThrowNoAuth();
@@ -159,6 +199,13 @@ namespace ScatterSharp
             return bool.Parse(result);
         }
 
+        /// <summary>
+        /// Sign origin (appName) with the Identity's private key. Or custom data with custom publicKey
+        /// </summary>
+        /// <param name="nonce">entropy nonce</param>
+        /// <param name="data">custom data</param>
+        /// <param name="publicKey">custom publickey</param>
+        /// <returns></returns>
         public async Task<string> Authenticate(string nonce, string data = null, string publicKey = null)
         {
             ThrowNoAuth();
@@ -178,6 +225,14 @@ namespace ScatterSharp
             return result;
         }
 
+        /// <summary>
+        /// Sign arbitrary data with the constraint of max 12 words
+        /// </summary>
+        /// <param name="publicKey">publickey to request the private key signature</param>
+        /// <param name="data">data to sign</param>
+        /// <param name="whatfor">Optional reason for signature</param>
+        /// <param name="isHash">is data a sha256 hash</param>
+        /// <returns></returns>
         public async Task<string> GetArbitrarySignature(string publicKey, string data, string whatfor = "", bool isHash = false)
         {
             ThrowNoAuth();
@@ -198,6 +253,11 @@ namespace ScatterSharp
             return result;
         }
 
+        /// <summary>
+        /// Allows apps to request that the user provide a user-selected Public Key to the app. ( ONBOARDING HELPER )
+        /// </summary>
+        /// <param name="blockchain"></param>
+        /// <returns></returns>
         public async Task<string> GetPublicKey(string blockchain)
         {
             ThrowNoAuth();
@@ -215,6 +275,11 @@ namespace ScatterSharp
             return result;
         }
 
+        /// <summary>
+        /// Allows the app to suggest that the user link new accounts on top of public keys ( ONBOARDING HELPER )
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
         public async Task<bool> LinkAccount(LinkAccount account)
         {
             ThrowNoAuth();
@@ -233,6 +298,10 @@ namespace ScatterSharp
             return bool.Parse(result);
         }
 
+        /// <summary>
+        /// Allows dapps to see if a user has an account for a specific blockchain. DOES NOT PROMPT and does not return an actual account, just a boolean.
+        /// </summary>
+        /// <returns></returns>
         public async Task<bool> HasAccountFor()
         {
             ThrowNoAuth();
@@ -250,6 +319,10 @@ namespace ScatterSharp
             return bool.Parse(result);
         }
 
+        /// <summary>
+        /// Prompts the user to add a new network to their Scatter.
+        /// </summary>
+        /// <returns></returns>
         public async Task<bool> SuggestNetwork()
         {
             ThrowNoAuth();
@@ -268,6 +341,13 @@ namespace ScatterSharp
         }
 
         //TODO check
+        /// <summary>
+        /// Request transfer of funds.
+        /// </summary>
+        /// <param name="to"></param>
+        /// <param name="amount"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
         public async Task<object> RequestTransfer(string to, string amount, object options = null)
         {
             ThrowNoAuth();
@@ -288,6 +368,11 @@ namespace ScatterSharp
             return result;
         }
 
+        /// <summary>
+        /// Request transaction signature
+        /// </summary>
+        /// <param name="payload"></param>
+        /// <returns></returns>
         public async Task<SignaturesResult> RequestSignature(object payload)
         {
             ThrowNoAuth();
@@ -301,6 +386,11 @@ namespace ScatterSharp
             return result;
         }
 
+        /// <summary>
+        /// Add token to wallet
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public async Task<bool> AddToken(Token token)
         {
             ThrowNoAuth();
@@ -319,6 +409,12 @@ namespace ScatterSharp
             return bool.Parse(result);
         }
 
+        /// <summary>
+        /// Update identity information
+        /// </summary>
+        /// <param name="name">identity name</param>
+        /// <param name="kyc">kyc information</param>
+        /// <returns></returns>
         public async Task<string> UpdateIdentity(string name, string kyc = null)
         {
             ThrowNoAuth();
@@ -357,26 +453,49 @@ namespace ScatterSharp
             return result;
         }
 
+        /// <summary>
+        /// Register listener for scatter event type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="callback"></param>
         public void On(string type, Action<object> callback)
         {
             SocketService.On(type, callback);
         }
 
+        /// <summary>
+        /// Remove listener by event type
+        /// </summary>
+        /// <param name="type">event type</param>
         public void Off(string type)
         {
             SocketService.Off(type);
         }
 
+        /// <summary>
+        /// Remove listener by event type and position
+        /// </summary>
+        /// <param name="type">event type</param>
+        /// <param name="index">position</param>
         public void Off(string type, int index)
         {
             SocketService.Off(type, index);
         }
 
+        /// <summary>
+        /// Remove listener by callback instance
+        /// </summary>
+        /// <param name="callback"></param>
         public void Off(Action<object> callback)
         {
             SocketService.Off(callback);
         }
 
+        /// <summary>
+        /// remove listner by event type and callback instance
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="callback"></param>
         public void Off(string type, Action<object> callback)
         {
             SocketService.Off(type, callback);
@@ -388,7 +507,6 @@ namespace ScatterSharp
             if (!SocketService.IsConnected())
                 throw new Exception("Connect and Authenticate first - scatter.connect( appName )");
         }
-
         #endregion
     }
 

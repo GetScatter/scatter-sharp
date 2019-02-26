@@ -119,6 +119,14 @@ namespace ScatterSharp.Core.Interfaces
         /// <returns></returns>
         Task<bool> AddToken(Token token);
 
+        /// <summary>
+        /// Update identity information
+        /// </summary>
+        /// <param name="name">identity name</param>
+        /// <param name="kyc">kyc information</param>
+        /// <returns></returns>
+        Task<string> UpdateIdentity(string name, string kyc = null);
+
         Task<string> GetEncryptionKey(string fromPublicKey, string toPublicKey, UInt64 nonce);
 
         /// <summary>

@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace ScatterSharp
 {
+    /// <summary>
+    /// Generic socket service implementation using socketio-sharp
+    /// </summary>
     public class SocketService : SocketServiceBase
     {
         public SocketService(IAppStorageProvider storageProvider, SocketIOConfigurator config, string appName, int timeout = 60000) :

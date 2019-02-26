@@ -14,6 +14,9 @@ using SocketIOSharp.Core;
 
 namespace ScatterSharp.Core
 {
+    /// <summary>
+    /// Base implementation for socket service using socketio-sharp interface
+    /// </summary>
     public abstract class SocketServiceBase : ISocketService 
     {
         protected readonly int OPEN_TASK_CHECK_INTERVAL_SECS = 1;
@@ -29,6 +32,13 @@ namespace ScatterSharp.Core
 
         protected Dictionary<string, List<Action<object>>> EventListenersDict { get; set; }
 
+        /// <summary>
+        /// Constructor for socket service
+        /// </summary>
+        /// <param name="storageProvider">Storage service for appName and nonce</param>
+        /// <param name="config">socketio-sharp configurator</param>
+        /// <param name="appName">app name</param>
+        /// <param name="timeout">default app request timeout in milliseconds</param>
         public SocketServiceBase(IAppStorageProvider storageProvider, SocketIOConfigurator config, string appName, int timeout = 60000)
         {
             OpenTasks = new Dictionary<string, OpenTask>();
@@ -42,35 +52,20 @@ namespace ScatterSharp.Core
             TimeoutMS = timeout;
         }
 
+        /// <summary>
+        /// dispose socketio-sharp websocket
+        /// </summary>
         public void Dispose()
         {
             SockIO.Dispose();
             StorageProvider.Save();
         }
 
-        public bool IsPaired()
-        {
-            return Paired;
-        }
-
-        public async Task Pair(bool passthrough = false)
-        {
-            PairOpenTask = new TaskCompletionSource<bool>();
-
-            await SockIO.EmitAsync("pair", new RequestWrapper()
-            {
-                data = new PairRequest()
-                {
-                    appkey = StorageProvider.GetAppkey(),
-                    passthrough = passthrough,
-                    origin = AppName
-                },
-                plugin = AppName
-            });
-
-            await PairOpenTask.Task;
-        }
-
+        /// <summary>
+        /// Link to scatter application by connecting, registering events and pair with passthrough
+        /// </summary>
+        /// <param name="uri">Uri to link to</param>
+        /// <returns></returns>
         public async Task<bool> Link(Uri uri)
         {
             if (SockIO.GetState() == WebSocketState.Open)
@@ -95,6 +90,37 @@ namespace ScatterSharp.Core
             return true;
         }
 
+        /// <summary>
+        /// Pair appication to registered applications in scatter
+        /// </summary>
+        /// <param name="passthrough">pass through rekey process</param>
+        /// <returns></returns>
+        public async Task Pair(bool passthrough = false)
+        {
+            PairOpenTask = new TaskCompletionSource<bool>();
+
+            await SockIO.EmitAsync("pair", new RequestWrapper()
+            {
+                data = new PairRequest()
+                {
+                    appkey = StorageProvider.GetAppkey(),
+                    passthrough = passthrough,
+                    origin = AppName
+                },
+                plugin = AppName
+            });
+
+            await PairOpenTask.Task;
+        }
+
+        /// <summary>
+        /// Send api request to scatter
+        /// </summary>
+        /// <typeparam name="TRequest">Request type param</typeparam>
+        /// <typeparam name="TReturn">Return type param</typeparam>
+        /// <param name="request">Request object</param>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
+        /// <returns></returns>
         public async Task<TReturn> SendApiRequest<TRequest, TReturn>(Request<TRequest> request, int? timeout = null)
         {
             if (request.type == "identityFromPermissions" && !Paired)
@@ -132,17 +158,39 @@ namespace ScatterSharp.Core
 
             return BuildApiResponse<TReturn>(await tcs.Task);
         }
-        
+
+        /// <summary>
+        /// Disconnect from socket
+        /// </summary>
+        /// <returns></returns>
         public Task Disconnect()
         {
             return SockIO.DisconnectAsync();
         }
 
+        /// <summary>
+        /// Check if socket connection is open
+        /// </summary>
+        /// <returns></returns>
         public bool IsConnected()
         {
             return SockIO.GetState() == WebSocketState.Open;
         }
 
+        /// <summary>
+        /// Check if socket service is paired with scatter
+        /// </summary>
+        /// <returns></returns>
+        public bool IsPaired()
+        {
+            return Paired;
+        }
+
+        /// <summary>
+        /// Register listener for socketio event type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="callback"></param>
         public void On(string type, Action<object> callback)
         {
             if (callback == null)
@@ -160,18 +208,31 @@ namespace ScatterSharp.Core
             }
         }
 
+        /// <summary>
+        /// Remove listener by event type
+        /// </summary>
+        /// <param name="type">event type</param>
         public void Off(string type)
         {
             if (EventListenersDict.ContainsKey(type))
                 EventListenersDict[type].Clear();
         }
 
+        /// <summary>
+        /// Remove listener by event type and position
+        /// </summary>
+        /// <param name="type">event type</param>
+        /// <param name="index">position</param>
         public void Off(string type, int index)
         {
             if (EventListenersDict.ContainsKey(type))
                 EventListenersDict[type].RemoveAt(index);
         }
 
+        /// <summary>
+        /// Remove listener by callback instance
+        /// </summary>
+        /// <param name="callback"></param>
         public void Off(Action<object> callback)
         {
             foreach (var el in EventListenersDict.Values)
@@ -180,6 +241,11 @@ namespace ScatterSharp.Core
             }
         }
 
+        /// <summary>
+        /// remove listner by event type and callback instance
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="callback"></param>
         public void Off(string type, Action<object> callback)
         {
             if (EventListenersDict.ContainsKey(type))

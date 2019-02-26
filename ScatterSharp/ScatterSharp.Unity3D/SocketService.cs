@@ -13,6 +13,9 @@ using UnityEngine;
 
 namespace ScatterSharp.Unity3D
 {
+    /// <summary>
+    /// Socket service implementation using socketio-sharp for unity3d
+    /// </summary>
     public class SocketService : SocketServiceBase
     {
         private MonoBehaviour ScriptInstance { get; set; }

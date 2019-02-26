@@ -6,11 +6,21 @@ namespace ScatterSharp.Core.Helpers
 {
     public class UtilsHelper
     {
+        /// <summary>
+        /// Generate hex encoded random number
+        /// </summary>
+        /// <param name="size">number size in bytes</param>
+        /// <returns></returns>
         public static string RandomNumber(int size = 6)
         {
             return ByteArrayToHexString(RandomNumberBytes(size));
         }
 
+        /// <summary>
+        /// Generate random number and convert to byte array
+        /// </summary>
+        /// <param name="size">number size in bytes</param>
+        /// <returns></returns>
         public static byte[] RandomNumberBytes(int size = 6)
         {
             var r = RandomNumberGenerator.Create();
@@ -19,6 +29,11 @@ namespace ScatterSharp.Core.Helpers
             return numberBytes;
         }
 
+        /// <summary>
+        /// Encode byte array to hexadecimal string
+        /// </summary>
+        /// <param name="ba">byte array to convert</param>
+        /// <returns></returns>
         public static string ByteArrayToHexString(byte[] ba)
         {
             StringBuilder hex = new StringBuilder(ba.Length * 2);
@@ -28,6 +43,11 @@ namespace ScatterSharp.Core.Helpers
             return hex.ToString();
         }
 
+        /// <summary>
+        /// Decode hexadecimal string to byte array
+        /// </summary>
+        /// <param name="hex"></param>
+        /// <returns></returns>
         public static byte[] HexStringToByteArray(string hex)
         {
             var l = hex.Length / 2;

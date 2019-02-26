@@ -17,32 +17,55 @@ namespace ScatterSharp.Core.Storage
         private string FilePath { get; set; }
         private AppData Data { get; set; }
 
+        /// <summary>
+        /// Construct file based storage implementation
+        /// </summary>
+        /// <param name="filePath">File path to create/update file</param>
         public FileStorageProvider(string filePath)
         {
             FilePath = filePath;
             Load();
         }
 
-        public string GetAppkey()
-        {
-            return Data.Appkey;
-        }
-
+        /// <summary>
+        /// Get Nonce
+        /// </summary>
+        /// <returns></returns>
         public string GetNonce()
         {
             return Data.Nonce;
         }
 
-        public void SetAppkey(string appkey)
-        {
-            Data.Appkey = appkey;
-        }
-
+        /// <summary>
+        /// Set nonce as hex string
+        /// </summary>
+        /// <param name="nonce"></param>
         public void SetNonce(string nonce)
         {
             Data.Nonce = nonce;
         }
 
+        /// <summary>
+        /// Get app key
+        /// </summary>
+        /// <returns></returns>
+        public string GetAppkey()
+        {
+            return Data.Appkey;
+        }
+
+        /// <summary>
+        /// Set appkey
+        /// </summary>
+        /// <param name="appkey"></param>
+        public void SetAppkey(string appkey)
+        {
+            Data.Appkey = appkey;
+        }
+
+        /// <summary>
+        /// Save all information to storage
+        /// </summary>
         public void Save()
         {
             var bf = new BinaryFormatter();
@@ -51,6 +74,9 @@ namespace ScatterSharp.Core.Storage
             fs.Close();
         }
 
+        /// <summary>
+        /// Load all information from storage
+        /// </summary>
         public void Load()
         {
             if (!File.Exists(FilePath))
