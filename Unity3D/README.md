@@ -4,7 +4,7 @@
 
 - Unity >= 2018.1
 - Visual Studio 2017+
-
+- ".NET Core cross-platform development" toolset in VS2017
 -------------------------------
 
 ## Creating a new project
