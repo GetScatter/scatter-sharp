@@ -18,7 +18,7 @@ namespace ScatterSharp
             {
                 Namespace = "scatter",
                 Proxy = config.Proxy
-            }, config.AppName))
+            }, config.AppName, config.DefaultTimeout))
         {
         }
     }

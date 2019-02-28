@@ -28,5 +28,9 @@ namespace ScatterSharp.Core
         /// Proxy to route traffic (optional)
         /// </summary>
         public Proxy Proxy { get; set; }
+        /// <summary>
+        /// Default Timeout for all requests
+        /// </summary>
+        public int DefaultTimeout = 60000;
     }
 }

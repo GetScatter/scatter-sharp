@@ -20,7 +20,7 @@ namespace ScatterSharp.Unity3D
             {
                 Namespace = "scatter",
                 Proxy = config.Proxy
-            }, config.AppName, 60000, scriptInstance))
+            }, config.AppName, config.DefaultTimeout, scriptInstance))
         {
         }
     }
