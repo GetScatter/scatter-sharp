@@ -13,10 +13,12 @@
     <RepositoryUrl>https://github.com/GetScatter/scatter-sharp</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>EOS, NetStandard, secp256k1, Blockchain, Scatter</PackageTags>
-    <AssemblyVersion>2.0.0.3</AssemblyVersion>
-    <FileVersion>2.0.0.3</FileVersion>
-    <PackageReleaseNotes>Update licence back to MIT</PackageReleaseNotes>
-    <Version>2.0.3</Version>
+    <AssemblyVersion>2.0.0.4</AssemblyVersion>
+    <FileVersion>2.0.0.4</FileVersion>
+    <PackageReleaseNotes>fix override timeout not working on unittests
+propagate timeout to scatter api
+refactor pair to support timeout</PackageReleaseNotes>
+    <Version>2.0.4</Version>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
