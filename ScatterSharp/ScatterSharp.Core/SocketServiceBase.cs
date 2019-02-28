@@ -27,9 +27,8 @@ namespace ScatterSharp.Core
 
         protected ISocketIO SockIO { get; set; }
         protected Dictionary<string, OpenTask> OpenTasks { get; set; }
-        protected TaskCompletionSource<bool> PairOpenTask { get; set; }
+        protected string PairOpenId { get; set; }
         protected Task TimoutTasksTask { get; set; }
-
         protected Dictionary<string, List<Action<object>>> EventListenersDict { get; set; }
 
         /// <summary>
@@ -50,6 +49,8 @@ namespace ScatterSharp.Core
             StorageProvider = storageProvider;
             AppName = appName;
             TimeoutMS = timeout;
+
+            PairOpenId = UtilsHelper.RandomNumber(24);
         }
 
         /// <summary>
@@ -65,8 +66,9 @@ namespace ScatterSharp.Core
         /// Link to scatter application by connecting, registering events and pair with passthrough
         /// </summary>
         /// <param name="uri">Uri to link to</param>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
         /// <returns></returns>
-        public async Task<bool> Link(Uri uri)
+        public async Task<bool> Link(Uri uri, int? timeout = null)
         {
             if (SockIO.GetState() == WebSocketState.Open)
                 return true;
@@ -86,7 +88,7 @@ namespace ScatterSharp.Core
 
             StartTimeoutOpenTasksCheck();
 
-            await Pair(true);
+            await Pair(true, timeout);
             return true;
         }
 
@@ -94,10 +96,22 @@ namespace ScatterSharp.Core
         /// Pair appication to registered applications in scatter
         /// </summary>
         /// <param name="passthrough">pass through rekey process</param>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
         /// <returns></returns>
-        public async Task Pair(bool passthrough = false)
+        public async Task Pair(bool passthrough = false, int? timeout = null)
         {
-            PairOpenTask = new TaskCompletionSource<bool>();
+            var pairOpenTask = new TaskCompletionSource<object>();
+            var openTask = new OpenTask()
+            {
+                PromiseTask = pairOpenTask,
+                TaskRequestTime = DateTime.Now,
+                TaskTimeoutMS = timeout.HasValue ? timeout.Value : TimeoutMS
+            };
+
+            if (OpenTasks.ContainsKey(PairOpenId))
+                OpenTasks[PairOpenId] = openTask;
+            else
+                OpenTasks.Add(PairOpenId, openTask);
 
             await SockIO.EmitAsync("pair", new RequestWrapper()
             {
@@ -110,7 +124,7 @@ namespace ScatterSharp.Core
                 plugin = AppName
             });
 
-            await PairOpenTask.Task;
+            await pairOpenTask.Task;
         }
 
         /// <summary>
@@ -135,7 +149,12 @@ namespace ScatterSharp.Core
 
             var tcs = new TaskCompletionSource<object>();
 
-            request.id = UtilsHelper.RandomNumber(24);
+            do
+            {
+                request.id = UtilsHelper.RandomNumber(24);
+            }
+            while (OpenTasks.ContainsKey(request.id));
+            
             request.appkey = StorageProvider.GetAppkey();
             request.nonce = StorageProvider.GetNonce() ?? "";
 
@@ -318,10 +337,12 @@ namespace ScatterSharp.Core
                 }
             }
 
-            if (PairOpenTask != null)
-            {
-                PairOpenTask.SetResult(Paired);
-            }
+            OpenTask openTask;
+            if (!OpenTasks.TryGetValue(PairOpenId, out openTask))
+                return;
+
+            openTask.PromiseTask.SetResult(Paired);
+            openTask.TaskTimeoutMS = int.MaxValue;
         }
 
         protected void GenerateNewAppKey()

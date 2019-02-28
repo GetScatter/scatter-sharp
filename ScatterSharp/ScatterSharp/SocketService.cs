@@ -27,7 +27,10 @@ namespace ScatterSharp
 
         protected override void StartTimeoutOpenTasksCheck()
         {
-            TimoutTasksTask = Task.Run(() => TimeoutOpenTasksCheck());
+            TimoutTasksTask = Task.Run(() => {
+                var e = TimeoutOpenTasksCheck();
+                while (e.MoveNext());
+            });
         }
 
         protected override object WaitForOpenTasksCheck(int openTaskCheckIntervalSecs)

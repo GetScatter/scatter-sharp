@@ -12,15 +12,17 @@ namespace ScatterSharp.Core.Interfaces
         /// Link to scatter application by connecting, registering events and pair with passthrough
         /// </summary>
         /// <param name="uri">Uri to link to</param>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
         /// <returns></returns>
-        Task<bool> Link(Uri uri);
+        Task<bool> Link(Uri uri, int? timeout = null);
 
         /// <summary>
         /// Pair appication to registered applications in scatter
         /// </summary>
         /// <param name="passthrough">pass through rekey process</param>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
         /// <returns></returns>
-        Task Pair(bool passthrough = false);
+        Task Pair(bool passthrough = false, int? timeout = null);
 
         /// <summary>
         /// Send api request to scatter

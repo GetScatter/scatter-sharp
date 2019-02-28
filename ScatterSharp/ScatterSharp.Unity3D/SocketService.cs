@@ -38,7 +38,10 @@ namespace ScatterSharp.Unity3D
             }
             else
             {
-                TimoutTasksTask = Task.Run(() => TimeoutOpenTasksCheck());
+                TimoutTasksTask = Task.Run(() => {
+                    var e = TimeoutOpenTasksCheck();
+                    while (e.MoveNext());
+                });
             }
         }
 

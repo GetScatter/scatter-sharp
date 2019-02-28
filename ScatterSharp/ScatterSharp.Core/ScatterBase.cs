@@ -54,8 +54,9 @@ namespace ScatterSharp
         /// <summary>
         /// Connect to scatter
         /// </summary>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
         /// <returns></returns>
-        public async Task Connect()
+        public async Task Connect(int? timeout = null)
         {
             //Try connect with wss connection
             Uri wssURI = new Uri(string.Format(ScatterConstants.WSURI,
@@ -63,7 +64,7 @@ namespace ScatterSharp
                                                ScatterConstants.WSS_HOST,
                                                ScatterConstants.WSS_PORT));
 
-            bool linked = await SocketService.Link(wssURI);
+            bool linked = await SocketService.Link(wssURI, timeout);
 
             if (!linked)
             {
@@ -73,14 +74,14 @@ namespace ScatterSharp
                                                    ScatterConstants.WS_HOST,
                                                    ScatterConstants.WS_PORT));
 
-                linked = await SocketService.Link(wsURI);
+                linked = await SocketService.Link(wsURI, timeout);
 
                 //TODO check for errors
                 if (!linked)
                     throw new Exception("socket not available.");
             }
 
-            this.Identity = await this.GetIdentityFromPermissions();
+            this.Identity = await this.GetIdentityFromPermissions(timeout);
         }
 
         /// <summary>
@@ -104,8 +105,9 @@ namespace ScatterSharp
         /// <summary>
         /// Get Scatter version
         /// </summary>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
         /// <returns></returns>
-        public async Task<string> GetVersion()
+        public async Task<string> GetVersion(int? timeout = null)
         {
             var result = await SocketService.SendApiRequest<ApiBase, string>(new Request<ApiBase>()
             {
@@ -114,7 +116,7 @@ namespace ScatterSharp
                 {
                     origin = AppName
                 }
-            });
+            }, timeout);
 
             return result;
         }
@@ -123,8 +125,9 @@ namespace ScatterSharp
         /// Prompts the users for an Identity if there is no permission, otherwise returns the permission without a prompt based on origin.
         /// </summary>
         /// <param name="requiredFields">Optional required fields</param>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
         /// <returns></returns>
-        public async Task<Identity> GetIdentity(IdentityRequiredFields requiredFields = null)
+        public async Task<Identity> GetIdentity(IdentityRequiredFields requiredFields = null, int? timeout = null)
         {
             ThrowNoAuth();
 
@@ -149,7 +152,7 @@ namespace ScatterSharp
                     fields = requiredFields,
                     origin = AppName
                 }
-            });
+            }, timeout);
 
             return Identity = result;
         }
@@ -157,8 +160,9 @@ namespace ScatterSharp
         /// <summary>
         /// Checks if an Identity has permissions and return the identity based on origin.
         /// </summary>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
         /// <returns></returns>
-        public async Task<Identity> GetIdentityFromPermissions()
+        public async Task<Identity> GetIdentityFromPermissions(int? timeout = null)
         {
             ThrowNoAuth();
 
@@ -169,7 +173,7 @@ namespace ScatterSharp
                 {
                     origin = AppName
                 }
-            });
+            }, timeout);
 
             if(result != null)
                 Identity = result;
@@ -180,8 +184,9 @@ namespace ScatterSharp
         /// <summary>
         /// Removes the identity permission for an origin from the user's Scatter, effectively logging them out.
         /// </summary>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
         /// <returns></returns>
-        public async Task<bool> ForgetIdentity()
+        public async Task<bool> ForgetIdentity(int? timeout = null)
         {
             ThrowNoAuth();
 
@@ -192,7 +197,7 @@ namespace ScatterSharp
                 {
                     origin = AppName
                 }
-            });
+            }, timeout);
 
             Identity = null;
 
@@ -205,8 +210,9 @@ namespace ScatterSharp
         /// <param name="nonce">entropy nonce</param>
         /// <param name="data">custom data</param>
         /// <param name="publicKey">custom publickey</param>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
         /// <returns></returns>
-        public async Task<string> Authenticate(string nonce, string data = null, string publicKey = null)
+        public async Task<string> Authenticate(string nonce, string data = null, string publicKey = null, int? timeout = null)
         {
             ThrowNoAuth();
 
@@ -220,7 +226,7 @@ namespace ScatterSharp
                     publicKey = publicKey,
                     origin = AppName
                 }
-            });
+            }, timeout);
 
             return result;
         }
@@ -232,8 +238,9 @@ namespace ScatterSharp
         /// <param name="data">data to sign</param>
         /// <param name="whatfor">Optional reason for signature</param>
         /// <param name="isHash">is data a sha256 hash</param>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
         /// <returns></returns>
-        public async Task<string> GetArbitrarySignature(string publicKey, string data, string whatfor = "", bool isHash = false)
+        public async Task<string> GetArbitrarySignature(string publicKey, string data, string whatfor = "", bool isHash = false, int? timeout = null)
         {
             ThrowNoAuth();
 
@@ -248,7 +255,7 @@ namespace ScatterSharp
                     isHash = isHash,
                     origin = AppName
                 }
-            });
+            }, timeout);
 
             return result;
         }
@@ -257,8 +264,9 @@ namespace ScatterSharp
         /// Allows apps to request that the user provide a user-selected Public Key to the app. ( ONBOARDING HELPER )
         /// </summary>
         /// <param name="blockchain"></param>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
         /// <returns></returns>
-        public async Task<string> GetPublicKey(string blockchain)
+        public async Task<string> GetPublicKey(string blockchain, int? timeout = null)
         {
             ThrowNoAuth();
 
@@ -270,7 +278,7 @@ namespace ScatterSharp
                     blockchain = blockchain,
                     origin = AppName
                 }
-            });
+            }, timeout);
 
             return result;
         }
@@ -279,8 +287,9 @@ namespace ScatterSharp
         /// Allows the app to suggest that the user link new accounts on top of public keys ( ONBOARDING HELPER )
         /// </summary>
         /// <param name="account"></param>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
         /// <returns></returns>
-        public async Task<bool> LinkAccount(LinkAccount account)
+        public async Task<bool> LinkAccount(LinkAccount account, int? timeout = null)
         {
             ThrowNoAuth();
 
@@ -293,7 +302,7 @@ namespace ScatterSharp
                     network = Network,
                     origin = AppName
                 }
-            });
+            }, timeout);
 
             return bool.Parse(result);
         }
@@ -301,8 +310,9 @@ namespace ScatterSharp
         /// <summary>
         /// Allows dapps to see if a user has an account for a specific blockchain. DOES NOT PROMPT and does not return an actual account, just a boolean.
         /// </summary>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
         /// <returns></returns>
-        public async Task<bool> HasAccountFor()
+        public async Task<bool> HasAccountFor(int? timeout = null)
         {
             ThrowNoAuth();
 
@@ -314,7 +324,7 @@ namespace ScatterSharp
                     network = Network,
                     origin = AppName
                 }
-            });
+            }, timeout);
 
             return bool.Parse(result);
         }
@@ -322,8 +332,9 @@ namespace ScatterSharp
         /// <summary>
         /// Prompts the user to add a new network to their Scatter.
         /// </summary>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
         /// <returns></returns>
-        public async Task<bool> SuggestNetwork()
+        public async Task<bool> SuggestNetwork(int? timeout = null)
         {
             ThrowNoAuth();
 
@@ -335,7 +346,7 @@ namespace ScatterSharp
                     network = Network,
                     origin = AppName
                 }
-            });
+            }, timeout);
 
             return bool.Parse(result);
         }
@@ -347,8 +358,9 @@ namespace ScatterSharp
         /// <param name="to"></param>
         /// <param name="amount"></param>
         /// <param name="options"></param>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
         /// <returns></returns>
-        public async Task<object> RequestTransfer(string to, string amount, object options = null)
+        public async Task<object> RequestTransfer(string to, string amount, object options = null, int? timeout = null)
         {
             ThrowNoAuth();
 
@@ -363,7 +375,7 @@ namespace ScatterSharp
                     options = options,
                     origin = AppName
                 }
-            });
+            }, timeout);
 
             return result;
         }
@@ -372,8 +384,9 @@ namespace ScatterSharp
         /// Request transaction signature
         /// </summary>
         /// <param name="payload"></param>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
         /// <returns></returns>
-        public async Task<SignaturesResult> RequestSignature(object payload)
+        public async Task<SignaturesResult> RequestSignature(object payload, int? timeout = null)
         {
             ThrowNoAuth();
 
@@ -381,7 +394,7 @@ namespace ScatterSharp
             {
                 type = "requestSignature",
                 payload = payload
-            });
+            }, timeout);
 
             return result;
         }
@@ -390,8 +403,9 @@ namespace ScatterSharp
         /// Add token to wallet
         /// </summary>
         /// <param name="token"></param>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
         /// <returns></returns>
-        public async Task<bool> AddToken(Token token)
+        public async Task<bool> AddToken(Token token, int? timeout = null)
         {
             ThrowNoAuth();
 
@@ -404,7 +418,7 @@ namespace ScatterSharp
                     network = Network,
                     origin = AppName
                 }
-            });
+            }, timeout);
 
             return bool.Parse(result);
         }
@@ -414,8 +428,9 @@ namespace ScatterSharp
         /// </summary>
         /// <param name="name">identity name</param>
         /// <param name="kyc">kyc information</param>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
         /// <returns></returns>
-        public async Task<string> UpdateIdentity(string name, string kyc = null)
+        public async Task<string> UpdateIdentity(string name, string kyc = null, int? timeout = null)
         {
             ThrowNoAuth();
 
@@ -428,13 +443,13 @@ namespace ScatterSharp
                     kyc = kyc,
                     origin = AppName
                 }
-            });
+            }, timeout);
 
             return result;
         }
 
         //TODO test on new branch
-        public async Task<string> GetEncryptionKey(string fromPublicKey, string toPublicKey, UInt64 nonce)
+        public async Task<string> GetEncryptionKey(string fromPublicKey, string toPublicKey, UInt64 nonce, int? timeout = null)
         {
             ThrowNoAuth();
 
@@ -448,7 +463,7 @@ namespace ScatterSharp
                     nonce = nonce,
                     origin = AppName
                 }
-            });
+            }, timeout);
 
             return result;
         }
