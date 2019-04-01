@@ -13,10 +13,10 @@
     <RepositoryUrl>https://github.com/GetScatter/scatter-sharp</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>EOS, NetStandard, secp256k1, Blockchain, Scatter</PackageTags>
-    <AssemblyVersion>2.0.6.0</AssemblyVersion>
-    <FileVersion>2.0.6.0</FileVersion>
-    <PackageReleaseNotes>update eos-sharp fixes on specialized array types</PackageReleaseNotes>
-    <Version>2.0.6</Version>
+    <AssemblyVersion>2.0.7.0</AssemblyVersion>
+    <FileVersion>2.0.7.0</FileVersion>
+    <PackageReleaseNotes>eos-sharp: fix bug on vector of structs typedefs</PackageReleaseNotes>
+    <Version>2.0.7</Version>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
