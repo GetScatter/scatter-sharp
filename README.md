@@ -155,6 +155,21 @@ In websocket tab you can view in real-time all the communication between scatter
 
 ![alt text](data/ws-detail.png)
 
+##### Enable proxy on Unity Editor
+
+To enable the proxy in unity editor go to the file:
+
+```
+C:\Program Files\Unity\Editor\Data\Mono\etc\mono\2.0\machine.config
+```
+
+Add this to the <system.net> node:
+```
+<defaultProxy>
+<proxy proxyaddress="http://localhost:8888"/>
+</defaultProxy>
+```
+
 #### Scatter Api methods
 - **Connect**
 Connect to scatter
