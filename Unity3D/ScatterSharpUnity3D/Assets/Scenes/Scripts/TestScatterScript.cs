@@ -11,6 +11,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using EosSharp.Core.Api.v1;
+using EosSharp.Core.Exceptions;
 
 public class TestScatterScript : MonoBehaviour
 {
@@ -21,13 +22,12 @@ public class TestScatterScript : MonoBehaviour
             ScatterSharp.Core.Api.Network network = new ScatterSharp.Core.Api.Network()
             {
                 blockchain = ScatterConstants.Blockchains.EOSIO,
-                host = "nodes.eos42.io",
+                host = "jungle2.cryptolions.io",
                 port = 443,
-                chainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"
+                chainId = "e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473"
             };
 
             var fileStorage = new FileStorageProvider(Application.persistentDataPath + "/scatterapp.dat");
-
             using (var scatter = new Scatter(new ScatterConfigurator()
             {
                 AppName = "UNITY-WEBGL-SCATTER",
@@ -40,14 +40,15 @@ public class TestScatterScript : MonoBehaviour
                 await scatter.GetIdentity(new IdentityRequiredFields()
                 {
                     accounts = new List<ScatterSharp.Core.Api.Network>()
-                    {
-                        network
-                    },
+                {
+                    network
+                },
                     location = new List<LocationFields>(),
                     personal = new List<PersonalFields>()
                 });
 
-                var eos = new Eos(new EosSharp.Core.EosConfigurator() {
+                var eos = new Eos(new EosSharp.Core.EosConfigurator()
+                {
                     ChainId = network.chainId,
                     HttpEndpoint = network.GetHttpEndpoint(),
                     SignProvider = new ScatterSignatureProvider(scatter)
@@ -58,28 +59,35 @@ public class TestScatterScript : MonoBehaviour
                 var result = await eos.CreateTransaction(new EosSharp.Core.Api.v1.Transaction()
                 {
                     actions = new List<EosSharp.Core.Api.v1.Action>()
+                {
+                    new EosSharp.Core.Api.v1.Action()
                     {
-                        new EosSharp.Core.Api.v1.Action()
+                        account = "eosio.token",
+                        authorization =  new List<PermissionLevel>()
                         {
-                            account = "eosio.token",
-                            authorization =  new List<PermissionLevel>()
-                            {
-                                new PermissionLevel() {actor = account.name, permission = account.authority }
-                            },
-                            name = "transfer",
-                            data = new Dictionary<string, object>()
-                            {
-                                { "from", account.name },
-                                { "to", "eosio" },
-                                { "quantity", "0.0001 EOS" },
-                                { "memo", "Unity3D WEBGL hello crypto world!" }
-                            }
+                            new PermissionLevel() { actor = account.name, permission = account.authority }
+                        },
+                        name = "transfer",
+                        data = new Dictionary<string, object>()
+                        {
+                            { "from", account.name },
+                            { "to", "eosio" },
+                            { "quantity", "0.0001 EOS" },
+                            { "memo", "Unity3D WEBGL hello crypto world!" }
                         }
                     }
+                }
                 });
-
                 print(result);
             }
+        }
+        catch(ApiErrorException ex)
+        {
+            print(JsonConvert.SerializeObject(ex.error));
+        }
+        catch(ApiException ex)
+        {
+            print(ex.Content);
         }
         catch (Exception ex)
         {

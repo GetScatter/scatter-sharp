@@ -13,12 +13,18 @@ for /f "usebackq tokens=1* delims=: " %%i in (`"%ProgramFiles(x86)%\Microsoft Vi
 
 set ScatterSharpUnity3DDir=ScatterSharpUnity3D\Assets\Plugins\
 
-if exist "%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe" (
+if exist "%InstallDir%\MSBuild\Current\Bin\MSBuild.exe" (
+  set MSBuild="%InstallDir%\MSBuild\Current\Bin\MSBuild.exe"
+) else (
+  set MSBuild="%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe"
+)
 
-  echo Building ScatterSharp project
+if exist "%MSBuild%" (
   cd ..\ScatterSharp\
+  echo Restoring Nuget packages
   dotnet restore
-  "%InstallDir%\MSBuild\15.0\Bin\MSBuild.exe" ScatterSharp.sln /p:Configuration=%CONFIGURATION%
+  echo Building ScatterSharp project
+  %MSBuild% ScatterSharp.sln /p:Configuration=%CONFIGURATION%
   
   echo Copying ScatterSharp project to Assets Plugins
   cd ..\Unity3D
