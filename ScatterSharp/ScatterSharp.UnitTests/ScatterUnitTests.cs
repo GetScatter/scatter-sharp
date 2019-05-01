@@ -28,10 +28,10 @@ namespace ScatterSharp.UnitTests
         //Jungle testnet
         //public static readonly Network network = new Network()
         //{
-        //    blockchain = Scatter.Blockchains.EOSIO,
-        //    host = "jungle.cryptolions.io",
-        //    port = 18888,
-        //    chainId = "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
+        //    blockchain = ScatterConstants.Blockchains.EOSIO,
+        //    host = "jungle2.cryptolions.io",
+        //    port = 443,
+        //    chainId = "e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473"
         //};
 
         public ScatterUnitTestCases ScatterUnitTestCases { get; set; }

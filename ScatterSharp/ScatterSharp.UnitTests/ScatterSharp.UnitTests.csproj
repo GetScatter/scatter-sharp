@@ -69,13 +69,17 @@
       <Project>{E750ADC2-6362-4614-A3B3-CC5CF8114F16}</Project>
       <Name>EosSharp.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\eos-sharp\EosSharp\EosSharp.Unity3D\EosSharp.Unity3D.csproj">
-      <Project>{71517f24-d1f3-4508-a95d-891d2d0eb779}</Project>
-      <Name>EosSharp.Unity3D</Name>
+    <ProjectReference Include="..\..\eos-sharp\EosSharp\EosSharp\EosSharp.csproj">
+      <Project>{bb5d6616-77b7-4006-b4cb-fe84e2b368fc}</Project>
+      <Name>EosSharp</Name>
     </ProjectReference>
     <ProjectReference Include="..\ScatterSharp.Core\ScatterSharp.Core.csproj">
       <Project>{d20f2a06-4626-4165-8df8-75081b742710}</Project>
       <Name>ScatterSharp.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ScatterSharp.EosProvider\ScatterSharp.EosProvider.csproj">
+      <Project>{3DC847A8-8FF2-4DF3-ACA5-F3C62023457D}</Project>
+      <Name>ScatterSharp.EosProvider</Name>
     </ProjectReference>
     <ProjectReference Include="..\ScatterSharp.UnitTests.Core\ScatterSharp.UnitTests.Core.csproj">
       <Project>{1c962869-5f7d-4612-a9fe-bcb4cb7252b5}</Project>
