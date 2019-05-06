@@ -12,7 +12,7 @@ if "%UNITY_PATH%" == "" (
 )
 
 set DEFAULT_UNITY_PATH=C:\Program Files\Unity\Editor\Unity.exe
-if exist "%DEFAULT_UNITY_PATH%" (
+if "%UNITY_PATH%" == "" (
     echo Using default Unity path %DEFAULT_UNITY_PATH%
     set UNITY_PATH=%DEFAULT_UNITY_PATH%
 )
@@ -20,6 +20,11 @@ if exist "%DEFAULT_UNITY_PATH%" (
 if "%UNITY_PATH%" == "" (
     echo Error: Unity path not defined. Please set the UNITY_PATH environment variable to the Unity.exe file, or pass the path as argument
     exit /B 1
+)
+
+if not exist "%UNITY_PATH%" (
+	echo Using second default Unity path C:\Program Files\Unity\Hub\Editor\2019.1.1f1\Editor\Unity.exe
+	set UNITY_PATH=C:\Program Files\Unity\Hub\Editor\2019.1.1f1\Editor\Unity.exe
 )
 
 if not exist "%UNITY_PATH%" (
