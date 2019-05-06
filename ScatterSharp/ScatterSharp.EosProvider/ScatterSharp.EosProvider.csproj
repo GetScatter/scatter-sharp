@@ -29,10 +29,11 @@
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
     <!-- include PDBs in the NuGet package -->
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    <Version>1.0.6</Version>
-    <AssemblyVersion>1.0.6.0</AssemblyVersion>
-    <FileVersion>1.0.6.0</FileVersion>
-    <PackageReleaseNotes>eos-sharp: Fixes to ApiError throwing in Unity3D
+    <Version>1.0.7</Version>
+    <AssemblyVersion>1.0.7.0</AssemblyVersion>
+    <FileVersion>1.0.7.0</FileVersion>
+    <PackageReleaseNotes>eos-sharp: Fix new_producers field in get_block
+eos-sharp: Remove hex_data from action structure deserializing
 
 </PackageReleaseNotes>
   </PropertyGroup>

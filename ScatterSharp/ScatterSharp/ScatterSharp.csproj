@@ -13,10 +13,11 @@
     <RepositoryUrl>https://github.com/GetScatter/scatter-sharp</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>EOS, NetStandard, secp256k1, Blockchain, Scatter</PackageTags>
-    <AssemblyVersion>2.0.9.0</AssemblyVersion>
-    <FileVersion>2.0.9.0</FileVersion>
-    <PackageReleaseNotes>eos-sharp: Fixes to ApiError throwing in Unity3D</PackageReleaseNotes>
-    <Version>2.0.9</Version>
+    <AssemblyVersion>2.0.10.0</AssemblyVersion>
+    <FileVersion>2.0.10.0</FileVersion>
+    <PackageReleaseNotes>eos-sharp: Fix new_producers field in get_block
+eos-sharp: Remove hex_data from action structure deserializing</PackageReleaseNotes>
+    <Version>2.0.10</Version>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
