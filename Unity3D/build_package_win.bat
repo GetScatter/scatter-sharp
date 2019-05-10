@@ -11,7 +11,7 @@ if "%UNITY_PATH%" == "" (
     set UNITY_PATH=%1
 )
 
-set SEARCH_UNITY_PATH=C:\Program Files\Unity\Hub\Editor\Unity.exe
+set SEARCH_UNITY_PATH=%ProgramFiles%\Unity\Hub\Editor\Unity.exe
 if "%UNITY_PATH%" == "" (
 	FOR /F "delims=" %%i IN ('dir /b /s "%SEARCH_UNITY_PATH%"') DO set UNITY_PATH=%%i
 )
