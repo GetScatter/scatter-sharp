@@ -3,6 +3,7 @@ using ScatterSharp.Core.Api;
 using ScatterSharp.Core.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ScatterSharp
@@ -226,7 +227,7 @@ namespace ScatterSharp
         {
             ThrowNoAuth();
 
-            var result = await SocketService.SendApiRequest<ApiBase, byte[]>(new Request<ApiBase>()
+            var result = await SocketService.SendApiRequest<ApiBase, string>(new Request<ApiBase>()
             {
                 type = "getAvatar",
                 payload = new ApiBase()
@@ -235,7 +236,13 @@ namespace ScatterSharp
                 }
             }, timeout);
 
-            return result;
+            if(!string.IsNullOrWhiteSpace(result))
+            {
+                var base64Data = Regex.Match(result, @"data:image/(?<type>.+?),(?<data>.+)").Groups["data"].Value;
+                return Convert.FromBase64String(base64Data);
+            }
+
+            return null;
         }
 
         /// <summary>
