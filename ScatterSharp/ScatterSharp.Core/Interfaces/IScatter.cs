@@ -43,11 +43,26 @@ namespace ScatterSharp.Core.Interfaces
         Task<Identity> GetIdentity(IdentityRequiredFields requiredFields = null, int? timeout = null);
 
         /// <summary>
+        /// Prompts the users for an Identity if there is no permission, otherwise returns the permission without a prompt based on origin.
+        /// </summary>
+        /// <param name="requiredFields">Optional required fields for multiple networks at once</param>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
+        /// <returns></returns>
+        Task<Identity> LoginAll(IdentityRequiredFields requiredFields = null, int? timeout = null);
+
+        /// <summary>
         /// Checks if an Identity has permissions and return the identity based on origin.
         /// </summary>
         /// <param name="timeout">set response timeout that overrides the default one</param>
         /// <returns></returns>
         Task<Identity> GetIdentityFromPermissions(int? timeout = null);
+
+        /// <summary>
+        /// Get authenticated user account
+        /// </summary>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
+        /// <returns></returns>
+        Task<byte[]> GetAvatar(int? timeout = null);
 
         /// <summary>
         /// Removes the identity permission for an origin from the user's Scatter, effectively logging them out.

@@ -28,7 +28,7 @@ namespace ScatterSharp.UnitTests.Core
 
         public async Task Connect()
         {
-            await Scatter.Connect();
+            await Scatter.Connect(3000);
         }
 
         public async Task<string> GetVersion()
@@ -43,10 +43,22 @@ namespace ScatterSharp.UnitTests.Core
             return await GetIdentityFromScatter();
         }
 
+        public async Task<Identity> LoginAll()
+        {
+            await Scatter.Connect();
+            return await Scatter.LoginAll();
+        }
+
         public async Task<Identity> GetIdentityFromPermissions()
         {
             await Scatter.Connect();
             return await Scatter.GetIdentityFromPermissions();
+        }
+
+        public async Task<byte[]> GetAvatar()
+        {
+            await Scatter.Connect();
+            return await Scatter.GetAvatar();
         }
 
         public async Task<bool> ForgetIdentity()

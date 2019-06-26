@@ -70,9 +70,9 @@ namespace ScatterSharp
             {
                 //try normal ws connection
                 Uri wsURI = new Uri(string.Format(ScatterConstants.WSURI,
-                                                   ScatterConstants.WS_PROTOCOL,
-                                                   ScatterConstants.WS_HOST,
-                                                   ScatterConstants.WS_PORT));
+                                                  ScatterConstants.WS_PROTOCOL,
+                                                  ScatterConstants.WS_HOST,
+                                                  ScatterConstants.WS_PORT));
 
                 linked = await SocketService.Link(wsURI, timeout);
 
@@ -124,7 +124,7 @@ namespace ScatterSharp
         /// <summary>
         /// Prompts the users for an Identity if there is no permission, otherwise returns the permission without a prompt based on origin.
         /// </summary>
-        /// <param name="requiredFields">Optional required fields</param>
+        /// <param name="requiredFields">Optional required fields and only one network permitted</param>
         /// <param name="timeout">set response timeout that overrides the default one</param>
         /// <returns></returns>
         public async Task<Identity> GetIdentity(IdentityRequiredFields requiredFields = null, int? timeout = null)
@@ -158,6 +158,42 @@ namespace ScatterSharp
         }
 
         /// <summary>
+        /// Prompts the users for an Identity if there is no permission, otherwise returns the permission without a prompt based on origin.
+        /// </summary>
+        /// <param name="requiredFields">Optional required fields for multiple networks at once</param>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
+        /// <returns></returns>
+        public async Task<Identity> LoginAll(IdentityRequiredFields requiredFields = null, int? timeout = null)
+        {
+            ThrowNoAuth();
+
+            if (requiredFields == null)
+            {
+                requiredFields = new IdentityRequiredFields()
+                {
+                    accounts = new List<Network>()
+                    {
+                        Network
+                    },
+                    location = new List<LocationFields>(),
+                    personal = new List<PersonalFields>()
+                };
+            }
+
+            var result = await SocketService.SendApiRequest<IdentityRequest, Identity>(new Request<IdentityRequest>()
+            {
+                type = "getAllAccountsFor",
+                payload = new IdentityRequest()
+                {
+                    fields = requiredFields,
+                    origin = AppName
+                }
+            }, timeout);
+
+            return Identity = result;
+        }
+
+        /// <summary>
         /// Checks if an Identity has permissions and return the identity based on origin.
         /// </summary>
         /// <param name="timeout">set response timeout that overrides the default one</param>
@@ -179,6 +215,27 @@ namespace ScatterSharp
                 Identity = result;
 
             return Identity;
+        }
+
+        /// <summary>
+        /// Get authenticated user account
+        /// </summary>
+        /// <param name="timeout">set response timeout that overrides the default one</param>
+        /// <returns></returns>
+        public async Task<byte[]> GetAvatar(int? timeout = null)
+        {
+            ThrowNoAuth();
+
+            var result = await SocketService.SendApiRequest<ApiBase, byte[]>(new Request<ApiBase>()
+            {
+                type = "getAvatar",
+                payload = new ApiBase()
+                {
+                    origin = AppName
+                }
+            }, timeout);
+
+            return result;
         }
 
         /// <summary>

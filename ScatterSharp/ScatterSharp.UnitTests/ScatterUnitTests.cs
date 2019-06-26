@@ -17,22 +17,22 @@ namespace ScatterSharp.UnitTests
     public class ScatterUnitTests
     {
         //mainnet
-        public static readonly Network network = new Network()
-        {
-            blockchain = ScatterConstants.Blockchains.EOSIO,
-            host = "nodes.eos42.io",
-            port = 443,
-            chainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"
-        };
-
-        //Jungle testnet
         //public static readonly Network network = new Network()
         //{
         //    blockchain = ScatterConstants.Blockchains.EOSIO,
-        //    host = "jungle2.cryptolions.io",
+        //    host = "nodes.eos42.io",
         //    port = 443,
-        //    chainId = "e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473"
+        //    chainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906"
         //};
+
+        //Jungle testnet
+        public static readonly Network network = new Network()
+        {
+            blockchain = ScatterConstants.Blockchains.EOSIO,
+            host = "jungle2.cryptolions.io",
+            port = 443,
+            chainId = "e70aaab8997e1dfce58fbfac80cbbb8fecec7b99cf982a9444273cbc64c41473"
+        };
 
         public ScatterUnitTestCases ScatterUnitTestCases { get; set; }
 
@@ -71,12 +71,25 @@ namespace ScatterSharp.UnitTests
         {
             Console.WriteLine(JsonConvert.SerializeObject(await ScatterUnitTestCases.GetIdentity()));
         }
+        [TestMethod]
+        [TestCategory("Scatter Tests")]
+        public async Task LoginAll()
+        {
+            Console.WriteLine(JsonConvert.SerializeObject(await ScatterUnitTestCases.LoginAll()));
+        }
 
         [TestMethod]
         [TestCategory("Scatter Tests")]
         public async Task GetIdentityFromPermissions()
         {
             Console.WriteLine(await ScatterUnitTestCases.GetIdentityFromPermissions());
+        }
+
+        [TestMethod]
+        [TestCategory("Scatter Tests")]
+        public async Task GetAvatar()
+        {
+            Console.WriteLine(JsonConvert.SerializeObject(await ScatterUnitTestCases.GetAvatar()));
         }
 
         [TestMethod]

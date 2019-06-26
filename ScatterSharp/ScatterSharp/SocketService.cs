@@ -53,6 +53,9 @@ namespace ScatterSharp
         {
             var result = jtoken as JToken;
 
+            if (result == null)
+                return default(TReturn);
+
             if (result.Type == JTokenType.Object &&
                result.SelectToken("isError") != null)
             {
