@@ -29,10 +29,12 @@
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
     <!-- include PDBs in the NuGet package -->
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    <Version>1.1.0</Version>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
-    <PackageReleaseNotes>eos-sharp: Implement TAPoS ref block with blocks behind
+    <Version>1.1.2</Version>
+    <AssemblyVersion>1.1.2.0</AssemblyVersion>
+    <FileVersion>1.1.2.0</FileVersion>
+    <PackageReleaseNotes>eos-sharp: Implement SignTransaction, BroadcastTransaction
+eos-sharp: Allow requiredKeys override
+eos-sharp: Implement CombinedSignerProvider to allow for multiple combined signatureProviders to sign the same transaction.
 
 </PackageReleaseNotes>
   </PropertyGroup>

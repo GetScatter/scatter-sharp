@@ -13,10 +13,12 @@
     <RepositoryUrl>https://github.com/GetScatter/scatter-sharp</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>EOS, NetStandard, secp256k1, Blockchain, Scatter</PackageTags>
-    <AssemblyVersion>2.1.0.0</AssemblyVersion>
-    <FileVersion>2.1.0.0</FileVersion>
-    <PackageReleaseNotes>eos-sharp: Implement TAPoS ref block with blocks behind</PackageReleaseNotes>
-    <Version>2.1.0</Version>
+    <AssemblyVersion>2.1.2.0</AssemblyVersion>
+    <FileVersion>2.1.2.0</FileVersion>
+    <PackageReleaseNotes>eos-sharp: Implement SignTransaction, BroadcastTransaction
+eos-sharp: Allow requiredKeys override
+eos-sharp: Implement CombinedSignerProvider to allow for multiple combined signatureProviders to sign the same transaction.</PackageReleaseNotes>
+    <Version>2.1.2</Version>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
