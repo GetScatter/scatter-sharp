@@ -29,14 +29,15 @@
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
     <!-- include PDBs in the NuGet package -->
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    <Version>1.1.2</Version>
-    <AssemblyVersion>1.1.2.0</AssemblyVersion>
-    <FileVersion>1.1.2.0</FileVersion>
-    <PackageReleaseNotes>eos-sharp: Implement SignTransaction, BroadcastTransaction
-eos-sharp: Allow requiredKeys override
-eos-sharp: Implement CombinedSignerProvider to allow for multiple combined signatureProviders to sign the same transaction.
-
-</PackageReleaseNotes>
+    <Version>1.1.3</Version>
+    <AssemblyVersion>1.1.3.0</AssemblyVersion>
+    <FileVersion>1.1.3.0</FileVersion>
+    <PackageReleaseNotes>eos-sharp: Fix Use convert ToDecimal instead of explicit cast
+eos-sharp: Fix object to float conversion InvalidCastException (by KGMaxey)
+eos-sharp: Add support for variant fields 
+eos-sharp: Add support for binary extension types (by dbulha) 
+eos-sharp: Add block_num_hint to gettransaction (by dbulha)
+eos-sharp: Changed authority accounts to use permission level (by dbulha)</PackageReleaseNotes>
   </PropertyGroup>
   
   <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
