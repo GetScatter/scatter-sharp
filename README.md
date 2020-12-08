@@ -1,3 +1,5 @@
+# This library is not actively maintained
+
 # scatter-sharp
 Scatter C# library to interact with ScatterDesktop / ScatterMobile
 
